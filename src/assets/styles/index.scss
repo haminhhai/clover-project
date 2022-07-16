@@ -1,0 +1,34 @@
+body {
+  margin: 0;
+}
+
+#root {
+  height: 100vh;
+  font-family: Roboto, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: local("Roboto"), url(../fonts/Roboto-Regular.ttf) format("truetype");
+}
+
+.ant-btn,
+.ant-input,
+.ant-card,
+.ant-select-selector,
+.ant-pagination-item,
+.ant-paginatin-item-link {
+  border-radius: 8px !important;
+}
+
+// .ant-btn {
+//   background-color: #fd949c ;
+//   border-color: #fd949c ;
+
+//   &:hover {
+//     background-color: #ff4d4d ;
+//     border-color: #ff4d4d ;
+//   }
+// }
