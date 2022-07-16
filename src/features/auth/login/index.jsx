@@ -1,8 +1,8 @@
 import { Button, Form, Input, Spin } from 'antd'
 import classNames from 'classnames/bind'
 import { FIELD_REQUIRED } from 'constants'
-import { useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { NavLink, useNavigate, useMatch } from 'react-router-dom'
 import _get from "lodash/get";
 import { toast } from 'react-toastify'
 
@@ -22,11 +22,17 @@ export default function LoginPage() {
     const handleSubmit = async (values) => {
         try {
             setIsLogging(true)
-            const { jwtToken, user } = await authApi.login(values)
+            const user = await authApi.login(values)
+            if (typeof user?.data !== 'undefined') {
+                toast.error('Username or password is incorrect')
+                return;
+            }
+            const jwtToken = "123asdasd";
+            delete user.password
             setHeader('Authorization', `Bearer ${jwtToken}`);
             localStorage.setItem(CLOVER_TOKEN, jwtToken);
             localStorage.setItem(CLOVER_USER, JSON.stringify(user));
-            navigate('/', { replace: true })
+            navigate('/')
         } catch (error) {
             const message = _get(error, 'response.data.message', {});
             if (message) {
@@ -62,7 +68,7 @@ export default function LoginPage() {
                 </Form>
                 <div className={cx('bottom-form')}>
                     Do not have an account?
-                    <NavLink className={cx('link-route')} to='/register'>
+                    <NavLink className={cx('link-route')} to='/register' replace={true}>
                         Register now
                     </NavLink>
                 </div>

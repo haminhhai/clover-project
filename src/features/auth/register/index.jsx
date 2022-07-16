@@ -1,22 +1,19 @@
 import { Button, Col, Form, Input, Row, Spin } from 'antd'
 import authApi from 'api/auth'
 import classNames from 'classnames/bind'
-import { RCDatePicker } from 'components/'
-import { FIELD_REQUIRED, DATE_FORMAT } from 'constants'
+import { FIELD_REQUIRED } from 'constants'
 import { FIELD_EMAIL_INVALID, PASSWORD_NOT_MATCH, PHONE_INVALID } from 'constants'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { disableFutureDate } from 'utils'
 import _get from 'lodash/get'
 import style from '../index.module.scss'
-import { useHistory } from 'react-router-dom'
 
 const cx = classNames.bind(style)
 
 export default function RegisterPage() {
     const [form] = Form.useForm()
-    const history = useHistory()
+    const navigate = useNavigate()
 
     const [isLogging, setIsLogging] = useState(false)
 
@@ -27,12 +24,9 @@ export default function RegisterPage() {
     const handleSubmit = async (values) => {
         try {
             setIsLogging(true)
-            await authApi.register({
-                ...values,
-                dob: values.dob.format(DATE_FORMAT),
-            })
+            await authApi.register(values)
             toast.success('Register success')
-            history.push('/login')
+            navigate('/login')
         } catch (error) {
             const message = _get(error, 'response.data.message', {});
             if (message) {
@@ -62,14 +56,14 @@ export default function RegisterPage() {
                     onFinish={handleSubmit}
                 >
                     <Row gutter={16}>
-                        <Col span='8'>
+                        <Col span='12'>
                             <Form.Item label="Username" name='username' rules={[
                                 { required: true, message: FIELD_REQUIRED },
                             ]}>
                                 <Input />
                             </Form.Item>
                         </Col>
-                        <Col span='8'>
+                        <Col span='12'>
                             <Form.Item label="Email" name='email' rules={[
                                 { required: true, message: FIELD_REQUIRED },
                                 { type: 'email', message: FIELD_EMAIL_INVALID }
@@ -77,26 +71,11 @@ export default function RegisterPage() {
                                 <Input />
                             </Form.Item>
                         </Col>
-                        <Col span='8'>
-                            <Form.Item label="Name" name='name' rules={[
+                        <Col span='24'>
+                            <Form.Item label="Full Name" name='fullName' rules={[
                                 { required: true, message: FIELD_REQUIRED },
                             ]}>
                                 <Input />
-                            </Form.Item>
-                        </Col>
-                        <Col span='12'>
-                            <Form.Item label="Phone" name='phone' rules={[
-                                { required: true, message: FIELD_REQUIRED },
-                                { validator: checkPhoneNumber }
-                            ]}>
-                                <Input />
-                            </Form.Item>
-                        </Col>
-                        <Col span='12'>
-                            <Form.Item label="DOB" name='dob' rules={[
-                                { required: true, message: FIELD_REQUIRED },
-                            ]}>
-                                <RCDatePicker placeholder='' disabledDate={disableFutureDate} />
                             </Form.Item>
                         </Col>
                         <Col span='12'>

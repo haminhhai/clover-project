@@ -1,0 +1,13 @@
+@import 'assets/styles/variables.scss';
+
+.layout {
+    height: 100%!important;
+}
+
+.content {
+    background-color: $grey20 !important;
+    height: 100%!important;
+    top: 0;
+    position: relative;
+    z-index: 0;
+}

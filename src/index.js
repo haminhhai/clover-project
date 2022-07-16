@@ -1,12 +1,12 @@
 import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
+import { Spinner, ToastifyContainer } from './components';
 import { ConfigProvider } from 'antd';
 
 import 'assets/styles/index.scss';
 import 'antd/dist/antd.css';
 import 'antd/dist/antd.variable.min.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { Spinner, ToastifyContainer } from './components';
 
 const LazyApp = lazy(() => import('./App'))
 

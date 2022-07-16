@@ -1,0 +1,42 @@
+@import "assets/styles/variables";
+
+.container {
+    &:global(.ant-layout-header) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #fff;
+        padding: 0 20px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        z-index: 1;
+    }
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    width: 200px;
+    height: 100%;
+
+    h2 {
+        font-weight: bold;
+        margin-bottom: 0;
+        color: $primary60;
+    }
+}
+
+.user {
+    padding-right: 20px;
+}
+
+.logout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.left-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
