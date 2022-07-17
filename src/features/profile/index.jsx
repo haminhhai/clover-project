@@ -1,6 +1,9 @@
 import { AuditOutlined, LockOutlined, TeamOutlined } from "@ant-design/icons";
 import { Card, Tabs } from "antd";
 import { getUser } from "utils/";
+import { AccountDetail } from "./account-detail";
+import { ChangePassword } from "./change-password";
+import ListAccount from "./list-account";
 
 const { TabPane } = Tabs;
 export default function ProfileFeature() {
@@ -16,7 +19,7 @@ export default function ProfileFeature() {
                     }
                     key="1"
                 >
-                    Tab 1
+                    <AccountDetail />
                 </TabPane>
                 {
                     getUser()?.role == 0 &&
@@ -29,7 +32,7 @@ export default function ProfileFeature() {
                         }
                         key="2"
                     >
-                        List Account
+                        <ListAccount />
                     </TabPane>
                 }
                 {
@@ -43,7 +46,7 @@ export default function ProfileFeature() {
                         }
                         key="3"
                     >
-                        Change Password
+                        <ChangePassword />
                     </TabPane>
                 }
             </Tabs>

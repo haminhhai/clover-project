@@ -1,0 +1,20 @@
+.container {
+    margin-bottom: 16px;
+
+    :global(.ant-select) {
+        width: 100%;
+    }
+}
+
+.col-filter {
+    display: flex !important;
+    align-items: center !important;
+
+    :global(.ant-picker-range) {
+        width: 100%;
+    }
+
+    :global(.ant-picker-input > input) {
+        text-align: center;
+    }
+}
