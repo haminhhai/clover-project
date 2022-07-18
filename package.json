@@ -21,7 +21,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "img-server": "json-server --watch images.json --port 2000"
   },
   "eslintConfig": {
     "extends": [

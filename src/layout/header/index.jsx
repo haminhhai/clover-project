@@ -43,7 +43,7 @@ export default function Header() {
         <AntHeader className={cx('container')}>
             <div className={cx('brand')}>
                 <h2>Clover</h2>
-            </div> :
+            </div>
             {
                 isUserLoggedIn() && <Dropdown overlay={menu} trigger={['click']} className={cx('user')}>
                     <Button type="primary">
