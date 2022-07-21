@@ -1,8 +1,8 @@
 import { Col, Input, Row, Select } from "antd"
 import classNames from "classnames/bind"
+import { ROLE_OPTIONS } from "constants/"
 import { debounce } from "lodash"
 import style from "./index.module.scss"
-import { roleOptions } from "../constants"
 
 const cx = classNames.bind(style)
 const { Option } = Select
@@ -60,7 +60,7 @@ export default function Filter({ filter, onChange }) {
                     <Col span={24}>
                         <Select defaultValue={''} onChange={onChangeRole}>
                             <Option value={''}>All</Option>
-                            {roleOptions.map(option => (
+                            {ROLE_OPTIONS.map(option => (
                                 <Option key={option.id} value={option.id}>
                                     {option.name}
                                 </Option>

@@ -18,8 +18,8 @@ export default function Sidebar({ selectedTab, setSelectedTab }) {
             case path.includes('dashboard'):
                 setSelectedTab(['dashboard'])
                 break
-            case path.includes('brands'):
-                setSelectedTab(['brands'])
+            case path.includes('branch'):
+                setSelectedTab(['branch'])
                 break
             default:
                 setSelectedTab([])
@@ -41,8 +41,8 @@ export default function Sidebar({ selectedTab, setSelectedTab }) {
                 <Menu.Item key='dashboard' icon={<DashboardFilled style={{ fontSize: 20 }} />}>
                     Dashboard
                 </Menu.Item>
-                <Menu.Item key='brands' icon={<ShopFilled style={{ fontSize: 20 }} />}>
-                    Brands
+                <Menu.Item key='branch' icon={<ShopFilled style={{ fontSize: 20 }} />}>
+                    Branch
                 </Menu.Item>
             </Menu>
         </Sider>

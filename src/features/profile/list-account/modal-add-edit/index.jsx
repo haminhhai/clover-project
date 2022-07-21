@@ -2,7 +2,7 @@ import { Button, Form, Input, Modal, Radio, Space } from "antd"
 import { FIELD_EMAIL_INVALID, FIELD_REQUIRED, PASSWORD_NOT_MATCH } from "constants/message";
 import { useEffect, useMemo } from "react";
 import { isEmpty } from "lodash";
-import { roleOptions } from "../constants";
+import { ROLE_OPTIONS } from "constants/";
 
 export default function ModalAddEdit({ loading, visible, onCancel, onSubmit, selectedUser }) {
     const [form] = Form.useForm();
@@ -46,7 +46,7 @@ export default function ModalAddEdit({ loading, visible, onCancel, onSubmit, sel
                     <Radio.Group>
                         <Space direction="vertical">
                             {
-                                roleOptions.map(item => (
+                                ROLE_OPTIONS.map(item => (
                                     <Radio value={item.id}>{item.name}</Radio>
                                 ))
                             }

@@ -1,7 +1,7 @@
 import { NotFound } from "components/index";
 import LoginPage from "features/auth/login/index";
-import RegisterPage from "features/auth/register/index";
-import { BrandFeature } from "features/brands";
+import { BranchFeature } from "features/branch";
+import BranchDetail from "features/branch/detail";
 import DashboardFeature from "features/dashboard/index";
 import ProfileFeature from "features/profile";
 import { PrivateLayout, PublicLayout } from "layout";
@@ -26,10 +26,6 @@ function App() {
           <Route index element={<LoginPage />} />
         </Route>
 
-        <Route path="/register" element={<PublicLayout />}>
-          <Route index element={<RegisterPage />} />
-        </Route>
-
         {/* Private Layout */}
         <Route path='/profile' element={<PrivateLayout />}>
           <Route index element={<ProfileFeature />} />
@@ -39,8 +35,9 @@ function App() {
           <Route index element={<DashboardFeature />} />
         </Route>
 
-        <Route path='/brands' element={<PrivateLayout />}>
-          <Route index element={<BrandFeature />} />
+        <Route path='/branch' element={<PrivateLayout />}>
+          <Route index element={<BranchFeature />} />
+          <Route path='detail/:id' element={<BranchDetail />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

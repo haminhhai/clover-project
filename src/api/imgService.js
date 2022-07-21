@@ -21,24 +21,20 @@ imgService.interceptors.response.use(
 );
 
 const imageApi = {
-    getAll(params) {
-        const url = '/images';
+    getImgProfile(params) {
+        const url = `/profile`;
         return imgService.get(url, { params });
     },
-    getImgProfileById(id) {
-        const url = `/images/${id}`;
-        return imgService.get(url);
-    },
-    create(body) {
-        const url = '/images';
+    addImgProfile(body) {
+        const url = '/profile';
         return imgService.post(url, body);
     },
-    update(id, body) {
-        const url = `/images/${id}`;
+    updateImageProfile(id, body) {
+        const url = `/profile/${id}`;
         return imgService.put(url, body);
     },
-    delete(id) {
-        const url = `/images/${id}`;
+    deleteImgProfile(id) {
+        const url = `/profile/${id}`;
         return imgService.delete(url);
     }
 }

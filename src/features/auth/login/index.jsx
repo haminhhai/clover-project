@@ -27,12 +27,12 @@ export default function LoginPage() {
                 toast.error('Username or password is incorrect')
                 return;
             }
-            const jwtToken = "123asdasd";
+            const jwtToken = "token";
             delete user.password
             setHeader('Authorization', `Bearer ${jwtToken}`);
             localStorage.setItem(CLOVER_TOKEN, jwtToken);
             localStorage.setItem(CLOVER_USER, JSON.stringify(user));
-            navigate('/')
+            navigate('/dashboard')
         } catch (error) {
             const message = _get(error, 'response.data.message', {});
             if (message) {
@@ -66,12 +66,6 @@ export default function LoginPage() {
                         <Button htmlType='submit' type="primary">Login</Button>
                     </Form.Item>
                 </Form>
-                <div className={cx('bottom-form')}>
-                    Do not have an account?
-                    <NavLink className={cx('link-route')} to='/register' replace={true}>
-                        Register now
-                    </NavLink>
-                </div>
             </div>
         </Spin>
     )
