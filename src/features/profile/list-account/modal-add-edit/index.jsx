@@ -47,7 +47,7 @@ export default function ModalAddEdit({ loading, visible, onCancel, onSubmit, sel
                         <Space direction="vertical">
                             {
                                 ROLE_OPTIONS.map(item => (
-                                    <Radio value={item.id}>{item.name}</Radio>
+                                    item.id !== 0 && <Radio value={item.id}>{item.name}</Radio>
                                 ))
                             }
                         </Space>

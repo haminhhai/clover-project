@@ -31,13 +31,6 @@ const list = [
         email: 'nguyenb@gmail.com',
         role: 3,
     },
-    {
-        id: 4,
-        username: "admin",
-        fullName: 'Admin',
-        email: 'admin@gmail.com',
-        role: 0,
-    }
 ]
 
 export default function ListAccount() {

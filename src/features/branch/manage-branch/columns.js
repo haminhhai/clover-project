@@ -12,6 +12,7 @@ export const data = [
         branchName: 'Branch 1',
         address: 'Address 1',
         phone: '0123456789',
+        managerId: 1,
         fullName: 'Full Name 1',
         active: 0
     },
@@ -20,12 +21,13 @@ export const data = [
         branchName: 'Branch 2',
         address: 'Address 2',
         phone: '0123456789',
+        managerId: 2,
         fullName: 'Full Name 2',
         active: 1
     }
 
 ]
-export const renderColumns = (goDetail) => ([
+export const renderColumns = (goDetail, openEdit, openDelete) => ([
     {
         title: 'Name',
         dataIndex: 'branchName',
@@ -63,8 +65,8 @@ export const renderColumns = (goDetail) => ([
         render: (content, record) => (
             <Space>
                 <EyeOutlined onClick={() => goDetail(record)} style={style} />
-                <EditOutlined style={style} />
-                <DeleteOutlined style={style} />
+                <EditOutlined onClick={() => openEdit(record)} style={style} />
+                <DeleteOutlined onClick={() => openDelete(record)} style={style} />
             </Space>
         )
     },

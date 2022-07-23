@@ -7,10 +7,6 @@ const commonStyle = {
 }
 
 const renderRoles = {
-    0: {
-        title: "Admin",
-        icon: <CrownOutlined style={{ ...commonStyle, color: '#ea5455' }} />
-    },
     1: {
         title: "Branch Manager",
         icon: <ClusterOutlined style={{ ...commonStyle, color: '#ff9f43' }} />

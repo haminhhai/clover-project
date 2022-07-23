@@ -24,7 +24,7 @@ export default function Filter() {
                         </label>
                     </Col>
                     <Col span={24}>
-                        <Select defaultValue="0" style={{ width: '100%' }}>
+                        <Select style={{ width: '100%' }}>
                             <Select.Option value="0">Active</Select.Option>
                             <Select.Option value="1">Inactive</Select.Option>
                         </Select>
