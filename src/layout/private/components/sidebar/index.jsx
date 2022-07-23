@@ -4,7 +4,7 @@ import style from "./index.module.scss"
 import { useEffect } from "react"
 import { useNavigate, useLocation } from "react-router"
 import { getUser } from "utils/"
-import { DashboardFilled, ShopFilled } from "@ant-design/icons"
+import { DashboardFilled, ShopFilled, ShoppingFilled } from "@ant-design/icons"
 
 const cx = classNames.bind(style)
 const { Sider } = Layout
@@ -20,6 +20,9 @@ export default function Sidebar({ selectedTab, setSelectedTab }) {
                 break
             case path.includes('branch'):
                 setSelectedTab(['branch'])
+                break
+            case path.includes('product'):
+                setSelectedTab(['product'])
                 break
             default:
                 setSelectedTab([])
@@ -43,6 +46,9 @@ export default function Sidebar({ selectedTab, setSelectedTab }) {
                 </Menu.Item>
                 <Menu.Item key='branch' icon={<ShopFilled style={{ fontSize: 20 }} />}>
                     Branch
+                </Menu.Item>
+                <Menu.Item key='product' icon={<ShoppingFilled style={{ fontSize: 20 }} />}>
+                    Product
                 </Menu.Item>
             </Menu>
         </Sider>

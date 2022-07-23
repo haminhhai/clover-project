@@ -15,7 +15,6 @@ export default function ManageBranch() {
     const [loading, setLoading] = useState(false);
     const [selected, setSelected] = useState(null);
     const [visbleAddEdit, setVisibleAddEdit] = useState(false);
-    const [visibleDelete, setVisibleDelete] = useState(false);
 
     const openAdd = () => {
         setVisibleAddEdit(true);
@@ -26,30 +25,15 @@ export default function ManageBranch() {
         setVisibleAddEdit(true);
     }
 
-    const openDelete = (branch) => {
-        setSelected(branch);
-        setVisibleDelete(true);
-    }
-
     const closeAddEdit = () => {
         console.log(123);
         setSelected(null)
         setVisibleAddEdit(false);
     }
 
-    const closeDelete = () => {
-        setSelected(null)
-        setVisibleDelete(false);
-    }
-
     const submitAddEdit = (values) => {
         console.log(values);
     }
-
-    const submitDelete = () => {
-        console.log(selected);
-    }
-
 
     const goDetail = (record) => {
         navigate(`/branch/detail/${record?.id || 0}`);
@@ -71,30 +55,13 @@ export default function ManageBranch() {
                 <Button icon={<SearchOutlined />}>Search</Button>
             </Space>
 
-            <Table dataSource={data} columns={renderColumns(goDetail, openEdit, openDelete)} pagination={false} />
+            <Table dataSource={data} columns={renderColumns(goDetail, openEdit)} pagination={false} />
             <BranchAddEdit
                 selected={selected}
                 visible={visbleAddEdit}
                 onClose={closeAddEdit}
                 onSubmit={submitAddEdit}
             />
-            <Modal
-                visible={visibleDelete}
-                title="Confirm"
-                width={400}
-                onOk={submitDelete}
-                onCancel={closeDelete}
-                footer={[
-                    <Button key="back" onClick={closeDelete}>
-                        Cancel
-                    </Button>,
-                    <Button key="delete" type="danger" onClick={submitDelete} loading={loading}>
-                        Delete
-                    </Button>,
-                ]}
-            >
-                <p>Do you want to delete this branch?</p>
-            </Modal>
         </Card>
     )
 }

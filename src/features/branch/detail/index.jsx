@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Area } from "@ant-design/plots";
 import { dataIncome, incomeConfig, columns } from "./constants";
-import moment from "moment";
 
 import style from "./index.module.scss";
 
@@ -15,7 +14,7 @@ export default function BranchDetail() {
     const navigate = useNavigate();
     const { id } = useParams();
 
-    const [branchDetail, setBranchDetail] = useState([]);
+    const [branchDetail, setBranchDetail] = useState({});
     const [dataTable, setDataTable] = useState([]);
 
     useEffect(() => {

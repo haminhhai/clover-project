@@ -3,6 +3,8 @@ import LoginPage from "features/auth/login/index";
 import { BranchFeature } from "features/branch";
 import BranchDetail from "features/branch/detail";
 import DashboardFeature from "features/dashboard/index";
+import ProductFeature from "features/product";
+import ProductDetail from "features/product/detail";
 import ProfileFeature from "features/profile";
 import { PrivateLayout, PublicLayout } from "layout";
 import {
@@ -38,6 +40,10 @@ function App() {
         <Route path='/branch' element={<PrivateLayout />}>
           <Route index element={<BranchFeature />} />
           <Route path='detail/:id' element={<BranchDetail />} />
+        </Route>
+
+        <Route path='/product' element={<PrivateLayout />}>
+          <Route index element={<ProductFeature />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

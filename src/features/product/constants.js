@@ -1,0 +1,38 @@
+export const listProduct = [
+    {
+        id: 0,
+        productName: "Product 1",
+        productPrice: 100000,
+        quantity: 10,
+        size: 10,
+        position: "A1",
+        url: "https://via.placeholder.com/150",
+    },
+    {
+        id: 1,
+        productName: "Product 2",
+        productPrice: 200000,
+        quantity: 20,
+        size: 20,
+        position: "A2",
+        url: "https://via.placeholder.com/100",
+    },
+    {
+        id: 2,
+        productName: "Product 3",
+        productPrice: 300000,
+        quantity: 30,
+        size: 30,
+        position: "A3",
+        url: "https://via.placeholder.com/150",
+    },
+    {
+        id: 3,
+        productName: "Product 4",
+        productPrice: 400000,
+        quantity: 40,
+        size: 40,
+        position: "A4",
+        url: "https://via.placeholder.com/100",
+    },
+]

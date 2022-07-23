@@ -1,26 +1,34 @@
-import { Card, Col, Menu, PageHeader, Row } from "antd";
-import classNames from "classnames/bind";
-import { getUser } from "utils/";
-import style from './index.module.scss'
+import { LineChartOutlined, PartitionOutlined } from "@ant-design/icons";
+import { Tabs } from "antd";
+import AllIncome from "./all-income";
 import ManageBranch from "./manage-branch";
 
-const cx = classNames.bind(style)
-
-let title = '';
-if (getUser()?.role) {
-    if (getUser().role == 0) {
-        title = "Manage Branches";
-    } else if (getUser().role == 1) {
-        title = "My Branch"
-    }
-}
+const { TabPane } = Tabs;
 export function BranchFeature() {
     return (
-        <>
-            <PageHeader
-                title={title}
-            />
-            <ManageBranch />
-        </>
+        <Tabs defaultActiveKey="1">
+            <TabPane
+                tab={
+                    <span>
+                        <PartitionOutlined />
+                        Manage Branch
+                    </span>
+                }
+                key="1"
+            >
+                <ManageBranch />
+            </TabPane>
+            <TabPane
+                tab={
+                    <span>
+                        <LineChartOutlined />
+                        Income All Branch
+                    </span>
+                }
+                key="2"
+            >
+                <AllIncome />
+            </TabPane>
+        </Tabs>
     )
 }

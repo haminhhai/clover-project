@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons"
+import { EditOutlined, EyeOutlined } from "@ant-design/icons"
 import { Badge, Button, Space } from "antd"
 
 const style = {
@@ -27,7 +27,7 @@ export const data = [
     }
 
 ]
-export const renderColumns = (goDetail, openEdit, openDelete) => ([
+export const renderColumns = (goDetail, openEdit) => ([
     {
         title: 'Name',
         dataIndex: 'branchName',
@@ -66,7 +66,6 @@ export const renderColumns = (goDetail, openEdit, openDelete) => ([
             <Space>
                 <EyeOutlined onClick={() => goDetail(record)} style={style} />
                 <EditOutlined onClick={() => openEdit(record)} style={style} />
-                <DeleteOutlined onClick={() => openDelete(record)} style={style} />
             </Space>
         )
     },
