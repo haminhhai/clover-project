@@ -14,22 +14,22 @@ export default function ProductDetail({ visible, product, onClose }) {
     useEffect(() => {
         setDataTable([
             {
-                key: product.productPrice,
+                key: 'productPrice',
                 label: 'Price',
                 value: product.productPrice
             },
             {
-                key: product.quantity,
+                key: 'quantity',
                 label: 'Quantity',
                 value: product.quantity
             },
             {
-                key: product.size,
+                key: 'size',
                 label: 'Size',
                 value: product.size
             },
             {
-                key: product.position,
+                key: 'position',
                 label: 'Position',
                 value: product.position
             }

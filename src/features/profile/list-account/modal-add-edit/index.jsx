@@ -1,13 +1,23 @@
-import { Button, Form, Input, Modal, Radio, Space } from "antd"
+import { Button, Form, Input, Modal, Radio, Space, Upload } from "antd"
 import { FIELD_EMAIL_INVALID, FIELD_REQUIRED, PASSWORD_NOT_MATCH } from "constants/message";
 import { useEffect, useMemo } from "react";
 import { isEmpty } from "lodash";
-import { ROLE_OPTIONS } from "constants/";
+import { UploadOutlined } from "@ant-design/icons";
 
-export default function ModalAddEdit({ loading, visible, onCancel, onSubmit, selectedUser }) {
+export default function ModalAddEdit({ listRole, loading, visible, onCancel, onSubmit, selectedUser }) {
     const [form] = Form.useForm();
 
     const isEdit = useMemo(() => !isEmpty(selectedUser), [selectedUser]);
+
+    const normFile = (e) => {
+        console.log('Upload event:', e);
+
+        if (Array.isArray(e)) {
+            return e;
+        }
+        if (e?.fileList?.length > 0) e.fileList[0].status = 'done';
+        return e?.fileList;
+    };
 
     useEffect(() => {
         if (!isEdit || !visible) {
@@ -18,7 +28,8 @@ export default function ModalAddEdit({ loading, visible, onCancel, onSubmit, sel
         form.setFieldsValue({
             fullName: selectedUser?.fullName || "",
             email: selectedUser?.email || "",
-            role: selectedUser?.role || "",
+            roleId: selectedUser?.roleId || "",
+            username: selectedUser?.username || "",
         });
 
     }, [selectedUser, isEdit, visible, form])
@@ -34,6 +45,30 @@ export default function ModalAddEdit({ loading, visible, onCancel, onSubmit, sel
                 form={form}
                 layout="vertical"
                 onFinish={onSubmit}>
+                <Form.Item
+                    name="image"
+                    label="Image"
+                    valuePropName="fileList"
+                    getValueFromEvent={normFile}
+                >
+                    <Upload
+                        name="logo"
+                        listType="picture"
+                        accept="image/png, image/jpeg"
+                        maxCount={1}>
+                        <Button icon={<UploadOutlined />}>Upload</Button>
+                    </Upload>
+                </Form.Item>
+                <Form.Item label="Username" name="username" rules={[
+                    { required: true, message: FIELD_REQUIRED },
+                ]}>
+                    <Input />
+                </Form.Item>
+                <Form.Item label="Fullname" name="fullName" rules={[
+                    { required: true, message: FIELD_REQUIRED },
+                ]}>
+                    <Input />
+                </Form.Item>
                 <Form.Item label="Email" name="email" rules={[
                     { required: true, message: FIELD_REQUIRED },
                     { type: "email", message: FIELD_EMAIL_INVALID }
@@ -46,7 +81,7 @@ export default function ModalAddEdit({ loading, visible, onCancel, onSubmit, sel
                     <Radio.Group>
                         <Space direction="vertical">
                             {
-                                ROLE_OPTIONS.map(item => (
+                                listRole.map(item => (
                                     item.id !== 0 && <Radio value={item.id}>{item.name}</Radio>
                                 ))
                             }

@@ -1,10 +1,9 @@
 import { Col, Input, InputNumber, Row, Select } from "antd";
-import { InputCurrency } from "components";
 
 export default function Filter() {
     return (
         <Row gutter={24}>
-            <Col>
+            <Col span={8}>
                 <Row>
                     <Col span={24}>
                         <label>
@@ -17,32 +16,7 @@ export default function Filter() {
                 </Row>
 
             </Col>
-            <Col>
-                <Row>
-                    <Col span={24}>
-                        <label>
-                            Price
-                        </label>
-                    </Col>
-                    <Col span={24}>
-                        <InputCurrency />
-                    </Col>
-                </Row>
-            </Col>
-            <Col>
-                <Row>
-                    <Col span={24}>
-                        <label>
-                            Quantity
-                        </label>
-                    </Col>
-                    <Col span={24}>
-                        <InputNumber style={{ width: '100%' }} />
-                    </Col>
-                </Row>
-
-            </Col>
-            <Col>
+            <Col span={8}>
                 <Row>
                     <Col span={24}>
                         <label>
@@ -55,15 +29,15 @@ export default function Filter() {
                 </Row>
 
             </Col>
-            <Col>
+            <Col span={8}>
                 <Row>
                     <Col span={24}>
                         <label>
-                            Position
+                            Category
                         </label>
                     </Col>
                     <Col span={24}>
-                        <Input />
+                        <Select style={{ width: '100%' }} />
                     </Col>
                 </Row>
 

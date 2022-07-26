@@ -1,11 +1,13 @@
-import { AlertOutlined, EnvironmentOutlined, EyeOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons"
+import { AlertOutlined, EnvironmentOutlined, EyeOutlined, PhoneOutlined, PieChartOutlined, UserOutlined } from "@ant-design/icons"
 import { Badge } from "antd"
+import { formatVND } from "utils/"
 
 const listIcon = {
     address: <EnvironmentOutlined />,
     phone: <PhoneOutlined />,
     manager: <UserOutlined />,
-    status: <AlertOutlined />
+    status: <AlertOutlined />,
+    income: <PieChartOutlined />
 }
 
 export const dataIncome = [
@@ -31,6 +33,17 @@ export const dataIncome = [
     },
 ]
 
+const render = (value, record) => {
+    switch (record.label.toLowerCase()) {
+        case 'status':
+            return <Badge status={value == 0 ? 'processing' : 'default'} text={value == 0 ? 'Active' : 'Inactive'} />;
+        case 'income':
+            return formatVND(value);
+        default:
+            return value;
+    }
+}
+
 export const columns = [
     {
         title: '',
@@ -50,16 +63,7 @@ export const columns = [
         title: '',
         dataIndex: 'value',
         key: 'value',
-        render: (value, record) => {
-            return (
-                <div>
-                    {
-                        record.label.toLowerCase() !== 'status' ? value :
-                            <Badge status={value == 0 ? 'processing' : 'default'} text={value == 0 ? 'Active' : 'Inactive'} />
-                    }
-                </div>
-            )
-        }
+        render
     },
 ]
 

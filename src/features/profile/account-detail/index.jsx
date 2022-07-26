@@ -11,20 +11,14 @@ import style from "./index.module.scss";
 import img from 'assets/images/null-img.png'
 import { ROLE_OPTIONS } from "constants/";
 import { columns } from "./columns";
+import { getUrlImage } from "utils/";
 
 const cx = classNames.bind(style);
 
 export function AccountDetail() {
     const [form] = Form.useForm();
 
-    const [fileList, setFileList] = useState([
-        // {
-        //     uid: '-1',
-        //     name: 'image.png',
-        //     status: 'done',
-        //     url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        // },
-    ]);
+    const [fileList, setFileList] = useState([]);
     const [imageProfile, setImageProfile] = useState({})
     const [isEdit, setIsEdit] = useState(false);
     const [userInfo, setUserInfo] = useState(null);
@@ -94,12 +88,7 @@ export function AccountDetail() {
                     await imageApi.deleteImgProfile(imageProfile.id);
                 }
                 else {
-                    let url = await new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(fileList[0].originFileObj);
-
-                        reader.onload = () => resolve(reader.result);
-                    });
+                    let url = await getUrlImage(fileList);
                     const body = {
                         ...imageProfile,
                         ...fileList[0],
@@ -112,12 +101,7 @@ export function AccountDetail() {
                 setIsEdit(false)
             } else {
                 if (fileList.length > 0) {
-                    let url = await new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(fileList[0].originFileObj);
-
-                        reader.onload = () => resolve(reader.result);
-                    });
+                    let url = await getUrlImage(fileList);
                     const body = {
                         ...fileList[0],
                         url,
@@ -163,7 +147,7 @@ export function AccountDetail() {
             {
                 key: getUser()?.name,
                 label: 'Role',
-                value: ROLE_OPTIONS[getUser()?.role].name
+                value: ROLE_OPTIONS[getUser()?.roleId].name
             },
         ])
     }, [])
@@ -194,7 +178,6 @@ export function AccountDetail() {
                             >
                                 {fileList.length < 1 && '+ Upload'}
                             </Upload>
-
                         </>
                 }
             </Col>

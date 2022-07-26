@@ -7,7 +7,7 @@ import style from "./index.module.scss"
 const cx = classNames.bind(style)
 const { Option } = Select
 
-export default function Filter({ filter, onChange }) {
+export default function Filter({ filter, onChange, listRole }) {
 
     const onChangeInput = debounce((value, field) => {
         onChange({
@@ -20,7 +20,7 @@ export default function Filter({ filter, onChange }) {
     const onChangeRole = (value) => {
         onChange({
             ...filter,
-            role: value
+            roleId: value
         })
     }
 
@@ -60,7 +60,7 @@ export default function Filter({ filter, onChange }) {
                     <Col span={24}>
                         <Select defaultValue={''} onChange={onChangeRole}>
                             <Option value={''}>All</Option>
-                            {ROLE_OPTIONS.map(option => (
+                            {listRole.map(option => (
                                 option.id !== 0 && <Option key={option.id} value={option.id}>
                                     {option.name}
                                 </Option>

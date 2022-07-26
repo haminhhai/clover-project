@@ -11,13 +11,23 @@ export default function Filter() {
     const [type, setType] = useState('date');
 
     return (
-        <Space>
-            <Select value={type} onChange={setType}>
-                <Option value="date">Date</Option>
-                <Option value="month">Month</Option>
-                <Option value="year">Year</Option>
-            </Select>
-            <PickerWithType type={type} onChange={(value) => console.log(value)} />
-        </Space>
+        <Row gutter={[16, 16]}>
+            <Col span={24}>
+                <Space>
+                    <Select value={type} onChange={setType}>
+                        <Option value="date">Date</Option>
+                        <Option value="month">Month</Option>
+                        <Option value="year">Year</Option>
+                    </Select>
+                    <PickerWithType type={type} onChange={(value) => console.log(value)} />
+                </Space>
+            </Col>
+            <Col span={24}>
+                <Select placeholder='Select Branch'>
+                    <Option value="1">Branch 1</Option>
+                    <Option value="2">Branch 2</Option>
+                </Select>
+            </Col>
+        </Row>
     )
 }

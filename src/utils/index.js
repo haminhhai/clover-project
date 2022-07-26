@@ -31,3 +31,15 @@ export const renderHtmlTextBreakLine = (text) => {
     if (!text) return '';
     return text.replace(/\n/g, '<br>');
 }
+
+export const getUrlImage = async (fileList) => {
+    if (fileList.length > 0) {
+        const file = fileList[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        return new Promise((resolve) => {
+            reader.onload = () => resolve(reader.result);
+        });
+    }
+    return '';
+}

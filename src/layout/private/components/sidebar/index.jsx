@@ -44,9 +44,12 @@ export default function Sidebar({ selectedTab, setSelectedTab }) {
                 <Menu.Item key='dashboard' icon={<DashboardFilled style={{ fontSize: 20 }} />}>
                     Dashboard
                 </Menu.Item>
-                <Menu.Item key='branch' icon={<ShopFilled style={{ fontSize: 20 }} />}>
-                    Branch
-                </Menu.Item>
+                {
+                    getUser()?.roleId === 0 &&
+                    <Menu.Item key='branch' icon={<ShopFilled style={{ fontSize: 20 }} />}>
+                        Branch
+                    </Menu.Item>
+                }
                 <Menu.Item key='product' icon={<ShoppingFilled style={{ fontSize: 20 }} />}>
                     Product
                 </Menu.Item>

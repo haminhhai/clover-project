@@ -1,5 +1,5 @@
 import { ClusterOutlined, CrownOutlined, DatabaseOutlined, DeleteOutlined, FormOutlined, UserOutlined } from "@ant-design/icons";
-import { Button } from "antd";
+import { Avatar, Button } from "antd";
 
 const commonStyle = {
     fontSize: 18,
@@ -8,21 +8,24 @@ const commonStyle = {
 
 const renderRoles = {
     1: {
-        title: "Branch Manager",
         icon: <ClusterOutlined style={{ ...commonStyle, color: '#ff9f43' }} />
     },
     2: {
-        title: "Store Keeper",
         icon: <DatabaseOutlined style={{ ...commonStyle, color: '#28c76f' }} />
     },
     3: {
-        title: "Staff",
         icon: <UserOutlined style={{ ...commonStyle, color: '#7367f0' }} />
     }
 
 }
 
-export const renderColumns = ({ openEdit, openDelete }) => [
+export const renderColumns = ({ listRole, openEdit, openDelete }) => [
+    {
+        title: '',
+        dataIndex: 'image',
+        key: 'image',
+        render: () => <Avatar icon={<UserOutlined />} />
+    },
     {
         title: 'Username',
         dataIndex: 'username',
@@ -40,12 +43,12 @@ export const renderColumns = ({ openEdit, openDelete }) => [
     },
     {
         title: 'Role',
-        dataIndex: 'role',
-        key: 'role',
-        render: (role, record) => (
+        dataIndex: 'roleId',
+        key: 'roleId',
+        render: (roleId, record) => (
             <span>
-                {renderRoles[role].icon}
-                {renderRoles[role].title}
+                {renderRoles[roleId].icon}
+                {listRole?.[roleId]?.name}
             </span>
         )
     },

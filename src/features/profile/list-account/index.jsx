@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Filter from "./filter";
 import ModalAddEdit from "./modal-add-edit";
 import { PlusCircleFilled } from "@ant-design/icons";
+import roleApi from "api/role";
 
 const cx = classNames.bind(style);
 
@@ -15,21 +16,21 @@ const list = [
         username: "nguyena",
         fullName: 'Nguyen Van A',
         email: 'nguyenvana@gmail.com',
-        role: 1,
+        roleId: 1,
     },
     {
         id: 2,
         username: "nguyenb",
         fullName: 'Nguyen Van B',
         email: 'nguyenb@gmail.com',
-        role: 2,
+        roleId: 2,
     },
     {
         id: 3,
         username: "nguyenc",
         fullName: 'Nguyen Van C',
         email: 'nguyenb@gmail.com',
-        role: 3,
+        roleId: 3,
     },
 ]
 
@@ -39,10 +40,11 @@ export default function ListAccount() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [visibleEdit, setVisibleEdit] = useState(false);
     const [visibleDelete, setVisibleDelete] = useState(false);
+    const [listRole, setListRole] = useState([]);
     const [filter, setFilter] = useState({
         username: "",
         fullName: "",
-        role: "",
+        roleId: "",
         email: "",
         pageIndex: 0,
         pageSize: 10,
@@ -83,9 +85,22 @@ export default function ListAccount() {
         setVisibleDelete(false);
     }
 
+    const fetchListRole = async () => {
+        try {
+            const list = await roleApi.getAll();
+            setListRole(list);
+        } catch (error) {
+            console.log("🚀 ~ error", error)
+        }
+    }
+
     useEffect(() => {
 
     }, [filter])
+
+    useEffect(() => {
+        fetchListRole();
+    }, [])
 
     return (
         <>
@@ -98,8 +113,8 @@ export default function ListAccount() {
                     New Account
                 </Button>
             </div>
-            <Filter filter={filter} onChange={handleFilterChange} />
-            <Table columns={renderColumns({ openEdit, openDelete })} dataSource={list} pagination={false} />
+            <Filter listRole={listRole} filter={filter} onChange={handleFilterChange} />
+            <Table columns={renderColumns({ listRole, openEdit, openDelete })} dataSource={list} pagination={false} />
             <Pagination
                 className={cx('pagination')}
                 total={10}
@@ -108,6 +123,7 @@ export default function ListAccount() {
                 showSizeChanger
                 onChange={handlePageChange} />
             <ModalAddEdit
+                listRole={listRole}
                 loading={loading}
                 visible={visibleEdit}
                 onSubmit={submitAddEdit}

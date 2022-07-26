@@ -14,7 +14,7 @@ export default function ProfileFeature() {
                     tab={
                         <span>
                             <AuditOutlined />
-                            {getUser()?.role == 0 ? 'My Account' : "My Profile"}
+                            {getUser()?.roleId == 0 ? 'My Account' : "My Profile"}
                         </span>
                     }
                     key="1"
@@ -22,7 +22,7 @@ export default function ProfileFeature() {
                     <AccountDetail />
                 </TabPane>
                 {
-                    getUser()?.role == 0 &&
+                    getUser()?.roleId == 0 &&
                     <TabPane
                         tab={
                             <span>
@@ -36,7 +36,7 @@ export default function ProfileFeature() {
                     </TabPane>
                 }
                 {
-                    getUser()?.role == 0 &&
+                    getUser()?.roleId == 0 &&
                     <TabPane
                         tab={
                             <span>

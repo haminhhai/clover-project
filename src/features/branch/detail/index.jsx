@@ -24,30 +24,36 @@ export default function BranchDetail() {
             address: "Address 1",
             phone: "0123456789",
             manager: "Full Name 1",
-            status: 0
+            status: 0,
+            income: 10000,
         }
         setBranchDetail(branch);
         setDataTable([
             {
-                key: branch.address,
+                key: 'address',
                 label: 'Address',
                 value: branch.address
             },
             {
-                key: branch.phone,
+                key: 'phone',
                 label: 'Phone',
                 value: branch.phone
             },
             {
-                key: branch.manager,
+                key: 'manager',
                 label: 'Manager',
                 value: branch.manager
             },
             {
-                key: branch.status,
+                key: 'status',
                 label: 'Status',
                 value: branch.status
-            }
+            },
+            {
+                key: 'income',
+                label: 'Income',
+                value: branch.income
+            },
         ]);
     }, [])
     return (
