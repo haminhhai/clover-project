@@ -7,6 +7,10 @@ import Filter from "./filter";
 import ModalAddEdit from "./modal-add-edit";
 import { PlusCircleFilled } from "@ant-design/icons";
 import roleApi from "api/role";
+import accountApi from "api/account";
+import { toast } from "react-toastify";
+import { getUrlImage } from "utils/";
+import imageApi from "api/imgService";
 
 const cx = classNames.bind(style);
 
@@ -40,6 +44,7 @@ export default function ListAccount() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [visibleEdit, setVisibleEdit] = useState(false);
     const [visibleDelete, setVisibleDelete] = useState(false);
+    const [listAccount, setListAccount] = useState([]);
     const [listRole, setListRole] = useState([]);
     const [filter, setFilter] = useState({
         username: "",
@@ -77,8 +82,64 @@ export default function ListAccount() {
         })
     }
 
-    const submitAddEdit = values => {
+    const submitAddEdit = async (values) => {
         console.log("🚀 ~ values", values)
+        let userInfo = values
+        try {
+            setLoading(true);
+            if (!selectedUser) {
+                if (userInfo.imageProfile && userInfo.imageProfile.length > 0) {
+                    let url = await getUrlImage(userInfo.imageProfile);
+                    const body = {
+                        ...userInfo.imageProfile[0],
+                        url,
+                    }
+                    const resp = await imageApi.addImgProfile(body)
+                    userInfo.image = resp.id;
+                }
+
+                await accountApi.addAccount(userInfo);
+                toast.success("Create account success");
+            } else {
+                if (selectedUser.image) {
+                    if (userInfo.imageProfile) {
+                        if (userInfo.imageProfile.length > 0) {
+                            let url = await getUrlImage(values.imageProfile);
+                            const body = {
+                                ...userInfo.imageProfile[0],
+                                id: selectedUser.image,
+                                url,
+                            }
+                            const resp = await imageApi.update(selectedUser.image, body)
+                            userInfo.image = resp.id;
+                        } else {
+                            await imageApi.deleteImgProfile(selectedUser.image);
+                            userInfo.image = '';
+                        }
+                    }
+                } else {
+                    if (userInfo.imageProfile && userInfo.imageProfile.length > 0) {
+                        let url = await getUrlImage(values.imageProfile);
+                        const body = {
+                            ...userInfo.imageProfile[0],
+                            url,
+                        }
+                        const resp = await imageApi.addImgProfile(body)
+                        userInfo.image = resp.id;
+                    }
+                }
+
+                await accountApi.editAccount(userInfo);
+                toast.success("Update account success");
+            }
+            setVisibleEdit(false);
+            fetchListAccount();
+        } catch (error) {
+            console.log("🚀 ~ error", error)
+            toast.error('Create account failed');
+        } finally {
+            setLoading(false);
+        }
     }
 
     const submitDelete = () => {
@@ -94,12 +155,22 @@ export default function ListAccount() {
         }
     }
 
+    const fetchListAccount = async () => {
+        try {
+            const list = await accountApi.getAll(filter);
+            setListAccount(list);
+        } catch (error) {
+            console.log("🚀 ~ error", error)
+        }
+    }
+
     useEffect(() => {
 
     }, [filter])
 
     useEffect(() => {
         fetchListRole();
+        fetchListAccount()
     }, [])
 
     return (
@@ -114,7 +185,7 @@ export default function ListAccount() {
                 </Button>
             </div>
             <Filter listRole={listRole} filter={filter} onChange={handleFilterChange} />
-            <Table columns={renderColumns({ listRole, openEdit, openDelete })} dataSource={list} pagination={false} />
+            <Table columns={renderColumns({ listRole, openEdit, openDelete })} dataSource={listAccount} pagination={false} />
             <Pagination
                 className={cx('pagination')}
                 total={10}

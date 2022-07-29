@@ -2,9 +2,13 @@ import { NotFound } from "components/index";
 import LoginPage from "features/auth/login/index";
 import { BranchFeature } from "features/branch";
 import BranchDetail from "features/branch/detail";
+import MyBranch from "features/branch/my-branch";
 import DashboardFeature from "features/dashboard/index";
 import ProductFeature from "features/product";
 import ProductDetail from "features/product/detail";
+import Export from "features/product/export";
+import Import from "features/product/import";
+import InventoryProduct from "features/product/inventory";
 import ProfileFeature from "features/profile";
 import { PrivateLayout, PublicLayout } from "layout";
 import {
@@ -42,8 +46,24 @@ function App() {
           <Route path='detail/:id' element={<BranchDetail />} />
         </Route>
 
+        <Route path='/my-branch' element={<PrivateLayout />}>
+          <Route index element={<MyBranch />} />
+        </Route>
+
         <Route path='/product' element={<PrivateLayout />}>
           <Route index element={<ProductFeature />} />
+        </Route>
+
+        <Route path='/inventory' element={<PrivateLayout />}>
+          <Route index element={<InventoryProduct />} />
+        </Route>
+
+        <Route path='/import' element={<PrivateLayout />}>
+          <Route index element={<Import />} />
+        </Route>
+
+        <Route path='/export' element={<PrivateLayout />}>
+          <Route index element={<Export />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

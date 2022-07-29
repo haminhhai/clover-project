@@ -1,11 +1,31 @@
 import { Button, Form, Input } from "antd";
-import { FIELD_EMAIL_INVALID, FIELD_REQUIRED, PASSWORD_NOT_MATCH } from "constants/message";
+import accountApi from "api/account";
+import { CLOVER_USER } from "constants/";
+import { FIELD_REQUIRED, PASSWORD_NOT_MATCH } from "constants/message";
+import { toast } from "react-toastify";
+import { getUser } from "utils/";
 
 export function ChangePassword() {
     const [form] = Form.useForm();
 
-    const onFinish = values => {
-        console.log("Received values of form: ", values);
+    const onFinish = async (values) => {
+        if (values.old_password !== getUser().password) {
+            toast.error("Old password is incorrect");
+            return;
+        }
+
+        try {
+            const userInfo = {
+                ...getUser(),
+                password: values.new_password
+            }
+            await accountApi.editAccount(userInfo)
+            localStorage.setItem(CLOVER_USER, JSON.stringify(userInfo));
+            toast.success("Change password success");
+            form.resetFields();
+        } catch (error) {
+            toast.error('Change password failed');
+        }
     }
 
     return (

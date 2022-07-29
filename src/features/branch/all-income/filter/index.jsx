@@ -23,7 +23,8 @@ export default function Filter() {
                 </Space>
             </Col>
             <Col span={24}>
-                <Select placeholder='Select Branch'>
+                <Select defaultValue="" style={{ width: '90%' }}>
+                    <Option value="">All</Option>
                     <Option value="1">Branch 1</Option>
                     <Option value="2">Branch 2</Option>
                 </Select>

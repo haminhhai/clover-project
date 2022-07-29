@@ -46,7 +46,7 @@ export default function ModalAddEdit({ listRole, loading, visible, onCancel, onS
                 layout="vertical"
                 onFinish={onSubmit}>
                 <Form.Item
-                    name="image"
+                    name="imageProfile"
                     label="Image"
                     valuePropName="fileList"
                     getValueFromEvent={normFile}
@@ -88,7 +88,7 @@ export default function ModalAddEdit({ listRole, loading, visible, onCancel, onS
                         </Space>
                     </Radio.Group>
                 </Form.Item>
-                <Form.Item label="New Password" name="new_password" rules={[
+                <Form.Item label="New Password" name="password" rules={[
                     { required: !isEdit, message: FIELD_REQUIRED },
                 ]}>
                     <Input.Password />
@@ -97,7 +97,7 @@ export default function ModalAddEdit({ listRole, loading, visible, onCancel, onS
                     { required: !isEdit, message: FIELD_REQUIRED },
                     ({ getFieldValue }) => ({
                         validator(_, value) {
-                            if (!value || getFieldValue('new_password') === value) {
+                            if (!value || getFieldValue('password') === value) {
                                 return Promise.resolve();
                             }
                             return Promise.reject(new Error(PASSWORD_NOT_MATCH));
@@ -109,7 +109,7 @@ export default function ModalAddEdit({ listRole, loading, visible, onCancel, onS
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit" loading={loading}>
-                        Update
+                        {isEdit ? "Update" : "Add"}
                     </Button>
                 </Form.Item>
             </Form>

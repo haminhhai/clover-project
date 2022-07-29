@@ -12,6 +12,8 @@ import img from 'assets/images/null-img.png'
 import { ROLE_OPTIONS } from "constants/";
 import { columns } from "./columns";
 import { getUrlImage } from "utils/";
+import accountApi from "api/account";
+import { CLOVER_USER } from "constants/";
 
 const cx = classNames.bind(style);
 
@@ -81,11 +83,17 @@ export function AccountDetail() {
     }
 
     const onFinish = async (values) => {
+        let userInfo = {
+            ...getUser(),
+            ...values,
+        }
         try {
             // check image exist
             if (imageProfile.url) {
                 if (fileList.length === 0) {
                     await imageApi.deleteImgProfile(imageProfile.id);
+                    userInfo.image = '';
+                    setImageProfile(null)
                 }
                 else {
                     let url = await getUrlImage(fileList);
@@ -96,9 +104,9 @@ export function AccountDetail() {
                     }
                     await imageApi.updateImageProfile(imageProfile.id, body)
                     setImageProfile(body)
+                    userInfo.image = imageProfile.id;
                 }
-                setFileList([])
-                setIsEdit(false)
+                await accountApi.editAccount(userInfo);
             } else {
                 if (fileList.length > 0) {
                     let url = await getUrlImage(fileList);
@@ -106,23 +114,25 @@ export function AccountDetail() {
                         ...fileList[0],
                         url,
                     }
-                    await imageApi.addImgProfile(body)
-                    setImageProfile(body)
+                    const resp = await imageApi.addImgProfile(body)
+                    userInfo.image = resp.id;
+                    await accountApi.editAccount(userInfo);
+                    setImageProfile(resp)
                 }
-                setFileList([])
-                setIsEdit(false)
             }
+            setFileList([])
+            setIsEdit(false)
+            localStorage.setItem(CLOVER_USER, JSON.stringify(userInfo));
+            toast.success("Update account success");
         } catch (error) {
             toast.error(error.message);
         }
     }
 
     const fetchImageProfile = async () => {
-        const response = await imageApi.getImgProfile({
-            userId: getUser()?.id
-        });
-        if (response.length > 0) {
-            setImageProfile(response[0]);
+        const response = await imageApi.getImgProfile(getUser().image);
+        if (response?.id) {
+            setImageProfile(response);
         }
     }
 

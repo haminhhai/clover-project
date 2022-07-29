@@ -1,6 +1,10 @@
 import { axiosService } from "./axiosService";
 
-const profileApi = {
+const accountApi = {
+    getAll(params) {
+        const url = `/account`;
+        return axiosService.get(url, { params });
+    },
     getAccById(id) {
         const url = `/account/id${id}`;
         return axiosService.get(url);
@@ -8,7 +12,15 @@ const profileApi = {
     changePassword(body) {
         const url = `/account/change-password`;
         return axiosService.post(url, body);
+    },
+    addAccount(body) {
+        const url = '/account/register';
+        return axiosService.post(url, body);
+    },
+    editAccount(body) {
+        const url = '/account/register';
+        return axiosService.post(url, body);
     }
 }
 
-export default profileApi;
+export default accountApi;

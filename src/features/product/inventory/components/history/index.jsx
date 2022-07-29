@@ -13,6 +13,7 @@ export default function HistoryDelete({ visible, onClose }) {
                 productId: 1,
                 quantity: 1,
                 fullName: "Nguyen Van A",
+                reason: "Reason 1",
                 timeDelete: "2020-01-01",
             },
             {
@@ -21,6 +22,7 @@ export default function HistoryDelete({ visible, onClose }) {
                 productId: 2,
                 quantity: 2,
                 fullName: "Nguyen Van B",
+                reason: "Reason 2",
                 timeDelete: "2020-01-02",
             },
         ]
@@ -28,6 +30,7 @@ export default function HistoryDelete({ visible, onClose }) {
 
     return (
         <Modal
+            width={800}
             title={inventory?.name || "History Delete"}
             visible={visible}
             footer={<Button danger onClick={onClose}>Close</Button>}

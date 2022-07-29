@@ -16,12 +16,10 @@ const listBranch = [
     {
         id: 1,
         name: "Branch 1",
-        accountId: 1,
     },
     {
         id: 2,
         name: "Branch 2",
-        accountId: 2,
     },
 ]
 
@@ -75,7 +73,7 @@ export default function ListProduct() {
                     {
                         (getUser()?.roleId !== 0 || getUser()?.roleId !== 4) &&
                             listBranch.length > 0 ? listBranch.map((item, idx) => {
-                                if (getUser()?.roleId === 1 && item.accountId === getUser()?.id) {
+                                if (getUser()?.roleId === 1 && item.id == getUser()?.idBranch) {
                                     return (
                                         <Menu.Item key={item.id} onClick={() => setSelectedKeys([`${item.id}`])}>
                                             {item.name}

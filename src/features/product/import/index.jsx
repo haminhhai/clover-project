@@ -31,6 +31,13 @@ export default function Import() {
             return e;
         }
 
+        if (e?.fileList?.length > 0) {
+            let res = e.fileList;
+            e.fileList[0].status = "done"
+
+            return res;
+        }
+
         return e?.fileList;
     };
 
@@ -50,11 +57,11 @@ export default function Import() {
                     <Select.Option value='2'>Import By Excel</Select.Option>
                 </Select>
             </Col>
-            <Col span={12}>
+            <Col span={20}>
                 {typeImport === '1' &&
                     <Card>
                         <Form form={form} layout='vertical' onFinish={addNewProduct}>
-                            <Row gutter={[16, 16]}>
+                            <Row gutter={[16, 8]}>
                                 <Col span={24}>
                                     <Form.Item
                                         name="upload"
@@ -72,27 +79,17 @@ export default function Import() {
                                         </Upload>
                                     </Form.Item>
                                 </Col>
-                                <Col span={24}>
+                                <Col span={12}>
                                     <Form.Item label='Name' name='productName' rules={[{ required: true, message: FIELD_REQUIRED }]}>
                                         <Input />
                                     </Form.Item>
                                 </Col>
-                                <Col span={24}>
+                                <Col span={12}>
                                     <Form.Item label='Code' name='productCode' rules={[{ required: true, message: FIELD_REQUIRED }]}>
                                         <Input />
                                     </Form.Item>
                                 </Col>
-                                <Col span={8}>
-                                    <Form.Item label='Price' name='productPrice' rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                                        <InputCurrency />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={8}>
-                                    <Form.Item label='Quantity' name='productQuantity' rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                                        <InputNumber style={{ width: '100%' }} />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={8}>
+                                <Col span={4}>
                                     <Form.Item label='Position' name='position' rules={[{ required: true, message: FIELD_REQUIRED }]}>
                                         {
                                             selectedPosition.name &&
@@ -105,6 +102,17 @@ export default function Import() {
                                         </Button>
                                     </Form.Item>
                                 </Col>
+                                <Col span={10}>
+                                    <Form.Item label='Price' name='productPrice' rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                                        <InputCurrency style={{ width: '100%' }} />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={10}>
+                                    <Form.Item label='Quantity' name='productQuantity' rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                                        <InputNumber style={{ width: '100%' }} />
+                                    </Form.Item>
+                                </Col>
+
                             </Row>
                             <Form.Item>
                                 <Button type='primary' htmlType='submit'>Import</Button>

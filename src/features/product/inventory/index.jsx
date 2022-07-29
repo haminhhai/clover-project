@@ -16,12 +16,10 @@ const listBranch = [
     {
         id: 1,
         name: "Branch 1",
-        accountId: 1,
     },
     {
         id: 2,
         name: "Branch 2",
-        accountId: 2,
     },
 ]
 
@@ -58,7 +56,7 @@ export default function InventoryProduct() {
         let actions = [
             <EyeFilled key='1' onClick={() => openDetail(product)} />
         ]
-        if (getUser()?.roleId === 2) {
+        if (getUser()?.roleId === 1) {
             actions.push(<RestFilled key='2' onClick={() => openDelete(product)} />)
         }
 
@@ -81,7 +79,7 @@ export default function InventoryProduct() {
                 <Col span={4}>
                     <Menu mode="inline" selectedKeys={selectedKeys}>
                         {listBranch.length > 0 ? listBranch.map((item, idx) => {
-                            if (getUser()?.roleId === 1 && item.accountId === getUser()?.id) {
+                            if (getUser()?.roleId === 1 && item.id == getUser()?.idBranch) {
                                 return (
                                     <Menu.Item key={item.id} onClick={() => setSelectedKeys([`${item.id}`])}>
                                         {item.name}
@@ -128,7 +126,7 @@ export default function InventoryProduct() {
             <ProductDetail visible={visibleDetail} product={selectedProduct} onClose={() => setVisibleDetail(false)} />
             <HistoryDelete visible={visibleHistory} inventory={selectedBranch} onClose={() => setVisibleHistory(false)} />
             <Modal
-                title="Delete Inventory Product"
+                title="Add Inventory Product To Warehouse"
                 visible={visibleDelete}
                 onCancel={() => setVisibleDelete(false)}
                 footer=''

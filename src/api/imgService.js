@@ -21,8 +21,11 @@ imgService.interceptors.response.use(
 );
 
 const imageApi = {
-    getImgProfile(params) {
-        const url = `/profile`;
+    getImgProfile(id, params) {
+        let url = `/profile`;
+        if (id) {
+            url += `/${id}`
+        }
         return imgService.get(url, { params });
     },
     addImgProfile(body) {

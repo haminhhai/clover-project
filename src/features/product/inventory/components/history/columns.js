@@ -15,6 +15,11 @@ export const columns = [
         key: 'fullName',
     },
     {
+        title: 'Reason',
+        dataIndex: 'reason',
+        key: 'reason',
+    },
+    {
         title: 'Time Delete',
         dataIndex: 'timeDelete',
         key: 'timeDelete',

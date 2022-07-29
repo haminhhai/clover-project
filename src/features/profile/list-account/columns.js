@@ -47,7 +47,7 @@ export const renderColumns = ({ listRole, openEdit, openDelete }) => [
         key: 'roleId',
         render: (roleId, record) => (
             <span>
-                {renderRoles[roleId].icon}
+                {renderRoles?.[roleId]?.icon}
                 {listRole?.[roleId]?.name}
             </span>
         )

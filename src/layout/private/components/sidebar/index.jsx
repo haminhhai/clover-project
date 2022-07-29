@@ -4,7 +4,7 @@ import style from "./index.module.scss"
 import { useEffect } from "react"
 import { useNavigate, useLocation } from "react-router"
 import { getUser } from "utils/"
-import { DashboardFilled, ShopFilled, ShoppingFilled } from "@ant-design/icons"
+import { DashboardFilled, ExportOutlined, ImportOutlined, InboxOutlined, ShopFilled, ShoppingFilled } from "@ant-design/icons"
 
 const cx = classNames.bind(style)
 const { Sider } = Layout
@@ -18,11 +18,23 @@ export default function Sidebar({ selectedTab, setSelectedTab }) {
             case path.includes('dashboard'):
                 setSelectedTab(['dashboard'])
                 break
+            case path.includes('my-branch'):
+                setSelectedTab(['my-branch'])
+                break;
             case path.includes('branch'):
                 setSelectedTab(['branch'])
                 break
             case path.includes('product'):
                 setSelectedTab(['product'])
+                break
+            case path.includes('inventory'):
+                setSelectedTab(['inventory'])
+                break
+            case path.includes('import'):
+                setSelectedTab(['import'])
+                break
+            case path.includes('export'):
+                setSelectedTab(['export'])
                 break
             default:
                 setSelectedTab([])
@@ -50,9 +62,34 @@ export default function Sidebar({ selectedTab, setSelectedTab }) {
                         Branch
                     </Menu.Item>
                 }
+                {
+                    getUser()?.roleId === 1 &&
+                    <Menu.Item key='my-branch' icon={<ShopFilled style={{ fontSize: 20 }} />}>
+                        My Branch
+                    </Menu.Item>
+                }
                 <Menu.Item key='product' icon={<ShoppingFilled style={{ fontSize: 20 }} />}>
                     Product
                 </Menu.Item>
+
+                {
+                    (getUser()?.roleId !== 0 && getUser()?.roleId !== 3) &&
+                    <Menu.Item key='inventory' icon={<InboxOutlined style={{ fontSize: 20 }} />}>
+                        Inventory
+                    </Menu.Item>
+                }
+
+                {
+                    getUser()?.roleId === 2 &&
+                    <>
+                        <Menu.Item key='import' icon={<ImportOutlined style={{ fontSize: 20 }} />}>
+                            Import
+                        </Menu.Item>
+                        <Menu.Item key='export' icon={<ExportOutlined style={{ fontSize: 20 }} />}>
+                            Export
+                        </Menu.Item>
+                    </>
+                }
             </Menu>
         </Sider>
     )

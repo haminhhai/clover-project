@@ -28,7 +28,6 @@ export default function LoginPage() {
                 return;
             }
             const jwtToken = "token";
-            delete user.password
             setHeader('Authorization', `Bearer ${jwtToken}`);
             localStorage.setItem(CLOVER_TOKEN, jwtToken);
             localStorage.setItem(CLOVER_USER, JSON.stringify(user));
@@ -38,6 +37,7 @@ export default function LoginPage() {
             if (message) {
                 toast.error(message)
             }
+            toast.error('Login failed')
         } finally {
             setIsLogging(false)
         }
