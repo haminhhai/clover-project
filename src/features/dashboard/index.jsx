@@ -2,6 +2,7 @@ import { PlusCircleFilled, StopFilled } from '@ant-design/icons'
 import { Card, Col, Row, Table, Tag } from 'antd'
 import classNames from 'classnames/bind'
 import React from 'react'
+import { getUser } from 'utils/'
 import { formatVND } from 'utils/'
 import { columns, data } from './columns'
 
@@ -37,6 +38,11 @@ const listPosition = [
         id: 6,
         name: "A6",
         isFull: true,
+    },
+    {
+        id: 7,
+        name: "A7",
+        isFull: false,
     }
 ]
 
@@ -52,38 +58,49 @@ const DashboardFeature = () => {
 
     return (
         <Row gutter={[16, 16]}>
-            <Col span={8}>
-                <Card hoverable title="User" >
-                    <h2>100</h2>
-                </Card>
-            </Col>
-            <Col span={8}>
-                <Card hoverable title="Branch" >
-                    <h2>50</h2>
-                </Card>
-            </Col>
-            <Col span={8}>
-                <Card hoverable title="Order" >
-                    <h2>{formatVND(200000)}</h2>
-                </Card>
-            </Col>
-            <Col span={12}>
-                <Card hoverable title="Top 10 Best Selling" className={cx('scroll')}>
-                    <Table dataSource={data} columns={columns} pagination={false} />
-                </Card>
-            </Col>
-            <Col span={12}>
-                <Card hoverable title="Warehouse's status" className={cx('scroll')}>
-                    <Row gutter={[16, 16]}>
-                        {listPosition.map((item, index) => (
-                            <Col span={4} key={index} className={cx('wrapper')}>
-                                <span className={cx('name')}>{item.name}</span>
-                                {renderIcon(item)}
-                            </Col>
-                        ))}
-                    </Row>
-                </Card>
-            </Col>
+            {
+                getUser()?.roleId === 0 &&
+                <>
+                    <Col span={8}>
+                        <Card hoverable title="User" >
+                            <h2>100</h2>
+                        </Card>
+                    </Col>
+                    <Col span={8}>
+                        <Card hoverable title="Branch" >
+                            <h2>50</h2>
+                        </Card>
+                    </Col>
+                    <Col span={8}>
+                        <Card hoverable title="Order" >
+                            <h2>{formatVND(200000)}</h2>
+                        </Card>
+                    </Col>
+                </>
+            }
+            {
+                getUser()?.roleId !== 2 &&
+                <Col span={getUser()?.roleId === 0 ? 24 : 12}>
+                    <Card hoverable title="Top 10 Best Selling" className={cx('scroll')}>
+                        <Table dataSource={data} columns={columns} pagination={false} />
+                    </Card>
+                </Col>
+            }
+            {
+                getUser()?.roleId !== 0 &&
+                <Col span={getUser()?.roleId === 2 ? 24 : 12}>
+                    <Card hoverable title="Warehouse's status" className={cx('scroll')}>
+                        <Row gutter={[16, 16]}>
+                            {listPosition.map((item, index) => (
+                                <Col span={getUser()?.roleId === 2 ? 2 : 4} key={index} className={cx('wrapper')}>
+                                    <span className={cx('name')}>{item.name}</span>
+                                    {renderIcon(item)}
+                                </Col>
+                            ))}
+                        </Row>
+                    </Card>
+                </Col>
+            }
         </Row>
     )
 }

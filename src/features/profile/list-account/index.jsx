@@ -83,7 +83,6 @@ export default function ListAccount() {
     }
 
     const submitAddEdit = async (values) => {
-        console.log("🚀 ~ values", values)
         let userInfo = values
         try {
             setLoading(true);

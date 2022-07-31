@@ -49,7 +49,7 @@ export default function ListProduct() {
         let actions = [
             <EyeFilled key='1' onClick={() => openDetail(product)} />
         ]
-        if (getUser()?.roleId === 2 && selectedKeys[0] !== '0') {
+        if (getUser()?.roleId === 2 && selectedKeys[0] == '0') {
             actions.push(<MinusCircleOutlined key='2' onClick={() => openAdd(product)} />)
         }
 

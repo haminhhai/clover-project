@@ -39,6 +39,25 @@ const imageApi = {
     deleteImgProfile(id) {
         const url = `/profile/${id}`;
         return imgService.delete(url);
+    },
+    getImgProduct(id, params) {
+        let url = `/product`;
+        if (id) {
+            url += `/${id}`
+        }
+        return imgService.get(url, { params });
+    },
+    addImgProduct(body) {
+        const url = '/product';
+        return imgService.post(url, body);
+    },
+    updateImageProduct(id, body) {
+        const url = `/product/${id}`;
+        return imgService.put(url, body);
+    },
+    deleteImgProduct(id) {
+        const url = `/product/${id}`;
+        return imgService.delete(url);
     }
 }
 

@@ -16,7 +16,7 @@ export default function Export() {
             >
                 <Row gutter={16}>
                     <Col span={8}>
-                        <Form.Item label='Branch' name="productId" rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                        <Form.Item label='Product' name="productId" rules={[{ required: true, message: FIELD_REQUIRED }]}>
                             <Select placeholder='Select Product'>
                                 <Select.Option value="1">Product 1</Select.Option>
                                 <Select.Option value="2">Product 2</Select.Option>
@@ -34,7 +34,7 @@ export default function Export() {
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item label='Quantiry' name="quantity" rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                        <Form.Item label='Quantity' name="quantity" rules={[{ required: true, message: FIELD_REQUIRED }]}>
                             <InputNumber min={1} style={{ width: '100%' }} />
                         </Form.Item>
                     </Col>

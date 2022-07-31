@@ -4,7 +4,7 @@ const listIcon = {
     fullname: <EyeOutlined />,
     username: <UserOutlined />,
     email: <MailOutlined />,
-    roleId: <PartitionOutlined />
+    role: <PartitionOutlined />
 }
 
 export const columns = [

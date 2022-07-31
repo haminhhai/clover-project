@@ -1,6 +1,6 @@
-import { Button, Form, Input, Modal, Radio, Space, Upload } from "antd"
+import { Button, Form, Input, Modal, Radio, Select, Space, Upload } from "antd"
 import { FIELD_EMAIL_INVALID, FIELD_REQUIRED, PASSWORD_NOT_MATCH } from "constants/message";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { isEmpty } from "lodash";
 import { UploadOutlined } from "@ant-design/icons";
 

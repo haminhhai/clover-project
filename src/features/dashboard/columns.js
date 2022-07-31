@@ -5,14 +5,15 @@ export const columns = [
         title: 'No.',
         dataIndex: 'no',
         key: 'no',
-        align: 'center',
-        render: (text, record, index) => {
-            if (index < 3) {
-                return <Badge count={index + 1} style={{ backgroundColor: '#314659' }} />
-            }
-
-            return <span>{index + 1}</span>
-        }
+        width: '10%',
+        render: (text, record, index) => (
+            <Badge
+                count={index + 1}
+                style={{
+                    color: index < 3 ? '#fff' : '#000',
+                    backgroundColor: index < 3 ? '#314659' : 'transparent',
+                }} />
+        )
     },
     {
         title: 'Name',
