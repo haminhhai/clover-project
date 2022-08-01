@@ -4,15 +4,15 @@ import { useEffect, useMemo } from "react";
 
 const listManager = [
     {
-        managerId: 1,
+        accountId: 5,
         name: "Manager 1"
     },
     {
-        managerId: 2,
+        accountId: 2,
         name: "Manager 2"
     },
     {
-        managerId: 3,
+        accountId: 3,
         name: "Manager 3"
     }
 ]
@@ -23,7 +23,10 @@ export default function BranchAddEdit({ selected, visible, onClose, onSubmit }) 
 
     useEffect(() => {
         if (visible && isEdit) {
-            form.setFieldsValue(selected)
+            form.setFieldsValue({
+                ...selected,
+                active: selected.active ? 0 : 1
+            })
         }
     }, [visible, selected])
     return (
@@ -34,8 +37,9 @@ export default function BranchAddEdit({ selected, visible, onClose, onSubmit }) 
             onCancel={onClose}>
             <Form
                 form={form}
+                onFinish={onSubmit}
                 layout="vertical">
-                <Form.Item name="branchName" label="Branch Name" rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                <Form.Item name="name" label="Branch Name" rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <Input />
                 </Form.Item>
                 <Form.Item name="address" label="Address" rules={[{ required: true, message: FIELD_REQUIRED }]}>
@@ -44,10 +48,10 @@ export default function BranchAddEdit({ selected, visible, onClose, onSubmit }) 
                 <Form.Item name="phone" label="Phone" rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <Input />
                 </Form.Item>
-                <Form.Item name="managerId" label="Manager" rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                <Form.Item name="accountId" label="Manager" rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <Select>
                         {listManager.map(item => (
-                            <Select.Option key={item.managerId} value={item.managerId}>{item.name}</Select.Option>
+                            <Select.Option key={item.managerId} value={item.accountId}>{item.name}</Select.Option>
                         ))}
                     </Select>
                 </Form.Item>

@@ -1,6 +1,15 @@
 import { Col, Input, Row, Select } from "antd";
 
-export default function Filter() {
+export default function Filter({ filter, onChange }) {
+
+    const onChangeName = (e) => {
+        onChange({ ...filter, name: e.target.value });
+    }
+
+    const onChangeStatus = (value) => {
+        onChange({ ...filter, active: value });
+    }
+
     return (
         <Row gutter={24}>
             <Col>
@@ -11,7 +20,7 @@ export default function Filter() {
                         </label>
                     </Col>
                     <Col span={24}>
-                        <Input />
+                        <Input value={filter.name} onChange={onChangeName} />
                     </Col>
                 </Row>
 
@@ -24,7 +33,8 @@ export default function Filter() {
                         </label>
                     </Col>
                     <Col span={24}>
-                        <Select style={{ width: '100%' }}>
+                        <Select value={filter.status} onChange={onChangeStatus} style={{ width: '100%' }}>
+                            <Select.Option value="">All</Select.Option>
                             <Select.Option value="0">Active</Select.Option>
                             <Select.Option value="1">Inactive</Select.Option>
                         </Select>

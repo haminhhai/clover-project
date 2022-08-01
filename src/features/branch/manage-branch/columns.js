@@ -30,8 +30,8 @@ export const data = [
 export const renderColumns = (goDetail, openEdit) => ([
     {
         title: 'Name',
-        dataIndex: 'branchName',
-        key: 'branchName',
+        dataIndex: 'name',
+        key: 'name',
     },
     {
         title: 'Address',
@@ -45,8 +45,8 @@ export const renderColumns = (goDetail, openEdit) => ([
     },
     {
         title: 'Manager',
-        dataIndex: 'fullName',
-        key: 'fullName',
+        dataIndex: 'accountId',
+        key: 'accountId',
     },
     {
         title: 'Status',
@@ -54,8 +54,8 @@ export const renderColumns = (goDetail, openEdit) => ([
         key: 'active',
         render: (active) => {
             return <Badge
-                status={active == 0 ? 'processing' : 'default'}
-                text={active == 0 ? 'Active' : 'Inactive'} />
+                status={active ? 'processing' : 'default'}
+                text={active ? 'Active' : 'Inactive'} />
         }
     },
     {
