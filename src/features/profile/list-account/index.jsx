@@ -14,30 +14,6 @@ import imageApi from "api/imgService";
 
 const cx = classNames.bind(style);
 
-const list = [
-    {
-        id: 1,
-        username: "nguyena",
-        fullName: 'Nguyen Van A',
-        email: 'nguyenvana@gmail.com',
-        roleId: 1,
-    },
-    {
-        id: 2,
-        username: "nguyenb",
-        fullName: 'Nguyen Van B',
-        email: 'nguyenb@gmail.com',
-        roleId: 2,
-    },
-    {
-        id: 3,
-        username: "nguyenc",
-        fullName: 'Nguyen Van C',
-        email: 'nguyenb@gmail.com',
-        roleId: 3,
-    },
-]
-
 export default function ListAccount() {
 
     const [loading, setLoading] = useState(false);

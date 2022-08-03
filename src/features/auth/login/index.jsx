@@ -32,12 +32,13 @@ export default function LoginPage() {
             localStorage.setItem(CLOVER_TOKEN, jwtToken);
             localStorage.setItem(CLOVER_USER, JSON.stringify(user));
             navigate('/dashboard')
+            toast.success('Login success')
         } catch (error) {
             const message = _get(error, 'response.data.message', {});
             if (message) {
                 toast.error(message)
             }
-            toast.error('Login failed')
+            toast.error('Wrong username or password, please check again')
         } finally {
             setIsLogging(false)
         }
@@ -53,12 +54,12 @@ export default function LoginPage() {
                     onFinish={handleSubmit}
                 >
                     <Form.Item label="Username" name='username' rules={[
-                        { required: true, message: FIELD_REQUIRED }
+                        { required: true, message: 'Username is required' }
                     ]}>
                         <Input />
                     </Form.Item>
                     <Form.Item label="Password" name='password' rules={[
-                        { required: true, message: FIELD_REQUIRED }
+                        { required: true, message: 'Password is required' }
                     ]}>
                         <Input.Password />
                     </Form.Item>

@@ -1,5 +1,5 @@
-import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, Col, Form, Image, Input, Row, Table, Upload } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import imageApi from "api/imgService";
 import classNames from "classnames/bind";
 import { VALIDATE_IMAGE } from "constants/";
@@ -96,15 +96,17 @@ export function AccountDetail() {
                     setImageProfile(null)
                 }
                 else {
-                    let url = await getUrlImage(fileList);
-                    const body = {
-                        ...imageProfile,
-                        ...fileList[0],
-                        url,
+                    if (!fileList[0].url) {
+                        let url = await getUrlImage(fileList);
+                        const body = {
+                            ...imageProfile,
+                            ...fileList[0],
+                            url,
+                        }
+                        await imageApi.updateImageProfile(imageProfile.id, body)
+                        setImageProfile(body)
+                        userInfo.image = imageProfile.id;
                     }
-                    await imageApi.updateImageProfile(imageProfile.id, body)
-                    setImageProfile(body)
-                    userInfo.image = imageProfile.id;
                 }
                 await accountApi.editAccount(userInfo);
             } else {

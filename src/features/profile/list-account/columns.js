@@ -57,6 +57,7 @@ export const renderColumns = ({ listRole, openEdit, openDelete }) => [
         title: 'Action',
         key: 'action',
         render: (content, record) => (
+            record.roleId !== 0 &&
             <>
                 <Button
                     key='1'
