@@ -59,7 +59,10 @@ export default function ListAccount() {
     }
 
     const submitAddEdit = async (values) => {
-        let userInfo = values
+        let userInfo = {
+            ...values,
+            id: selectedUser ? selectedUser.id : undefined,
+        }
         try {
             setLoading(true);
             if (!selectedUser) {
@@ -117,8 +120,15 @@ export default function ListAccount() {
         }
     }
 
-    const submitDelete = () => {
-        setVisibleDelete(false);
+    const submitDelete = async () => {
+        try {
+            await accountApi.deleteAccount(selectedUser.id);
+            toast.success("Delete account success");
+            setVisibleDelete(false);
+            fetchListAccount();
+        } catch (error) {
+            toast.error('Delete account failed');
+        }
     }
 
     const fetchListRole = async () => {

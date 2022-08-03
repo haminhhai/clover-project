@@ -20,6 +20,10 @@ const accountApi = {
     editAccount(body) {
         const url = '/account/register';
         return axiosService.post(url, body);
+    },
+    deleteAccount(id) {
+        const url = `/account/${id}`;
+        return axiosService.delete(url);
     }
 }
 

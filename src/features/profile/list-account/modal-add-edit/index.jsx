@@ -28,7 +28,7 @@ export default function ModalAddEdit({ listRole, loading, visible, onCancel, onS
         form.setFieldsValue({
             fullName: selectedUser?.fullName || "",
             email: selectedUser?.email || "",
-            roleId: selectedUser?.roleId || "",
+            role: selectedUser?.roleId || "",
             username: selectedUser?.username || "",
         });
 

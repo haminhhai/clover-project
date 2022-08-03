@@ -7,6 +7,9 @@ const commonStyle = {
 }
 
 const renderRoles = {
+    0: {
+        icon: <CrownOutlined style={{ ...commonStyle, color: '#ea5455' }} />,
+    },
     1: {
         icon: <ClusterOutlined style={{ ...commonStyle, color: '#ff9f43' }} />
     },
