@@ -17,10 +17,11 @@ export default function ManageBranch() {
     const [loading, setLoading] = useState(false);
     const [filter, setFilter] = useState({
         name: "",
-        active: "",
+        active: '0',
         pageIndex: 0,
         pageSize: 5,
     });
+    const [total, setTotal] = useState(0);
     const [selected, setSelected] = useState(null);
     const [listBranch, setListBranch] = useState([]);
     const [visbleAddEdit, setVisibleAddEdit] = useState(false);
@@ -64,11 +65,12 @@ export default function ManageBranch() {
 
     const fetchListBranch = async () => {
         try {
-            const list = await branchApi.getPaging({
+            const { branches, total } = await branchApi.getPaging({
                 ...filter,
                 active: filter.active.length < 1 ? undefined : (filter.active == '0' ? true : false),
             })
-            setListBranch(list)
+            setListBranch(branches)
+            setTotal(total)
         } catch (error) {
             toast.error('Oops! Something went wrong. Please try again!');
         }
@@ -95,7 +97,11 @@ export default function ManageBranch() {
             </Space>
 
             <Table dataSource={listBranch} columns={renderColumns(goDetail, openEdit)} pagination={false} />
-            <Pagination pageSize={5} />
+            <Pagination
+                className={cx('pagination')}
+                total={total}
+                current={filter.pageIndex + 1}
+                pageSize={filter.pageSize} />
             <BranchAddEdit
                 selected={selected}
                 visible={visbleAddEdit}

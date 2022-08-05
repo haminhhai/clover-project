@@ -22,6 +22,7 @@ export default function ListAccount() {
     const [visibleDelete, setVisibleDelete] = useState(false);
     const [listAccount, setListAccount] = useState([]);
     const [listRole, setListRole] = useState([]);
+    const [total, setTotal] = useState(0);
     const [filter, setFilter] = useState({
         username: "",
         fullName: "",
@@ -142,14 +143,16 @@ export default function ListAccount() {
 
     const fetchListAccount = async () => {
         try {
-            const list = await accountApi.getAll(filter);
-            setListAccount(list);
+            const { total, accounts } = await accountApi.getAll(filter);
+            setListAccount(accounts);
+            setTotal(total);
         } catch (error) {
             console.log("🚀 ~ error", error)
         }
     }
 
     useEffect(() => {
+        fetchListAccount()
 
     }, [filter])
 
@@ -173,7 +176,7 @@ export default function ListAccount() {
             <Table columns={renderColumns({ listRole, openEdit, openDelete })} dataSource={listAccount} pagination={false} />
             <Pagination
                 className={cx('pagination')}
-                total={10}
+                total={total}
                 current={filter.pageIndex + 1}
                 pageSize={filter.pageSize}
                 showSizeChanger

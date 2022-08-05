@@ -12,6 +12,10 @@ const branchApi = {
     update(body) {
         const url = '/branch';
         return axiosService.post(url, body);
+    },
+    getALlManager() {
+        const url = '/branch/manager';
+        return axiosService.get(url);
     }
 }
 

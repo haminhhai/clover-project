@@ -1,27 +1,24 @@
 import { Button, Form, Input, Modal, Select } from "antd";
+import branchApi from "api/branch";
 import { FIELD_REQUIRED } from "constants/message";
-import { useEffect, useMemo } from "react";
-
-const listManager = [
-    {
-        accountId: 5,
-        name: "Manager 1"
-    },
-    {
-        accountId: 2,
-        name: "Manager 2"
-    },
-    {
-        accountId: 3,
-        name: "Manager 3"
-    }
-]
+import { useEffect, useMemo, useState } from "react";
 
 export default function BranchAddEdit({ selected, visible, onClose, onSubmit }) {
     const [form] = Form.useForm();
     const isEdit = useMemo(() => !!selected, [selected])
+    const [listManager, setListManager] = useState([]);
+
+    const fetchListManager = async () => {
+        try {
+            const data = await branchApi.getALlManager();
+            setListManager(data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
+        fetchListManager();
         if (visible && isEdit) {
             form.setFieldsValue({
                 ...selected,
@@ -51,7 +48,7 @@ export default function BranchAddEdit({ selected, visible, onClose, onSubmit }) 
                 <Form.Item name="accountId" label="Manager" rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <Select>
                         {listManager.map(item => (
-                            <Select.Option key={item.managerId} value={item.accountId}>{item.name}</Select.Option>
+                            <Select.Option key={item.id} value={item.id}>{item.username}</Select.Option>
                         ))}
                     </Select>
                 </Form.Item>
