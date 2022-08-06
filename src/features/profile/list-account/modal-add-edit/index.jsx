@@ -90,6 +90,7 @@ export default function ModalAddEdit({ listRole, loading, visible, onCancel, onS
                 </Form.Item>
                 <Form.Item label="New Password" name="password" rules={[
                     { required: !isEdit, message: FIELD_REQUIRED },
+                    { min: 8, message: "Password must be at least 6 characters" }
                 ]}>
                     <Input.Password />
                 </Form.Item>

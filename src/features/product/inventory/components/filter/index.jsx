@@ -1,6 +1,6 @@
 import { Col, Input, InputNumber, Row, Select } from "antd";
 
-export default function Filter() {
+export default function Filter({ listCategory }) {
     return (
         <Row gutter={24}>
             <Col span={8}>
@@ -37,7 +37,13 @@ export default function Filter() {
                         </label>
                     </Col>
                     <Col span={24}>
-                        <Select style={{ width: '100%' }} />
+                        <Select style={{ width: '100%' }} >
+                            {listCategory.map(item => (
+                                <Select.Option key={item.id} value={item.id}>
+                                    {item.name}
+                                </Select.Option>
+                            ))}
+                        </Select>
                     </Col>
                 </Row>
 

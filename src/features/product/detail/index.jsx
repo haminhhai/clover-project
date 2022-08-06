@@ -5,6 +5,7 @@ import img from 'assets/images/null-img.png'
 
 import style from "./index.module.scss";
 import classNames from "classnames/bind";
+import { formatVND } from "utils/";
 
 const cx = classNames.bind(style);
 
@@ -14,9 +15,9 @@ export default function ProductDetail({ visible, product, onClose }) {
     useEffect(() => {
         setDataTable([
             {
-                key: 'productPrice',
+                key: 'price',
                 label: 'Price',
-                value: product.productPrice
+                value: formatVND(product.price)
             },
             {
                 key: 'quantity',
@@ -38,7 +39,7 @@ export default function ProductDetail({ visible, product, onClose }) {
 
     return (
         <Modal
-            title={product?.productName || "Product"}
+            title={product?.name || "Product"}
             width={700}
             visible={visible}
             footer={<Button danger onClick={onClose}>Close</Button>}

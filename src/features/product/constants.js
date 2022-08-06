@@ -1,8 +1,8 @@
 export const listProduct = [
     {
         id: 0,
-        productName: "Product 1",
-        productPrice: 100000,
+        name: "Product 1",
+        price: 100000,
         quantity: 10,
         size: 10,
         position: "A1",
@@ -10,8 +10,8 @@ export const listProduct = [
     },
     {
         id: 1,
-        productName: "Product 2",
-        productPrice: 200000,
+        name: "Product 2",
+        price: 200000,
         quantity: 20,
         size: 20,
         position: "A2",
@@ -19,8 +19,8 @@ export const listProduct = [
     },
     {
         id: 2,
-        productName: "Product 3",
-        productPrice: 300000,
+        name: "Product 3",
+        price: 300000,
         quantity: 30,
         size: 30,
         position: "A3",
@@ -28,8 +28,8 @@ export const listProduct = [
     },
     {
         id: 3,
-        productName: "Product 4",
-        productPrice: 400000,
+        name: "Product 4",
+        price: 400000,
         quantity: 40,
         size: 40,
         position: "A4",

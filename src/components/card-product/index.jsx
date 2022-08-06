@@ -18,8 +18,8 @@ export default function CardProduct({ product, ...rest }) {
             hoverable
             {...rest}>
             <div className={cx('content')}>
-                <h3>{product.productName}</h3>
-                <h2>{formatVND(product.productPrice)}</h2>
+                <h3>{product.name}</h3>
+                <h2>{formatVND(product.price)}</h2>
                 {/* <Divider />
                 <div className={cx('footer')}>
                     <div className={cx('item-group')}>

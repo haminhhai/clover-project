@@ -26,7 +26,7 @@ export default function ListAccount() {
     const [filter, setFilter] = useState({
         username: "",
         fullName: "",
-        roleId: "",
+        role: "",
         email: "",
         pageIndex: 0,
         pageSize: 10,

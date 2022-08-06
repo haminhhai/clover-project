@@ -20,7 +20,7 @@ export default function Filter({ filter, onChange, listRole }) {
     const onChangeRole = (value) => {
         onChange({
             ...filter,
-            roleId: value
+            role: value
         })
     }
 
@@ -61,7 +61,7 @@ export default function Filter({ filter, onChange, listRole }) {
                         <Select defaultValue={''} onChange={onChangeRole}>
                             <Option value={''}>All</Option>
                             {listRole.map(option => (
-                                option.id !== 0 && <Option key={option.id} value={option.id}>
+                                <Option key={option.id} value={option.id}>
                                     {option.name}
                                 </Option>
                             ))}

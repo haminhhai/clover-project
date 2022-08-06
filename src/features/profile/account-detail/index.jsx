@@ -108,7 +108,13 @@ export function AccountDetail() {
                         userInfo.image = imageProfile.id;
                     }
                 }
-                await accountApi.editAccount(userInfo);
+                delete userInfo.roleName;
+                delete userInfo.roleId;
+                delete userInfo.idBranch;
+                await accountApi.editAccount({
+                    ...userInfo,
+                    role: getUser().roleId,
+                });
             } else {
                 if (fileList.length > 0) {
                     let url = await getUrlImage(fileList);
@@ -118,9 +124,15 @@ export function AccountDetail() {
                     }
                     const resp = await imageApi.addImgProfile(body)
                     userInfo.image = resp.id;
-                    await accountApi.editAccount(userInfo);
                     setImageProfile(resp)
                 }
+                delete userInfo.roleName;
+                delete userInfo.roleId;
+                delete userInfo.idBranch;
+                await accountApi.editAccount({
+                    ...userInfo,
+                    role: getUser().roleId,
+                });
             }
             setFileList([])
             setIsEdit(false)

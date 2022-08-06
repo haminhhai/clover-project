@@ -1,12 +1,37 @@
 import { Button, Card, Col, Form, InputNumber, Row, Select } from "antd";
+import branchApi from "api/branch";
 import classNames from "classnames/bind";
 import { FIELD_REQUIRED } from "constants/message";
+import { useEffect, useState } from "react";
 import style from "./index.module.scss";
 
 const cx = classNames.bind(style)
 
 export default function Export() {
     const [form] = Form.useForm();
+    const [listProduct, setListProduct] = useState([]);
+    const [listBranch, setListBranch] = useState([]);
+
+    const fetchBranch = async () => {
+        try {
+            const listActive = await branchApi.getPaging({
+                pageIndex: 0,
+                pageSize: 100,
+            });
+            const listInActive = await branchApi.getPaging({
+                pageIndex: 0,
+                pageSize: 100,
+                active: false,
+            });
+            setListBranch([...listActive.branches, ...listInActive.branches]);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchBranch();
+    }, [])
 
     return (
         <Card>
@@ -18,9 +43,11 @@ export default function Export() {
                     <Col span={8}>
                         <Form.Item label='Product' name="productId" rules={[{ required: true, message: FIELD_REQUIRED }]}>
                             <Select placeholder='Select Product'>
-                                <Select.Option value="1">Product 1</Select.Option>
-                                <Select.Option value="2">Product 2</Select.Option>
-                                <Select.Option value="2">Product 2</Select.Option>
+                                {
+                                    listProduct.map(product => (
+                                        <Select.Option key={product.id} value={product.id}>{product.name}</Select.Option>
+                                    ))
+                                }
                             </Select>
                         </Form.Item>
                     </Col>

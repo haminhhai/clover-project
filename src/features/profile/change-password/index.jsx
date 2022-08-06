@@ -40,6 +40,7 @@ export function ChangePassword() {
             </Form.Item>
             <Form.Item label="New Password" name="new_password" rules={[
                 { required: true, message: FIELD_REQUIRED },
+                { min: 8, message: "Password must be at least 6 characters" }
             ]}>
                 <Input.Password />
             </Form.Item>

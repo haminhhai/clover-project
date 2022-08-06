@@ -1,27 +1,17 @@
 import { EyeFilled, RestFilled, SearchOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Empty, Form, InputNumber, Menu, Modal, Pagination, Row } from "antd";
+import branchApi from "api/branch";
+import categoryApi from "api/category";
 import classNames from "classnames/bind";
 import { CardProduct } from "components/";
 import { FIELD_REQUIRED } from "constants/message";
 import { useEffect, useState } from "react";
 import { getUser } from "utils/";
-import { listProduct } from "../constants";
 import ProductDetail from "../detail";
 import { Filter, HistoryDelete } from "./components";
 import style from "./index.module.scss";
 
 const cx = classNames.bind(style);
-
-const listBranch = [
-    {
-        id: 1,
-        name: "Branch 1",
-    },
-    {
-        id: 2,
-        name: "Branch 2",
-    },
-]
 
 export default function InventoryProduct() {
     const [form] = Form.useForm();
@@ -32,6 +22,9 @@ export default function InventoryProduct() {
     const [visibleDetail, setVisibleDetail] = useState(false);
     const [visibleHistory, setVisibleHistory] = useState(false);
     const [visibleDelete, setVisibleDelete] = useState(false);
+    const [listProduct, setListProduct] = useState([]);
+    const [listBranch, setListBranch] = useState([]);
+    const [listCategory, setListCategory] = useState([]);
 
     const openDetail = (product) => {
         setSelectedProduct(product);
@@ -62,6 +55,37 @@ export default function InventoryProduct() {
 
         return actions;
     }
+
+    const fecthCategory = async () => {
+        try {
+            const list = await categoryApi.getAll();
+            setListCategory(list);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const fetchBranch = async () => {
+        try {
+            const listActive = await branchApi.getPaging({
+                pageIndex: 0,
+                pageSize: 100,
+            });
+            const listInActive = await branchApi.getPaging({
+                pageIndex: 0,
+                pageSize: 100,
+                active: false,
+            });
+            setListBranch([...listActive.branches, ...listInActive.branches]);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchBranch();
+        fecthCategory();
+    }, []);
 
     useEffect(() => {
         form.resetFields();
@@ -100,7 +124,7 @@ export default function InventoryProduct() {
                     selectedKeys.length > 0 && (
                         <Col span={20}>
                             <Card className={cx('filter')}>
-                                <Filter />
+                                <Filter listCategory={listCategory} />
                                 <div className={cx('btn')}>
                                     <Button icon={<SearchOutlined />}>Search</Button>
                                 </div>

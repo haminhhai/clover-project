@@ -45,8 +45,8 @@ export const renderColumns = (goDetail, openEdit) => ([
     },
     {
         title: 'Manager',
-        dataIndex: 'accountId',
-        key: 'accountId',
+        dataIndex: 'accountName',
+        key: 'accountName',
     },
     {
         title: 'Status',

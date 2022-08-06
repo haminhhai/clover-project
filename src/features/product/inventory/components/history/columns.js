@@ -1,8 +1,8 @@
 export const columns = [
     {
         title: 'Product Name',
-        dataIndex: 'productName',
-        key: 'productName',
+        dataIndex: 'name',
+        key: 'name',
     },
     {
         title: 'Quantity',

@@ -1,7 +1,9 @@
 import { PlusCircleFilled, StopFilled } from '@ant-design/icons'
 import { Card, Col, Row, Table, Tag } from 'antd'
+import accountApi from 'api/account'
+import branchApi from 'api/branch'
 import classNames from 'classnames/bind'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { getUser } from 'utils/'
 import { formatVND } from 'utils/'
 import { columns, data } from './columns'
@@ -49,12 +51,49 @@ const listPosition = [
 const cx = classNames.bind(style)
 
 const DashboardFeature = () => {
+    const [totalBranch, setTotalBranch] = useState(0)
+    const [totalAccount, setTotalAccount] = useState(0)
+
     const renderIcon = (position) => {
         if (position.isFull) {
             return <StopFilled style={{ color: 'red' }} />
         }
         return <PlusCircleFilled style={{ color: 'green' }} />
     }
+
+    const fetchBranch = async () => {
+        try {
+            const listActive = await branchApi.getPaging({
+                pageIndex: 0,
+                pageSize: 100,
+            });
+            const listInActive = await branchApi.getPaging({
+                pageIndex: 0,
+                pageSize: 100,
+                active: false,
+            });
+            setTotalBranch(listActive.total + listInActive.total)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const fetchAccount = async () => {
+        try {
+            const { total } = await accountApi.getAll({
+                pageIndex: 0,
+                pageSize: 100,
+            })
+            setTotalAccount(total)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchBranch();
+        fetchAccount();
+    }, [])
 
     return (
         <Row gutter={[16, 16]}>
@@ -63,12 +102,12 @@ const DashboardFeature = () => {
                 <>
                     <Col span={8}>
                         <Card hoverable title="User" >
-                            <h2>100</h2>
+                            <h2>{totalAccount}</h2>
                         </Card>
                     </Col>
                     <Col span={8}>
                         <Card hoverable title="Branch" >
-                            <h2>50</h2>
+                            <h2>{totalBranch}</h2>
                         </Card>
                     </Col>
                     <Col span={8}>

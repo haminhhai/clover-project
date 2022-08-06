@@ -9,7 +9,7 @@ export default function HistoryDelete({ visible, onClose }) {
         history: [
             {
                 id: 1,
-                productName: "Product 1",
+                name: "Product 1",
                 productId: 1,
                 quantity: 1,
                 fullName: "Nguyen Van A",
@@ -18,7 +18,7 @@ export default function HistoryDelete({ visible, onClose }) {
             },
             {
                 id: 2,
-                productName: "Product 2",
+                name: "Product 2",
                 productId: 2,
                 quantity: 2,
                 fullName: "Nguyen Van B",
