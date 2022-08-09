@@ -3,7 +3,7 @@ import { CLOVER_TOKEN, CLOVER_USER } from "constants/";
 
 // Set up default config for http requests here
 const axiosService = axios.create({
-  // baseURL: 'http://localhost:8080',
+  baseURL: '/api',
   headers: {
     "content-type": "application/json",
   },

@@ -10,6 +10,7 @@ import style from '../index.module.scss'
 import authApi from 'api/auth'
 import { setHeader } from 'api/axiosService'
 import { CLOVER_TOKEN, CLOVER_USER } from 'constants/'
+import imgCloudApi from 'api/cloudinary'
 
 const cx = classNames.bind(style)
 
@@ -43,6 +44,18 @@ export default function LoginPage() {
             setIsLogging(false)
         }
     }
+
+    const fetchResource = async () => {
+        try {
+            await imgCloudApi.getResource()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchResource()
+    }, [])
 
     return (
         <Spin spinning={isLogging}>

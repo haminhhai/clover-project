@@ -27,7 +27,7 @@ export const renderColumns = ({ listRole, openEdit, openDelete }) => [
         title: '',
         dataIndex: 'image',
         key: 'image',
-        render: () => <Avatar icon={<UserOutlined />} />
+        render: (image) => <Avatar src={image ? image : undefined} icon={!image && <UserOutlined />} />
     },
     {
         title: 'Username',

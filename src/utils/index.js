@@ -1,3 +1,5 @@
+import imgCloudApi from 'api/cloudinary';
+import { CLOUDINARY_TOKEN } from 'constants/';
 import { CLOVER_TOKEN, CLOVER_USER } from 'constants/'
 import moment from 'moment';
 
@@ -42,4 +44,18 @@ export const getUrlImage = async (fileList) => {
         });
     }
     return '';
+}
+
+export const handleUploadImage = async (fileList) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const formData = new FormData();
+            formData.append("file", fileList[0].originFileObj);
+            formData.append("upload_preset", CLOUDINARY_TOKEN.upload_preset);
+            const response = await imgCloudApi.uploadImage(formData)
+            resolve(response)
+        } catch (error) {
+            reject(error)
+        }
+    })
 }

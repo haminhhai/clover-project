@@ -1,12 +1,12 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Form, Input, InputNumber, Row, Select, Tag, Upload } from "antd";
-import imageApi from "api/imgService";
+import categoryApi from "api/category";
 import productApi from "api/product";
 import { InputCurrency } from "components/";
 import { FIELD_REQUIRED } from "constants/message";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getUrlImage } from "utils/";
+import { handleUploadImage } from "utils/";
 import WareHouse from "../warehouse";
 
 export default function Manually() {
@@ -15,19 +15,15 @@ export default function Manually() {
     const [loading, setLoading] = useState(false);
     const [selectedPosition, setSelectedPosition] = useState({});
     const [visibleWarehouse, setVisibleWarehouse] = useState(false);
+    const [listCategory, setListCategory] = useState([]);
 
     const addNewProduct = async (values) => {
         let productInfo = values
         try {
             setLoading(true);
             if (productInfo.upload && productInfo.upload.length > 0) {
-                let url = await getUrlImage(productInfo.upload);
-                const body = {
-                    ...productInfo.upload[0],
-                    url,
-                }
-                const resp = await imageApi.addImgProduct(body)
-                productInfo.image = resp.id;
+                const { url } = await handleUploadImage(productInfo.upload);
+                productInfo.image = url;
             }
 
             await productApi.addProduct(productInfo);
@@ -65,6 +61,20 @@ export default function Manually() {
         });
     }
 
+    const fetchCategory = async () => {
+        console.log(123);
+        try {
+            const list = await categoryApi.getAll();
+            setListCategory(list);
+        } catch (error) {
+            console.log("🚀 ~ error", error)
+        }
+    }
+
+    useEffect(() => {
+        fetchCategory();
+    }, [])
+
     return (
         <Card>
             <Form form={form} layout='vertical' onFinish={addNewProduct}>
@@ -98,8 +108,11 @@ export default function Manually() {
                     <Col span={8}>
                         <Form.Item label='Category' name='idCategory' rules={[{ required: true, message: FIELD_REQUIRED }]}>
                             <Select >
-                                <Select.Option value={1}>Category 1</Select.Option>
-                                <Select.Option value={2}>Category 2</Select.Option>
+                                {
+                                    listCategory.map(item => (
+                                        <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
+                                    ))
+                                }
                             </Select>
                         </Form.Item>
                     </Col>

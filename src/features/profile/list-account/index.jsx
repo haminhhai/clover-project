@@ -9,8 +9,7 @@ import { PlusCircleFilled } from "@ant-design/icons";
 import roleApi from "api/role";
 import accountApi from "api/account";
 import { toast } from "react-toastify";
-import { getUrlImage } from "utils/";
-import imageApi from "api/imgService";
+import { handleUploadImage } from "utils/";
 
 const cx = classNames.bind(style);
 
@@ -38,6 +37,7 @@ export default function ListAccount() {
     }
 
     const openEdit = (user) => {
+        console.log("🚀 ~ user", user)
         setSelectedUser(user);
         setVisibleEdit(true);
     }
@@ -61,51 +61,27 @@ export default function ListAccount() {
 
     const submitAddEdit = async (values) => {
         let userInfo = {
+            ...selectedUser,
             ...values,
-            id: selectedUser ? selectedUser.id : undefined,
+        }
+        if (!userInfo.password) {
+            userInfo.password = selectedUser.password;
         }
         try {
             setLoading(true);
             if (!selectedUser) {
                 if (userInfo.imageProfile && userInfo.imageProfile.length > 0) {
-                    let url = await getUrlImage(userInfo.imageProfile);
-                    const body = {
-                        ...userInfo.imageProfile[0],
-                        url,
-                    }
-                    const resp = await imageApi.addImgProfile(body)
-                    userInfo.image = resp.id;
+                    const { url } = await handleUploadImage(userInfo.imageProfile);
+                    userInfo.image = url;
                 }
 
                 await accountApi.addAccount(userInfo);
                 toast.success("Create account success");
             } else {
-                if (selectedUser.image) {
-                    if (userInfo.imageProfile) {
-                        if (userInfo.imageProfile.length > 0) {
-                            let url = await getUrlImage(values.imageProfile);
-                            const body = {
-                                ...userInfo.imageProfile[0],
-                                id: selectedUser.image,
-                                url,
-                            }
-                            const resp = await imageApi.update(selectedUser.image, body)
-                            userInfo.image = resp.id;
-                        } else {
-                            await imageApi.deleteImgProfile(selectedUser.image);
-                            userInfo.image = '';
-                        }
-                    }
-                } else {
-                    if (userInfo.imageProfile && userInfo.imageProfile.length > 0) {
-                        let url = await getUrlImage(values.imageProfile);
-                        const body = {
-                            ...userInfo.imageProfile[0],
-                            url,
-                        }
-                        const resp = await imageApi.addImgProfile(body)
-                        userInfo.image = resp.id;
-                    }
+                if (userInfo.imageProfile && userInfo.imageProfile.length > 0) {
+                    const { url } = await handleUploadImage(userInfo.imageProfile);
+
+                    userInfo.image = url;
                 }
 
                 await accountApi.editAccount(userInfo);

@@ -1,6 +1,4 @@
 import { Avatar, Button, Col, Form, Image, Input, Row, Table, Upload } from "antd";
-import { UserOutlined } from "@ant-design/icons";
-import imageApi from "api/imgService";
 import classNames from "classnames/bind";
 import { VALIDATE_IMAGE } from "constants/";
 import { FIELD_EMAIL_INVALID, FIELD_REQUIRED } from "constants/message";
@@ -11,9 +9,9 @@ import style from "./index.module.scss";
 import img from 'assets/images/null-img.png'
 import { ROLE_OPTIONS } from "constants/";
 import { columns } from "./columns";
-import { getUrlImage } from "utils/";
 import accountApi from "api/account";
 import { CLOVER_USER } from "constants/";
+import { handleUploadImage } from "utils/";
 
 const cx = classNames.bind(style);
 
@@ -82,6 +80,20 @@ export function AccountDetail() {
         setIsEdit(false);
     }
 
+    // const handleUploadImage = async () => {
+    //     return new Promise(async (resolve, reject) => {
+    //         try {
+    //             const formData = new FormData();
+    //             formData.append("file", fileList[0].originFileObj);
+    //             formData.append("upload_preset", CLOUDINARY_TOKEN.upload_preset);
+    //             const response = await imgCloudApi.uploadImage(formData)
+    //             resolve(response)
+    //         } catch (error) {
+    //             reject(error)
+    //         }
+    //     })
+    // }
+
     const onFinish = async (values) => {
         let userInfo = {
             ...getUser(),
@@ -92,21 +104,15 @@ export function AccountDetail() {
             // check image exist
             if (imageProfile.url) {
                 if (fileList.length === 0) {
-                    await imageApi.deleteImgProfile(imageProfile.id);
                     userInfo.image = '';
                     setImageProfile(null)
                 }
                 else {
                     if (!fileList[0].url) {
-                        let url = await getUrlImage(fileList);
-                        const body = {
-                            ...imageProfile,
-                            ...fileList[0],
-                            url,
-                        }
-                        await imageApi.updateImageProfile(imageProfile.id, body)
-                        setImageProfile(body)
-                        userInfo.image = imageProfile.id;
+                        const { url } = await handleUploadImage(fileList)
+
+                        setImageProfile(url)
+                        userInfo.image = url;
                     }
                 }
                 delete userInfo.roleName;
@@ -118,14 +124,9 @@ export function AccountDetail() {
                 });
             } else {
                 if (fileList.length > 0) {
-                    let url = await getUrlImage(fileList);
-                    const body = {
-                        ...fileList[0],
-                        url,
-                    }
-                    const resp = await imageApi.addImgProfile(body)
-                    userInfo.image = resp.id;
-                    setImageProfile(resp)
+                    const { url } = await handleUploadImage(fileList)
+                    userInfo.image = url;
+                    setImageProfile(url)
                 }
                 delete userInfo.roleName;
                 delete userInfo.roleId;
@@ -146,9 +147,8 @@ export function AccountDetail() {
     }
 
     const fetchImageProfile = async () => {
-        const response = await imageApi.getImgProfile(getUser().image);
-        if (response?.id) {
-            setImageProfile(response);
+        if (getUser().image) {
+            setImageProfile(getUser().image)
         }
     }
 
@@ -191,8 +191,8 @@ export function AccountDetail() {
                         <Image
                             width={102}
                             height={102}
-                            preview={imageProfile?.url}
-                            src={imageProfile?.url ? imageProfile.url : img}
+                            preview={imageProfile}
+                            src={imageProfile ? imageProfile : img}
                         /> :
                         <>
                             <Upload
