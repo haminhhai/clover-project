@@ -87,6 +87,7 @@ export function AccountDetail() {
             ...getUser(),
             ...values,
         }
+        let res;
         try {
             // check image exist
             if (imageProfile.url) {
@@ -111,7 +112,7 @@ export function AccountDetail() {
                 delete userInfo.roleName;
                 delete userInfo.roleId;
                 delete userInfo.idBranch;
-                await accountApi.editAccount({
+                res = await accountApi.editAccount({
                     ...userInfo,
                     role: getUser().roleId,
                 });
@@ -129,14 +130,15 @@ export function AccountDetail() {
                 delete userInfo.roleName;
                 delete userInfo.roleId;
                 delete userInfo.idBranch;
-                await accountApi.editAccount({
+                res = await accountApi.editAccount({
                     ...userInfo,
                     role: getUser().roleId,
                 });
             }
             setFileList([])
             setIsEdit(false)
-            localStorage.setItem(CLOVER_USER, JSON.stringify(userInfo));
+            localStorage.setItem(CLOVER_USER, JSON.stringify(res));
+            setUserInfoManual()
             toast.success("Update account success");
         } catch (error) {
             toast.error(error.message);
@@ -150,8 +152,7 @@ export function AccountDetail() {
         }
     }
 
-    useEffect(() => {
-        fetchImageProfile()
+    const setUserInfoManual = () => {
         setUserInfo([
             {
                 key: getUser()?.fullName,
@@ -171,9 +172,14 @@ export function AccountDetail() {
             {
                 key: getUser()?.name,
                 label: 'Role',
-                value: ROLE_OPTIONS[getUser()?.roleId].name
+                value: ROLE_OPTIONS[getUser()?.roleId]?.name
             },
         ])
+    }
+
+    useEffect(() => {
+        fetchImageProfile()
+        setUserInfoManual()
     }, [])
 
     return (

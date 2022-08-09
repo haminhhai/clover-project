@@ -73,7 +73,7 @@ export default function Sidebar({ selectedTab, setSelectedTab }) {
                 </Menu.Item>
 
                 {
-                    (getUser()?.roleId !== 0 && getUser()?.roleId !== 3) &&
+                    (getUser()?.roleId !== 3) &&
                     <Menu.Item key='inventory' icon={<InboxOutlined style={{ fontSize: 20 }} />}>
                         Inventory
                     </Menu.Item>

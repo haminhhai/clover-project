@@ -10,12 +10,21 @@ import { getUser } from "utils/";
 import { FIELD_REQUIRED } from "constants/message";
 import branchApi from "api/branch";
 import categoryApi from "api/category";
+import productApi from "api/product";
 
 const cx = classNames.bind(style);
 
 export default function ListProduct() {
     const [form] = Form.useForm();
 
+    const [filter, setFilter] = useState({
+        pageIndex: 0,
+        pageSize: 9,
+        name: "",
+        size: "",
+        category: "",
+    });
+    const [total, setTotal] = useState(0);
     const [selectedProduct, setSelectedProduct] = useState("");
     const [visibleDetail, setVisibleDetail] = useState(false);
     const [visibleAdd, setVisibleAdd] = useState(false);
@@ -36,6 +45,31 @@ export default function ListProduct() {
 
     const addToInventory = (values) => {
         console.log("🚀 ~ values", values)
+    }
+
+    const onChangeFilter = (values) => {
+        setFilter(values);
+    }
+
+    const handlePageChange = async (page, pageSize) => {
+        const params = {
+            ...filter,
+            pageIndex: page - 1,
+            pageSize,
+        }
+        setFilter(params)
+        try {
+            const { products, total } = await productApi.getPaging(params);
+            setListProduct(products);
+            setTotal(total);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const onChangeBranch = (id) => {
+        setSelectedKeys([`${id}`])
+        fecthListProduct();
     }
 
     const renderAction = (product) => {
@@ -75,6 +109,16 @@ export default function ListProduct() {
         }
     }
 
+    const fecthListProduct = async () => {
+        try {
+            const { products, total } = await productApi.getPaging(filter);
+            setListProduct(products);
+            setTotal(total);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         fetchBranch();
         fecthCategory();
@@ -90,7 +134,7 @@ export default function ListProduct() {
                 <Menu mode="inline" selectedKeys={selectedKeys}>
                     {
                         (getUser()?.roleId === 0 || getUser()?.roleId === 2) &&
-                        <Menu.Item key={'0'} onClick={() => setSelectedKeys(['0'])}>
+                        <Menu.Item key={'0'} onClick={() => onChangeBranch('0')}>
                             Warehouse
                         </Menu.Item>
                     }
@@ -99,14 +143,14 @@ export default function ListProduct() {
                             listBranch.length > 0 ? listBranch.map((item, idx) => {
                                 if (getUser()?.roleId === 1 && item.id == getUser()?.idBranch) {
                                     return (
-                                        <Menu.Item key={item.id} onClick={() => setSelectedKeys([`${item.id}`])}>
+                                        <Menu.Item key={item.id} onClick={() => onChangeBranch(item.id)}>
                                             {item.name}
                                         </Menu.Item>
                                     )
                                 }
                                 if (getUser()?.roleId === 2) {
                                     return (
-                                        <Menu.Item key={item.id} onClick={() => setSelectedKeys([`${item.id}`])}>
+                                        <Menu.Item key={item.id} onClick={() => onChangeBranch(item.id)}>
                                             {item.name}
                                         </Menu.Item>
                                     )
@@ -118,9 +162,9 @@ export default function ListProduct() {
                 selectedKeys.length > 0 &&
                 <Col span={20}>
                     <Card className={cx('filter')}>
-                        <Filter listCategory={listCategory} />
+                        <Filter filter={filter} onChangeFilter={onChangeFilter} listCategory={listCategory} />
                         <div className={cx('btn')}>
-                            <Button icon={<SearchOutlined />}>Search</Button>
+                            <Button icon={<SearchOutlined />} onClick={fecthListProduct}>Search</Button>
                         </div>
                     </Card>
                     <Row gutter={[16, 16]}>
@@ -134,7 +178,12 @@ export default function ListProduct() {
                             ))
                         }
                     </Row>
-                    <Pagination className={cx('pagination')} defaultCurrent={1} pageSize={12} total={10} />
+                    <Pagination
+                        className={cx('pagination')}
+                        currentPage={filter.pageIndex + 1}
+                        pageSize={filter.pageSize}
+                        onChange={handlePageChange}
+                        total={total} />
                 </Col>
             }
             <ProductDetail visible={visibleDetail} product={selectedProduct} onClose={() => setVisibleDetail(false)} />

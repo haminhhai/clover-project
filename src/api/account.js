@@ -18,8 +18,8 @@ const accountApi = {
         return axiosService.post(url, body);
     },
     editAccount(body) {
-        const url = '/account/register';
-        return axiosService.post(url, body);
+        const url = '/account/update';
+        return axiosService.put(url, body);
     },
     deleteAccount(id) {
         const url = `/account/${id}`;

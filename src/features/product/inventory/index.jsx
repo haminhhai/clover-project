@@ -94,7 +94,7 @@ export default function InventoryProduct() {
     return (
         <div>
             {
-                getUser()?.roleId === 0 || getUser()?.roleId === 2 &&
+                (getUser()?.roleId === 0 || getUser()?.roleId === 2) &&
                 <Button disabled={selectedKeys.length === 0} style={{ marginBottom: 16 }} onClick={openHistory}>
                     View History
                 </Button>
@@ -110,7 +110,7 @@ export default function InventoryProduct() {
                                     </Menu.Item>
                                 )
                             }
-                            if (getUser()?.roleId === 2) {
+                            if (getUser()?.roleId === 0 || getUser()?.roleId === 2) {
                                 return (
                                     <Menu.Item key={item.id} onClick={() => setSelectedKeys([`${item.id}`])}>
                                         {item.name}

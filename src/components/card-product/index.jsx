@@ -12,7 +12,7 @@ export default function CardProduct({ product, ...rest }) {
             className={cx("card-product")}
             cover={
                 <LazyLoad once>
-                    <img alt="blog-img" src={product.url} />
+                    <img alt="product-img" src={product.url} />
                 </LazyLoad>
             }
             hoverable
