@@ -6,6 +6,7 @@ import { Area } from "@ant-design/plots";
 import { dataIncome, incomeConfig, columns } from "./constants";
 
 import style from "./index.module.scss";
+import { getUser } from "utils/";
 
 const cx = classNames.bind(style);
 const { RangePicker } = DatePicker;
@@ -67,12 +68,15 @@ export default function BranchDetail() {
                         </div>
                     </Card>
                 </Col>
-                <Col span={18}>
-                    <Card title='Branch Income'>
-                        <RangePicker className={cx('datepicker')} size="large" />
-                        <Area data={dataIncome} {...incomeConfig} />
-                    </Card>
-                </Col>
+                {
+                    getUser().roleId === 0 &&
+                    <Col span={18}>
+                        <Card title='Branch Income'>
+                            <RangePicker className={cx('datepicker')} size="large" />
+                            <Area data={dataIncome} {...incomeConfig} />
+                        </Card>
+                    </Col>
+                }
 
             </Row>
         </>

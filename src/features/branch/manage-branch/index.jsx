@@ -5,6 +5,7 @@ import classNames from "classnames/bind";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { getUser } from "utils/";
 import { data, renderColumns } from "./columns";
 import { Filter } from "./components";
 import BranchAddEdit from "./components/add-edit";
@@ -82,15 +83,19 @@ export default function ManageBranch() {
 
     return (
         <Card>
-            <div style={{ marginBottom: 16 }}>
-                <Button
-                    type='primary'
-                    icon={<PlusOutlined />}
-                    onClick={openAdd}
-                    size='large'>
-                    New Branch
-                </Button>
-            </div>
+            {
+                getUser().roleId === 0 && (
+                    <div style={{ marginBottom: 16 }}>
+                        <Button
+                            type='primary'
+                            icon={<PlusOutlined />}
+                            onClick={openAdd}
+                            size='large'>
+                            New Branch
+                        </Button>
+                    </div>
+                )
+            }
             <Filter filter={filter} onChange={(value) => setFilter(value)} />
             <Space className={cx('btn')}>
                 <Button icon={<SearchOutlined />} onClick={fetchListBranch}>Search</Button>

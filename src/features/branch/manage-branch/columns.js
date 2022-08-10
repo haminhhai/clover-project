@@ -1,5 +1,6 @@
 import { EditOutlined, EyeOutlined } from "@ant-design/icons"
 import { Badge, Button, Space } from "antd"
+import { getUser } from "utils/"
 
 const style = {
     fontSize: 20,
@@ -65,7 +66,9 @@ export const renderColumns = (goDetail, openEdit) => ([
         render: (content, record) => (
             <Space>
                 <EyeOutlined onClick={() => goDetail(record)} style={style} />
-                <EditOutlined onClick={() => openEdit(record)} style={style} />
+                {
+                    getUser().roleId === 0 && <EditOutlined onClick={() => openEdit(record)} style={style} />
+                }
             </Space>
         )
     },

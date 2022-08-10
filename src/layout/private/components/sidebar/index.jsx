@@ -57,7 +57,7 @@ export default function Sidebar({ selectedTab, setSelectedTab }) {
                     Dashboard
                 </Menu.Item>
                 {
-                    getUser()?.roleId === 0 &&
+                    getUser()?.roleId !== 1 &&
                     <Menu.Item key='branch' icon={<ShopFilled style={{ fontSize: 20 }} />}>
                         Branch
                     </Menu.Item>
