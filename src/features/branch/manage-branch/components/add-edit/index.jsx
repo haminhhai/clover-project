@@ -1,12 +1,21 @@
 import { Button, Form, Input, Modal, Select } from "antd";
 import branchApi from "api/branch";
-import { FIELD_REQUIRED } from "constants/message";
+import { FIELD_REQUIRED, PHONE_INVALID } from "constants/message";
 import { useEffect, useMemo, useState } from "react";
 
 export default function BranchAddEdit({ selected, visible, onClose, onSubmit }) {
     const [form] = Form.useForm();
     const isEdit = useMemo(() => !!selected, [selected])
     const [listManager, setListManager] = useState([]);
+
+    const checkPhoneNumber = (_, value) => {
+        const regex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g
+        if (!value || regex.test(value)) {
+            return Promise.resolve();
+        }
+
+        return Promise.reject(new Error(PHONE_INVALID));
+    };
 
     const fetchListManager = async () => {
         try {
@@ -42,7 +51,10 @@ export default function BranchAddEdit({ selected, visible, onClose, onSubmit }) 
                 <Form.Item name="address" label="Address" rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <Input />
                 </Form.Item>
-                <Form.Item name="phone" label="Phone" rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                <Form.Item name="phone" label="Phone" rules={[
+                    { required: true, message: FIELD_REQUIRED },
+                    { validator: checkPhoneNumber }
+                ]}>
                     <Input />
                 </Form.Item>
                 <Form.Item name="accountId" label="Manager" rules={[{ required: true, message: FIELD_REQUIRED }]}>

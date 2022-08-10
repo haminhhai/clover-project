@@ -1,6 +1,7 @@
-import { Badge } from "antd"
+import { Avatar, Badge } from "antd"
+import img from "assets/images/null-img.png"
 
-export const columns = [
+export const columnsTopSelling = [
     {
         title: 'No.',
         dataIndex: 'no',
@@ -25,6 +26,25 @@ export const columns = [
         dataIndex: 'amount',
         key: 'amount',
     }
+]
+
+export const columnsProductOnWH = [
+    {
+        title: '',
+        dataIndex: 'image',
+        key: 'image',
+        render: (image) => <Avatar src={image ? image : img} />
+    },
+    {
+        title: 'Product Name',
+        dataIndex: 'name',
+        key: 'name',
+    },
+    {
+        title: 'Amount',
+        dataIndex: 'amount',
+        key: 'amount',
+    },
 ]
 
 export const data = [
@@ -77,5 +97,26 @@ export const data = [
         id: 10,
         name: "Product 9",
         amount: 11,
+    },
+]
+
+export const productsInWareHouse = [
+    {
+        id: 1,
+        name: "Product 1",
+        image: "https://via.placeholder.com/150",
+        amount: 20,
+    },
+    {
+        id: 2,
+        name: "Product 2",
+        image: "https://via.placeholder.com/150",
+        amount: 19,
+    },
+    {
+        id: 3,
+        name: "Product 3",
+        image: "https://via.placeholder.com/150",
+        amount: 18,
     },
 ]

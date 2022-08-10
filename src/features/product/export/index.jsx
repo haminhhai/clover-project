@@ -5,6 +5,7 @@ import classNames from "classnames/bind";
 import { InputCurrency } from "components/";
 import { FIELD_REQUIRED } from "constants/message";
 import { useEffect, useState } from "react";
+import FieldExport from "./Field";
 import style from "./index.module.scss";
 
 const cx = classNames.bind(style)
@@ -46,41 +47,14 @@ export default function Export() {
                     {(fields, { add, remove }) => (
                         <>
                             {fields.map(({ key, name, ...restField }) => (
-                                <Row gutter={16}>
-                                    <Col span={6}>
-                                        <Form.Item label='Product' name="productId" rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                                            <Select placeholder='Select Product'>
-                                                {
-                                                    listProduct.map(product => (
-                                                        <Select.Option key={product.id} value={product.id}>{product.name}</Select.Option>
-                                                    ))
-                                                }
-                                            </Select>
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Form.Item label='Branch' name="branchId" rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                                            <Select placeholder='Select Branch'>
-                                                <Select.Option value="1">Branch 1</Select.Option>
-                                                <Select.Option value="2">Branch 2</Select.Option>
-                                                <Select.Option value="2">Branch 2</Select.Option>
-                                            </Select>
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Form.Item label='Price' name="price" rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                                            <InputCurrency style={{ width: '100%' }} />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={4}>
-                                        <Form.Item label='Quantity' name="quantity" rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                                            <InputNumber min={1} style={{ width: '100%' }} />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col>
-                                        <MinusCircleOutlined onClick={() => remove(name)} />
-                                    </Col>
-                                </Row>
+                                <FieldExport
+                                    key={key}
+                                    listProduct={listProduct}
+                                    listBranch={listBranch}
+                                    name={name}
+                                    remove={remove}
+                                    restField={restField}
+                                />
                             ))}
                             <Form.Item>
                                 <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>

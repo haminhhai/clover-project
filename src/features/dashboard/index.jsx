@@ -1,14 +1,15 @@
 import { PlusCircleFilled, StopFilled } from '@ant-design/icons'
-import { Card, Col, Row, Table, Tag } from 'antd'
+import { Button, Card, Col, Row, Table, Tag } from 'antd'
 import accountApi from 'api/account'
 import branchApi from 'api/branch'
 import classNames from 'classnames/bind'
 import React, { useEffect, useState } from 'react'
 import { getUser } from 'utils/'
 import { formatVND } from 'utils/'
-import { columns, data } from './columns'
+import { columnsTopSelling, data } from './columns'
 
 import style from "./index.module.scss"
+import ModalProduct from './ModalProduct'
 
 const listPosition = [
     {
@@ -53,12 +54,21 @@ const cx = classNames.bind(style)
 const DashboardFeature = () => {
     const [totalBranch, setTotalBranch] = useState(0)
     const [totalAccount, setTotalAccount] = useState(0)
+    const [showModal, setShowModal] = useState(false)
+
+    const openModal = (selected) => {
+        setShowModal(true)
+    }
+
+    const closeModal = () => {
+        setShowModal(false)
+    }
 
     const renderIcon = (position) => {
         if (position.isFull) {
-            return <StopFilled style={{ color: 'red' }} />
+            return <Button onClick={openModal} icon={<StopFilled style={{ color: 'red' }} />} />
         }
-        return <PlusCircleFilled style={{ color: 'green' }} />
+        return <Button icon={<PlusCircleFilled style={{ color: 'green' }} />} />
     }
 
     const fetchBranch = async () => {
@@ -121,14 +131,14 @@ const DashboardFeature = () => {
                 getUser()?.roleId !== 2 &&
                 <Col span={getUser()?.roleId === 0 ? 24 : 12}>
                     <Card hoverable title="Top 10 Best Selling" className={cx('scroll')}>
-                        <Table dataSource={data} columns={columns} pagination={false} />
+                        <Table dataSource={data} columns={columnsTopSelling} pagination={false} />
                     </Card>
                 </Col>
             }
             {
                 getUser()?.roleId !== 0 &&
                 <Col span={getUser()?.roleId === 2 ? 24 : 12}>
-                    <Card hoverable title="Warehouse's status" className={cx('scroll')}>
+                    <Card hoverable title={`${getUser()?.roleId === 1 ? 'Branch' : 'Warehouse'}'s status`} className={cx('scroll')}>
                         <Row gutter={[16, 16]}>
                             {listPosition.map((item, index) => (
                                 <Col span={getUser()?.roleId === 2 ? 2 : 4} key={index} className={cx('wrapper')}>
@@ -140,6 +150,7 @@ const DashboardFeature = () => {
                     </Card>
                 </Col>
             }
+            <ModalProduct show={showModal} onClose={closeModal} />
         </Row>
     )
 }
