@@ -2,6 +2,7 @@ import { EyeFilled, RestFilled, SearchOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Empty, Form, InputNumber, Menu, Modal, Pagination, Row } from "antd";
 import branchApi from "api/branch";
 import categoryApi from "api/category";
+import productApi from "api/product";
 import classNames from "classnames/bind";
 import { CardProduct } from "components/";
 import { FIELD_REQUIRED } from "constants/message";
@@ -16,6 +17,15 @@ const cx = classNames.bind(style);
 export default function InventoryProduct() {
     const [form] = Form.useForm();
 
+    const [filter, setFilter] = useState({
+        pageIndex: 0,
+        pageSize: 9,
+        name: "",
+        size: "",
+        category: "",
+
+    });
+    const [total, setTotal] = useState(0);
     const [selectedKeys, setSelectedKeys] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState("");
     const [selectedBranch, setSelectedBranch] = useState({});
@@ -43,6 +53,19 @@ export default function InventoryProduct() {
 
     const deleteProduct = (values) => {
         console.log(values);
+    }
+
+    const onChangeFilter = (values) => {
+        setFilter(values);
+    }
+
+    const handlePageChange = async (page, pageSize) => {
+        const params = {
+            ...filter,
+            pageIndex: page - 1,
+            pageSize,
+        }
+        setFilter(params)
     }
 
     const renderAction = (product) => {
@@ -82,6 +105,20 @@ export default function InventoryProduct() {
         }
     }
 
+    const fetchInventory = async () => {
+        try {
+            const { products, total } = await productApi.getProductBranch({
+                ...filter,
+                branchId: selectedKeys[0],
+            });
+            setListProduct(products);
+            setTotal(total);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     useEffect(() => {
         fetchBranch();
         fecthCategory();
@@ -90,6 +127,10 @@ export default function InventoryProduct() {
     useEffect(() => {
         form.resetFields();
     }, [visibleDelete])
+
+    useEffect(() => {
+        selectedKeys.length > 0 && fetchInventory();
+    }, [filter, selectedKeys]);
 
     return (
         <div>
@@ -124,7 +165,7 @@ export default function InventoryProduct() {
                     selectedKeys.length > 0 && (
                         <Col span={20}>
                             <Card className={cx('filter')}>
-                                <Filter listCategory={listCategory} />
+                                <Filter filter={filter} onChangeFilter={onChangeFilter} listCategory={listCategory} />
                                 <div className={cx('btn')}>
                                     <Button icon={<SearchOutlined />}>Search</Button>
                                 </div>
@@ -142,7 +183,12 @@ export default function InventoryProduct() {
                                     ))
                                 }
                             </Row>
-                            <Pagination className={cx('pagination')} defaultCurrent={1} pageSize={12} total={10} />
+                            <Pagination
+                                className={cx('pagination')}
+                                currentPage={filter.pageIndex + 1}
+                                pageSize={filter.pageSize}
+                                onChange={handlePageChange}
+                                total={total} />
                         </Col>
                     )
                 }

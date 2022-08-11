@@ -49,7 +49,7 @@ export const columns = [
         title: '',
         dataIndex: 'label',
         key: 'label',
-        width: '20',
+        width: '40%',
         render: (label, record) => {
             return (
                 <div>

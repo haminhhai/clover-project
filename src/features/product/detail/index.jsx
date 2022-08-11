@@ -50,8 +50,8 @@ export default function ProductDetail({ visible, product, onClose }) {
                     <Image
                         width={200}
                         height={200}
-                        preview={product?.url}
-                        src={product?.url ? product.url : img}
+                        preview={product?.image}
+                        src={product?.image ? product.image : img}
                     />
                 </Col>
                 <Col span={16} className={cx('table')}>

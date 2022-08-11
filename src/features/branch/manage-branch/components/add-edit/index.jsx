@@ -27,12 +27,19 @@ export default function BranchAddEdit({ selected, visible, onClose, onSubmit }) 
     }
 
     useEffect(() => {
-        fetchListManager();
-        if (visible && isEdit) {
-            form.setFieldsValue({
-                ...selected,
-                active: selected.active ? 0 : 1
-            })
+        if (visible) {
+            fetchListManager();
+            if (isEdit) {
+                form.setFieldsValue({
+                    ...selected,
+                    active: selected.active ? 0 : 1
+                })
+
+            }
+            !isEdit && form.resetFields();
+        }
+        if (!visible) {
+            setListManager([]);
         }
     }, [visible, selected])
     return (
@@ -59,6 +66,11 @@ export default function BranchAddEdit({ selected, visible, onClose, onSubmit }) 
                 </Form.Item>
                 <Form.Item name="accountId" label="Manager" rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <Select>
+                        {
+                            selected?.accountId && (
+                                <Select.Option value={selected.accountId}>{selected.accountName}</Select.Option>
+                            )
+                        }
                         {listManager.map(item => (
                             <Select.Option key={item.id} value={item.id}>{item.username}</Select.Option>
                         ))}

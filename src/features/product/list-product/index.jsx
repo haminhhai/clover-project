@@ -59,9 +59,21 @@ export default function ListProduct() {
         }
         setFilter(params)
         try {
-            const { products, total } = await productApi.getPaging(params);
-            setListProduct(products);
-            setTotal(total);
+            if (selectedKeys[0] == '0') {
+                const { products, total } = await productApi.getProductWarehouse({
+                    ...filter,
+                    warehouseId: 1
+                });
+                setListProduct(products);
+                setTotal(total);
+            } else {
+                const { products, total } = await productApi.getProductBranch({
+                    ...filter,
+                    branchId: selectedKeys[0].id
+                });
+                setListProduct(products);
+                setTotal(total);
+            }
         } catch (error) {
             console.log(error);
         }
@@ -69,7 +81,6 @@ export default function ListProduct() {
 
     const onChangeBranch = (id) => {
         setSelectedKeys([`${id}`])
-        fecthListProduct();
     }
 
     const renderAction = (product) => {
@@ -111,9 +122,22 @@ export default function ListProduct() {
 
     const fecthListProduct = async () => {
         try {
-            const { products, total } = await productApi.getPaging(filter);
-            setListProduct(products);
-            setTotal(total);
+            if (selectedKeys[0] == '0') {
+                const { products, total } = await productApi.getProductWarehouse({
+                    ...filter,
+                    warehouseId: 1
+                });
+                setListProduct(products);
+                setTotal(total);
+            } else {
+                const { products, total } = await productApi.getProductBranch({
+                    ...filter,
+                    branchId: selectedKeys[0]
+                });
+                setListProduct(products);
+                setTotal(total);
+            }
+
         } catch (error) {
             console.log(error);
         }
@@ -127,6 +151,10 @@ export default function ListProduct() {
     useEffect(() => {
         form.resetFields();
     }, [visibleAdd])
+
+    useEffect(() => {
+        selectedKeys.length > 0 && fecthListProduct();
+    }, [selectedKeys])
 
     return (
         <Row gutter={16}>

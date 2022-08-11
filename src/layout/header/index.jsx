@@ -4,16 +4,20 @@ import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons'
 import { getUser, isUserLoggedIn } from "utils"
 
 import style from './index.module.scss'
-import React from "react"
+import React, { useContext, useMemo } from "react"
 import { removeHeader } from "api/axiosService"
 import { CLOVER_TOKEN, CLOVER_USER } from "constants/"
 import { useNavigate } from "react-router-dom"
 import { Link } from "react-router-dom"
+import Context from "layout/private/Context"
 
 const cx = classNames.bind(style)
 const { Header: AntHeader } = Layout
 export default function Header() {
     const navigate = useNavigate()
+    const contextValue = useContext(Context)
+
+    const name = useMemo(() => contextValue?.name, [contextValue])
 
     const handleLogout = () => {
         removeHeader('Authorization')
@@ -48,7 +52,7 @@ export default function Header() {
                 isUserLoggedIn() && <Dropdown overlay={menu} trigger={['click']} className={cx('user')}>
                     <Button type="primary">
                         <UserOutlined />
-                        {getUser()?.fullName}
+                        {name}
                         <DownOutlined />
                     </Button>
                 </Dropdown>

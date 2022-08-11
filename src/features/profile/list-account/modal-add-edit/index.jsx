@@ -59,11 +59,15 @@ export default function ModalAddEdit({ listRole, loading, visible, onCancel, onS
                         <Button icon={<UploadOutlined />}>Upload</Button>
                     </Upload>
                 </Form.Item>
-                <Form.Item label="Username" name="username" rules={[
-                    { required: true, message: FIELD_REQUIRED },
-                ]}>
-                    <Input />
-                </Form.Item>
+                {
+                    !isEdit && (
+                        <Form.Item label="Username" name="username" rules={[
+                            { required: true, message: FIELD_REQUIRED },
+                        ]}>
+                            <Input />
+                        </Form.Item>
+                    )
+                }
                 <Form.Item label="Fullname" name="fullName" rules={[
                     { required: true, message: FIELD_REQUIRED },
                 ]}>

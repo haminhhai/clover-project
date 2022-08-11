@@ -3,10 +3,7 @@ import { useState } from "react";
 
 const { Option } = Select;
 
-const PickerWithType = ({ type, onChange }) => {
-    if (type === 'date') return <DatePicker onChange={onChange} />;
-    return <DatePicker picker={type} onChange={onChange} />;
-};
+const { RangePicker } = DatePicker;
 export default function Filter() {
     const [type, setType] = useState('date');
 
@@ -14,16 +11,11 @@ export default function Filter() {
         <Row gutter={[16, 16]}>
             <Col span={24}>
                 <Space>
-                    <Select value={type} onChange={setType}>
-                        <Option value="date">Date</Option>
-                        <Option value="month">Month</Option>
-                        <Option value="year">Year</Option>
-                    </Select>
-                    <PickerWithType type={type} onChange={(value) => console.log(value)} />
+                    <RangePicker />
                 </Space>
             </Col>
             <Col span={24}>
-                <Select defaultValue="" style={{ width: '90%' }}>
+                <Select defaultValue="" style={{ width: '100%' }}>
                     <Option value="">All</Option>
                     <Option value="1">Branch 1</Option>
                     <Option value="2">Branch 2</Option>

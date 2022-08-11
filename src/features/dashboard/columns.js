@@ -23,8 +23,8 @@ export const columnsTopSelling = [
     },
     {
         title: 'Amount',
-        dataIndex: 'amount',
-        key: 'amount',
+        dataIndex: 'quantity',
+        key: 'quantity',
     }
 ]
 

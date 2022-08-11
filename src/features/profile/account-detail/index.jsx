@@ -2,7 +2,7 @@ import { Avatar, Button, Col, Form, Image, Input, Row, Table, Upload } from "ant
 import classNames from "classnames/bind";
 import { VALIDATE_IMAGE } from "constants/";
 import { FIELD_EMAIL_INVALID, FIELD_REQUIRED } from "constants/message";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { getUser } from "utils/";
 import style from "./index.module.scss";
@@ -12,16 +12,20 @@ import { columns } from "./columns";
 import accountApi from "api/account";
 import { CLOVER_USER } from "constants/";
 import { handleUploadImage } from "utils/";
+import Context from "layout/private/Context";
 
 const cx = classNames.bind(style);
 
 export function AccountDetail() {
-    const [form] = Form.useForm();
+    const [form] = Form.useForm()
+    const contextValue = useContext(Context)
 
     const [fileList, setFileList] = useState([]);
     const [imageProfile, setImageProfile] = useState({})
     const [isEdit, setIsEdit] = useState(false);
     const [userInfo, setUserInfo] = useState(null);
+
+    const setName = useMemo(() => contextValue.setName, [contextValue])
 
     const toggleMode = () => {
         if (!isEdit) {
@@ -80,20 +84,6 @@ export function AccountDetail() {
         setIsEdit(false);
     }
 
-    // const handleUploadImage = async () => {
-    //     return new Promise(async (resolve, reject) => {
-    //         try {
-    //             const formData = new FormData();
-    //             formData.append("file", fileList[0].originFileObj);
-    //             formData.append("upload_preset", CLOUDINARY_TOKEN.upload_preset);
-    //             const response = await imgCloudApi.uploadImage(formData)
-    //             resolve(response)
-    //         } catch (error) {
-    //             reject(error)
-    //         }
-    //     })
-    // }
-
     const onFinish = async (values) => {
         let userInfo = {
             ...getUser(),
@@ -140,6 +130,7 @@ export function AccountDetail() {
             setIsEdit(false)
             localStorage.setItem(CLOVER_USER, JSON.stringify(res));
             setUserInfoManual()
+            setName(res.fullName)
             toast.success("Update account success");
         } catch (error) {
             toast.error(error.message);

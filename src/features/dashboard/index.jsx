@@ -2,6 +2,7 @@ import { PlusCircleFilled, StopFilled } from '@ant-design/icons'
 import { Button, Card, Col, Row, Table, Tag } from 'antd'
 import accountApi from 'api/account'
 import branchApi from 'api/branch'
+import productApi from 'api/product'
 import classNames from 'classnames/bind'
 import React, { useEffect, useState } from 'react'
 import { getUser } from 'utils/'
@@ -55,6 +56,7 @@ const DashboardFeature = () => {
     const [totalBranch, setTotalBranch] = useState(0)
     const [totalAccount, setTotalAccount] = useState(0)
     const [showModal, setShowModal] = useState(false)
+    const [topSelling, setTopSelling] = useState([])
 
     const openModal = (selected) => {
         setShowModal(true)
@@ -100,9 +102,19 @@ const DashboardFeature = () => {
         }
     }
 
+    const fetchTopSelling = async () => {
+        try {
+            const list = await productApi.getBestSelling({});
+            setTopSelling(list)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         fetchBranch();
         fetchAccount();
+        fetchTopSelling();
     }, [])
 
     return (
@@ -131,7 +143,7 @@ const DashboardFeature = () => {
                 getUser()?.roleId !== 2 &&
                 <Col span={getUser()?.roleId === 0 ? 24 : 12}>
                     <Card hoverable title="Top 10 Best Selling" className={cx('scroll')}>
-                        <Table dataSource={data} columns={columnsTopSelling} pagination={false} />
+                        <Table dataSource={topSelling} columns={columnsTopSelling} pagination={false} />
                     </Card>
                 </Col>
             }

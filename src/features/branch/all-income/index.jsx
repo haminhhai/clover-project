@@ -10,7 +10,7 @@ const cx = classNames.bind(style);
 export default function AllIncome() {
     return (
         <Card>
-            <Row>
+            <Row gutter={24}>
                 <Col span={6}>
                     <Filter />
                 </Col>

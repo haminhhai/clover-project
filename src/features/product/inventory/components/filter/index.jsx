@@ -1,6 +1,18 @@
 import { Col, Input, InputNumber, Row, Select } from "antd";
 
-export default function Filter({ listCategory }) {
+export default function Filter({ listCategory, filter, onChangeFilter }) {
+    const onChangeName = (e) => {
+        onChangeFilter({ ...filter, name: e.target.value });
+    }
+
+    const onChangeSize = (value) => {
+        onChangeFilter({ ...filter, size: value });
+    }
+
+    const onChangeCategory = (value) => {
+        onChangeFilter({ ...filter, category: value });
+    }
+
     return (
         <Row gutter={24}>
             <Col span={8}>
@@ -11,7 +23,7 @@ export default function Filter({ listCategory }) {
                         </label>
                     </Col>
                     <Col span={24}>
-                        <Input />
+                        <Input value={filter.name} onChange={onChangeName} />
                     </Col>
                 </Row>
 
@@ -24,7 +36,7 @@ export default function Filter({ listCategory }) {
                         </label>
                     </Col>
                     <Col span={24}>
-                        <InputNumber style={{ width: '100%' }} />
+                        <InputNumber value={filter.size} onChange={onChangeSize} style={{ width: '100%' }} />
                     </Col>
                 </Row>
 
@@ -37,7 +49,8 @@ export default function Filter({ listCategory }) {
                         </label>
                     </Col>
                     <Col span={24}>
-                        <Select style={{ width: '100%' }} >
+                        <Select value={filter.category} onChange={onChangeCategory} style={{ width: '100%' }} >
+                            <Select.Option value="">All</Select.Option>
                             {listCategory.map(item => (
                                 <Select.Option key={item.id} value={item.id}>
                                     {item.name}

@@ -1,0 +1,7 @@
+.place {
+    margin-bottom: 0;
+
+    :global(.ant-form-item-control) {
+        display: none;
+    }
+}

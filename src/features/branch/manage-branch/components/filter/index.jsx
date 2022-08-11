@@ -34,6 +34,7 @@ export default function Filter({ filter, onChange }) {
                     </Col>
                     <Col span={24}>
                         <Select value={filter.active} onChange={onChangeStatus} style={{ width: '100%' }}>
+                            <Select.Option value="">All</Select.Option>
                             <Select.Option value="0">Active</Select.Option>
                             <Select.Option value="1">Inactive</Select.Option>
                         </Select>

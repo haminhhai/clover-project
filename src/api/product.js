@@ -5,8 +5,12 @@ const productApi = {
         const url = '/product/best_selling';
         return axiosService.get(url);
     },
-    getPaging(params) {
-        const url = '/product';
+    getProductWarehouse(params) {
+        const url = '/warehouse';
+        return axiosService.get(url, { params });
+    },
+    getProductBranch(params) {
+        const url = '/inventory';
         return axiosService.get(url, { params });
     },
     addProduct(body) {

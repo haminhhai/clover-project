@@ -23,7 +23,7 @@ export default function Filter({ listCategory, filter, onChangeFilter }) {
                         </label>
                     </Col>
                     <Col span={24}>
-                        <Input onChange={onChangeName} />
+                        <Input value={filter.name} onChange={onChangeName} />
                     </Col>
                 </Row>
 
@@ -36,7 +36,7 @@ export default function Filter({ listCategory, filter, onChangeFilter }) {
                         </label>
                     </Col>
                     <Col span={24}>
-                        <InputNumber onChange={onChangeSize} style={{ width: '100%' }} />
+                        <InputNumber value={filter.size} onChange={onChangeSize} style={{ width: '100%' }} />
                     </Col>
                 </Row>
 
@@ -49,7 +49,7 @@ export default function Filter({ listCategory, filter, onChangeFilter }) {
                         </label>
                     </Col>
                     <Col span={24}>
-                        <Select onChange={onChangeCategory} style={{ width: '100%' }} >
+                        <Select value={filter.category} onChange={onChangeCategory} style={{ width: '100%' }} >
                             <Select.Option value="">All</Select.Option>
                             {listCategory.map(item => (
                                 <Select.Option key={item.id} value={item.id}>

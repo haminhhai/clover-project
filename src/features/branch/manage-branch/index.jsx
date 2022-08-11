@@ -18,7 +18,7 @@ export default function ManageBranch() {
     const [loading, setLoading] = useState(false);
     const [filter, setFilter] = useState({
         name: "",
-        active: '0',
+        active: '',
         pageIndex: 0,
         pageSize: 5,
     });
@@ -28,6 +28,7 @@ export default function ManageBranch() {
     const [visbleAddEdit, setVisibleAddEdit] = useState(false);
 
     const openAdd = () => {
+        setSelected(null)
         setVisibleAddEdit(true);
     }
 
@@ -55,6 +56,7 @@ export default function ManageBranch() {
             })
             fetchListBranch();
             closeAddEdit();
+            toast.success(!selected ? 'Create Branch Success' : 'Update Branch Success');
         } catch (error) {
             toast.error('Oops! Something went wrong. Please try again!');
         }

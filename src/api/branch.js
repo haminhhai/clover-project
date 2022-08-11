@@ -5,6 +5,10 @@ const branchApi = {
         const url = '/branch';
         return axiosService.get(url, { params });
     },
+    getDetail(id) {
+        const url = `/branch/id/${id}`;
+        return axiosService.get(url);
+    },
     add(body) {
         const url = '/branch';
         return axiosService.post(url, body);
