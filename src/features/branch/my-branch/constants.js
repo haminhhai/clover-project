@@ -36,7 +36,7 @@ export const dataIncome = [
 const render = (value, record) => {
     switch (record.label.toLowerCase()) {
         case 'status':
-            return <Badge status={value == 0 ? 'processing' : 'default'} text={value == 0 ? 'Active' : 'Inactive'} />;
+            return <Badge status={value == 0 ? 'processing' : 'default'} text={value == 0 ? 'Active' : 'Deactive'} />;
         case 'income':
             return formatVND(value);
         default:

@@ -1,6 +1,7 @@
-import { ExportOutlined, ImportOutlined, RiseOutlined, ShoppingOutlined } from "@ant-design/icons";
+import { ExportOutlined, ImportOutlined, PlusCircleOutlined, RiseOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { Tabs } from "antd";
 import { getUser } from "utils/";
+import AddNew from "./add-new";
 import BestSelling from "./best-selling";
 import Export from "./export";
 import Import from "./import";
@@ -35,6 +36,21 @@ export default function ProductFeature() {
             >
                 <ListProduct />
             </TabPane>
+            {
+                getUser()?.roleId === 2 && (
+                    <TabPane
+                        tab={
+                            <span>
+                                <PlusCircleOutlined />
+                                Add New Product
+                            </span>
+                        }
+                        key="3"
+                    >
+                        <AddNew />
+                    </TabPane>
+                )
+            }
         </Tabs>
     );
 }

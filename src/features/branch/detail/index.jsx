@@ -10,6 +10,7 @@ import { getUser } from "utils/";
 import branchApi from "api/branch";
 import moment from "moment";
 import { DATE_FORMAT } from "constants/";
+import { disableFutureDate } from "utils/";
 
 const cx = classNames.bind(style);
 const { RangePicker } = DatePicker;
@@ -70,8 +71,25 @@ export default function BranchDetail() {
         }
     }
 
+    const fetchIncome = async () => {
+        try {
+            const income = await branchApi.getIncomeBranch({
+                branchId: id,
+                startDate: filter.startDate,
+                endDate: filter.endDate,
+            });
+            setDataIncome(income);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         fetchDetail();
+    }, [])
+
+    useEffect(() => {
+        fetchIncome();
     }, [filter])
 
     return (
@@ -90,6 +108,7 @@ export default function BranchDetail() {
                     <Col span={18}>
                         <Card title='Branch Income'>
                             <RangePicker
+                                disabledDate={disableFutureDate}
                                 value={[
                                     filter.startDate ? moment(filter.startDate, DATE_FORMAT) : '',
                                     filter.endDate ? moment(filter.endDate, DATE_FORMAT) : ''

@@ -7,6 +7,10 @@ import { dataIncome, incomeConfig, columns } from "./constants";
 
 import style from "./index.module.scss";
 import { getUser } from "utils/";
+import moment from "moment";
+import { DATE_FORMAT } from "constants/";
+import branchApi from "api/branch";
+import { disableFutureDate } from "utils/";
 
 const cx = classNames.bind(style);
 const { RangePicker } = DatePicker;
@@ -15,47 +19,79 @@ export default function MyBranch() {
     const { id } = useParams();
 
     const [branchDetail, setBranchDetail] = useState({});
+    const [dataIncome, setDataIncome] = useState([]);
     const [dataTable, setDataTable] = useState([]);
+    const [filter, setFilter] = useState({
+        startDate: '',
+        endDate: '',
+    })
+
+    const onChangeDate = (dates) => {
+        const [dateStart, dateEnd] = dates
+        setFilter({
+            startDate: dateStart.format(DATE_FORMAT),
+            endDate: dateEnd.format(DATE_FORMAT)
+        })
+    }
+
+    const fetchDetail = async () => {
+        try {
+            const branch = await branchApi.getDetail(getUser().idBranch);
+            setBranchDetail(branch);
+            setDataTable([
+                {
+                    key: 'address',
+                    label: 'Address',
+                    value: branch.address
+                },
+                {
+                    key: 'phone',
+                    label: 'Phone',
+                    value: branch.phone
+                },
+                {
+                    key: 'manager',
+                    label: 'Manager',
+                    value: branch.accountName || '-'
+                },
+                {
+                    key: 'status',
+                    label: 'Status',
+                    value: branch.active
+                },
+                {
+                    key: 'income',
+                    label: 'Income',
+                    value: branch.income
+                },
+            ]);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const fetchIncome = async () => {
+        try {
+            const income = await branchApi.getIncomeBranch({
+                branchId: id,
+                startDate: filter.startDate,
+                endDate: filter.endDate,
+            });
+            setDataIncome(income);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     useEffect(() => {
-        const branch = {
-            id: id,
-            name: "Branch 1",
-            address: "Address 1",
-            phone: "0123456789",
-            manager: "Full Name 1",
-            status: 0,
-            income: 10000,
-        }
-        setBranchDetail(branch);
-        setDataTable([
-            {
-                key: 'address',
-                label: 'Address',
-                value: branch.address
-            },
-            {
-                key: 'phone',
-                label: 'Phone',
-                value: branch.phone
-            },
-            {
-                key: 'manager',
-                label: 'Manager',
-                value: branch.manager
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                value: branch.status
-            },
-            {
-                key: 'income',
-                label: 'Income',
-                value: branch.income
-            },
-        ]);
+        fetchDetail()
     }, [])
+
+    useEffect(() => {
+        fetchIncome();
+    }, [filter])
+
+
     return getUser()?.idBranch ?
         <>
             <PageHeader title={branchDetail?.name || ''} />
@@ -69,7 +105,15 @@ export default function MyBranch() {
                 </Col>
                 <Col span={18}>
                     <Card title='Branch Income'>
-                        <RangePicker className={cx('datepicker')} size="large" />
+                        <RangePicker
+                            disabledDate={disableFutureDate}
+                            value={[
+                                filter.startDate ? moment(filter.startDate, DATE_FORMAT) : '',
+                                filter.endDate ? moment(filter.endDate, DATE_FORMAT) : ''
+                            ]}
+                            className={cx('datepicker')}
+                            size="large"
+                            onChange={onChangeDate} />
                         <Area data={dataIncome} {...incomeConfig} />
                     </Card>
                 </Col>

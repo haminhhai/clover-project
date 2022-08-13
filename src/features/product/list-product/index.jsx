@@ -1,5 +1,5 @@
 import { EyeFilled, MinusCircleOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Empty, Form, InputNumber, Menu, Modal, Pagination, Row } from "antd";
+import { Button, Card, Col, Empty, Form, InputNumber, Menu, Modal, Pagination, Row, Select, Spin } from "antd";
 import classNames from "classnames/bind";
 import { Filter } from "./components";
 import { CardProduct } from "components";
@@ -11,6 +11,7 @@ import { FIELD_REQUIRED } from "constants/message";
 import branchApi from "api/branch";
 import categoryApi from "api/category";
 import productApi from "api/product";
+import { toast } from "react-toastify";
 
 const cx = classNames.bind(style);
 
@@ -24,6 +25,7 @@ export default function ListProduct() {
         size: "",
         category: "",
     });
+    const [loading, setLoading] = useState(false);
     const [total, setTotal] = useState(0);
     const [selectedProduct, setSelectedProduct] = useState("");
     const [visibleDetail, setVisibleDetail] = useState(false);
@@ -34,17 +36,13 @@ export default function ListProduct() {
     const [listCategory, setListCategory] = useState([]);
 
     const openDetail = (product) => {
-        setSelectedProduct(product);
+        getProductById(product);
         setVisibleDetail(true);
     }
 
     const openAdd = (product) => {
-        setSelectedProduct(product);
+        getProductById(product);
         setVisibleAdd(true);
-    }
-
-    const addToInventory = (values) => {
-        console.log("🚀 ~ values", values)
     }
 
     const onChangeFilter = (values) => {
@@ -94,18 +92,25 @@ export default function ListProduct() {
         return actions;
     }
 
+    const getProductById = async (product) => {
+        try {
+            const resp = await productApi.getById(product.id);
+            setSelectedProduct({
+                ...resp,
+                quantity: product.quantity
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const fetchBranch = async () => {
         try {
-            const listActive = await branchApi.getPaging({
+            const list = await branchApi.getPaging({
                 pageIndex: 0,
                 pageSize: 100,
             });
-            const listInActive = await branchApi.getPaging({
-                pageIndex: 0,
-                pageSize: 100,
-                active: false,
-            });
-            setListBranch([...listActive.branches, ...listInActive.branches]);
+            setListBranch(list.branches);
         } catch (error) {
             console.log(error);
         }
@@ -122,6 +127,7 @@ export default function ListProduct() {
 
     const fecthListProduct = async () => {
         try {
+            setLoading(true);
             if (selectedKeys[0] == '0') {
                 const { products, total } = await productApi.getProductWarehouse({
                     ...filter,
@@ -140,6 +146,27 @@ export default function ListProduct() {
 
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const submitAddInventory = async (values) => {
+        try {
+            await productApi.addProductToInventory({
+                ...values,
+                idCategory: selectedProduct.idCategory,
+                name: selectedProduct.name,
+                image: selectedProduct.image,
+                price: selectedProduct.price,
+                size: selectedProduct.size,
+                position: selectedProduct.position,
+            });
+            setVisibleAdd(false);
+            fecthListProduct();
+            toast.success("Success")
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -154,7 +181,7 @@ export default function ListProduct() {
 
     useEffect(() => {
         selectedKeys.length > 0 && fecthListProduct();
-    }, [selectedKeys])
+    }, [filter, selectedKeys])
 
     return (
         <Row gutter={16}>
@@ -191,13 +218,10 @@ export default function ListProduct() {
                 <Col span={20}>
                     <Card className={cx('filter')}>
                         <Filter filter={filter} onChangeFilter={onChangeFilter} listCategory={listCategory} />
-                        <div className={cx('btn')}>
-                            <Button icon={<SearchOutlined />} onClick={fecthListProduct}>Search</Button>
-                        </div>
                     </Card>
                     <Row gutter={[16, 16]}>
                         {
-                            listProduct.map((product) => (
+                            loading ? <Spin /> : listProduct.map((product) => (
                                 <Col key={product.id} span={6}>
                                     <CardProduct
                                         product={product}
@@ -223,7 +247,7 @@ export default function ListProduct() {
             >
                 <Form
                     form={form}
-                    onFinish={addToInventory}
+                    onFinish={submitAddInventory}
                     layout='vertical'>
                     <Form.Item
                         label="Quantity"
@@ -241,7 +265,22 @@ export default function ListProduct() {
                             }),
                         ]}
                     >
-                        <InputNumber />
+                        <InputNumber min={0} max={selectedProduct?.quantity} />
+                    </Form.Item>
+                    <Form.Item
+                        label="Branch"
+                        name='branchId'
+                        rules={[
+                            { required: true, message: FIELD_REQUIRED },
+                        ]}
+                    >
+                        <Select>
+                            {
+                                listBranch.map((item) => (
+                                    <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
+                                ))
+                            }
+                        </Select>
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit" style={{ marginRight: 8 }}>

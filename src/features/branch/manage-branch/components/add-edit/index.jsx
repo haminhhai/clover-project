@@ -79,7 +79,7 @@ export default function BranchAddEdit({ selected, visible, onClose, onSubmit }) 
                 <Form.Item name="active" label="Status" rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <Select>
                         <Select.Option key='0' value={0}>Active</Select.Option>
-                        <Select.Option key='1' value={1}>Inactive</Select.Option>
+                        <Select.Option key='1' value={1}>Deactive</Select.Option>
                     </Select>
                 </Form.Item>
                 <Form.Item>

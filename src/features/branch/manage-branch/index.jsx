@@ -56,7 +56,7 @@ export default function ManageBranch() {
             })
             fetchListBranch();
             closeAddEdit();
-            toast.success(!selected ? 'Create Branch Success' : 'Update Branch Success');
+            toast.success(!selected ? 'Create Branch Success' : 'Success');
         } catch (error) {
             toast.error('Oops! Something went wrong. Please try again!');
         }

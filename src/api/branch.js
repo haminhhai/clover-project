@@ -20,6 +20,10 @@ const branchApi = {
     getALlManager() {
         const url = '/branch/manager';
         return axiosService.get(url);
+    },
+    getIncomeBranch(params) {
+        const url = '/branch/income';
+        return axiosService.get(url, { params });
     }
 }
 

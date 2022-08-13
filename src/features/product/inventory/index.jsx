@@ -1,5 +1,5 @@
 import { EyeFilled, RestFilled, SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Empty, Form, InputNumber, Menu, Modal, Pagination, Row } from "antd";
+import { Button, Card, Col, Empty, Form, Input, InputNumber, Menu, Modal, Pagination, Row } from "antd";
 import branchApi from "api/branch";
 import categoryApi from "api/category";
 import productApi from "api/product";
@@ -7,6 +7,7 @@ import classNames from "classnames/bind";
 import { CardProduct } from "components/";
 import { FIELD_REQUIRED } from "constants/message";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { getUser } from "utils/";
 import ProductDetail from "../detail";
 import { Filter, HistoryDelete } from "./components";
@@ -51,10 +52,6 @@ export default function InventoryProduct() {
         setVisibleDelete(true);
     }
 
-    const deleteProduct = (values) => {
-        console.log(values);
-    }
-
     const onChangeFilter = (values) => {
         setFilter(values);
     }
@@ -90,16 +87,11 @@ export default function InventoryProduct() {
 
     const fetchBranch = async () => {
         try {
-            const listActive = await branchApi.getPaging({
+            const list = await branchApi.getPaging({
                 pageIndex: 0,
                 pageSize: 100,
             });
-            const listInActive = await branchApi.getPaging({
-                pageIndex: 0,
-                pageSize: 100,
-                active: false,
-            });
-            setListBranch([...listActive.branches, ...listInActive.branches]);
+            setListBranch(list.branches);
         } catch (error) {
             console.log(error);
         }
@@ -115,6 +107,23 @@ export default function InventoryProduct() {
             setTotal(total);
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    const addToWarehouse = async (values) => {
+        try {
+            console.log("🚀 ~ selectedProduct", selectedProduct)
+            await productApi.addProductToWarehouse({
+                ...values,
+                productId: selectedProduct.id,
+                positionId: selectedProduct.position,
+            })
+            setVisibleDelete(false);
+            fetchInventory();
+            toast.success("Success")
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed')
         }
     }
 
@@ -166,9 +175,9 @@ export default function InventoryProduct() {
                         <Col span={20}>
                             <Card className={cx('filter')}>
                                 <Filter filter={filter} onChangeFilter={onChangeFilter} listCategory={listCategory} />
-                                <div className={cx('btn')}>
+                                {/* <div className={cx('btn')}>
                                     <Button icon={<SearchOutlined />}>Search</Button>
-                                </div>
+                                </div> */}
                             </Card>
 
                             <Row gutter={[16, 16]}>
@@ -203,7 +212,7 @@ export default function InventoryProduct() {
             >
                 <Form
                     form={form}
-                    onFinish={deleteProduct}
+                    onFinish={addToWarehouse}
                     layout='vertical'>
                     <Form.Item
                         label="Quantity"
@@ -213,7 +222,12 @@ export default function InventoryProduct() {
                             { required: true, message: FIELD_REQUIRED },
                         ]}
                     >
-                        <InputNumber max={selectedProduct?.quantity} />
+                        <InputNumber min={0} max={selectedProduct?.quantity} />
+                    </Form.Item>
+                    <Form.Item name='reason' label='Reason' rules={[
+                        { required: true, message: FIELD_REQUIRED },
+                    ]}>
+                        <Input />
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit" style={{ marginRight: 8 }}>

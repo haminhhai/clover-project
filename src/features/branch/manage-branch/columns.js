@@ -56,7 +56,7 @@ export const renderColumns = (goDetail, openEdit) => ([
         render: (active) => {
             return <Badge
                 status={active ? 'processing' : 'default'}
-                text={active ? 'Active' : 'Inactive'} />
+                text={active ? 'Active' : 'Deactive'} />
         }
     },
     {

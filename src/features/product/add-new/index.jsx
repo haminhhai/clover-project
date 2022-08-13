@@ -10,29 +10,29 @@ import { FIELD_REQUIRED } from "constants/message";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { handleUploadImage } from "utils/";
-import WareHouse from "../warehouse";
+import WareHouse from "../import/warehouse";
 import style from "./index.module.scss";
 
 const cx = classNames.bind(style);
 
-export default function Manually() {
+export default function AddNew() {
     const [form] = Form.useForm();
 
     const [loading, setLoading] = useState(false);
     const [selectedPosition, setSelectedPosition] = useState({});
     const [visibleWarehouse, setVisibleWarehouse] = useState(false);
     const [listCategory, setListCategory] = useState([]);
-    const [listBranch, setListBranch] = useState([]);
     const [listPosition, setListPosition] = useState([]);
+    const [listBranch, setListBranch] = useState([]);
 
     const addNewProduct = async (values) => {
         let productInfo = values
-        if (productInfo.idBranch == 0) {
-            productInfo.idBranch = null;
-            productInfo.warehouseId = 1
-        } else {
-            productInfo.warehouseId = null
-        }
+        // if (productInfo.idBranch == 0) {
+        productInfo.idBranch = null;
+        productInfo.warehouseId = 1
+        // } else {
+        //     productInfo.warehouseId = null
+        // }
         try {
             setLoading(true);
             if (productInfo.upload && productInfo.upload.length > 0) {
@@ -41,12 +41,12 @@ export default function Manually() {
             }
 
             await productApi.addProduct(productInfo);
-            toast.success("Import product success");
+            toast.success("Add product success");
             form.resetFields();
             setSelectedPosition({});
         } catch (error) {
             console.log("🚀 ~ error", error)
-            toast.error('Import product failed');
+            toast.error('Add product failed');
         } finally {
             setLoading(false);
         }
@@ -103,7 +103,6 @@ export default function Manually() {
         }
     }
 
-
     const fetchListPosition = async () => {
         try {
             const list = await positionApi.getWarehouse();
@@ -139,17 +138,17 @@ export default function Manually() {
                             </Upload>
                         </Form.Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={4}>
                         <Form.Item label='Name' name='name' rules={[{ required: true, message: FIELD_REQUIRED }]}>
                             <Input />
                         </Form.Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={4}>
                         <Form.Item label='Code' name='sku' rules={[{ required: true, message: FIELD_REQUIRED }]}>
                             <Input />
                         </Form.Item>
                     </Col>
-                    <Col span={6}>
+                    {/* <Col span={6}>
                         <Form.Item
                             label='Place'
                             name='idBranch'
@@ -164,8 +163,8 @@ export default function Manually() {
                                 }
                             </Select>
                         </Form.Item>
-                    </Col>
-                    <Col span={6}>
+                    </Col> */}
+                    <Col span={4}>
                         <Form.Item label='Category' name='idCategory' rules={[{ required: true, message: FIELD_REQUIRED }]}>
                             <Select >
                                 {
@@ -176,7 +175,17 @@ export default function Manually() {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={4}>
+                        <Form.Item label='Price' name='price' rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                            <InputCurrency min={0} style={{ width: '100%' }} />
+                        </Form.Item>
+                    </Col>
+                    <Col span={4}>
+                        <Form.Item label='Size' name='size' rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                            <InputNumber style={{ width: '100%' }} />
+                        </Form.Item>
+                    </Col>
+                    <Col span={4}>
                         <Form.Item label='Position' name='position' rules={[{ required: true, message: FIELD_REQUIRED }]}>
                             {
                                 selectedPosition.name &&
@@ -189,32 +198,17 @@ export default function Manually() {
                             </Button>
                         </Form.Item>
                     </Col>
-                    <Col span={6}>
-                        <Form.Item label='Price' name='price' rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                            <InputCurrency min={0} style={{ width: '100%' }} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item label='Quantity' name='quantity' rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                            <InputNumber style={{ width: '100%' }} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item label='Size' name='size' rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                            <InputNumber style={{ width: '100%' }} />
-                        </Form.Item>
-                    </Col>
 
                 </Row>
                 <Form.Item>
-                    <Button type='primary' loading={loading} htmlType='submit'>Import</Button>
+                    <Button type='primary' loading={loading} htmlType='submit'>Add</Button>
                 </Form.Item>
             </Form>
 
             <WareHouse
                 selectedPosition={selectedPosition}
-                visible={visibleWarehouse}
                 listPosition={listPosition}
+                visible={visibleWarehouse}
                 onClose={() => setVisibleWarehouse(false)}
                 selectPosistion={selectPosistion} />
         </Card>

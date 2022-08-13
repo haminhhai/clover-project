@@ -2,6 +2,7 @@ import { PlusCircleFilled, StopFilled } from '@ant-design/icons'
 import { Button, Card, Col, Row, Table, Tag } from 'antd'
 import accountApi from 'api/account'
 import branchApi from 'api/branch'
+import positionApi from 'api/position'
 import productApi from 'api/product'
 import classNames from 'classnames/bind'
 import React, { useEffect, useState } from 'react'
@@ -12,43 +13,43 @@ import { columnsTopSelling, data } from './columns'
 import style from "./index.module.scss"
 import ModalProduct from './ModalProduct'
 
-const listPosition = [
-    {
-        id: 1,
-        name: "A1",
-        isFull: false,
-    },
-    {
-        id: 2,
-        name: "A2",
-        isFull: false,
-    },
-    {
-        id: 3,
-        name: "A3",
-        isFull: true,
-    },
-    {
-        id: 4,
-        name: "A4",
-        isFull: false,
-    },
-    {
-        id: 5,
-        name: "A5",
-        isFull: true,
-    },
-    {
-        id: 6,
-        name: "A6",
-        isFull: true,
-    },
-    {
-        id: 7,
-        name: "A7",
-        isFull: false,
-    }
-]
+// const listPosition = [
+//     {
+//         id: 1,
+//         name: "A1",
+//         isFull: false,
+//     },
+//     {
+//         id: 2,
+//         name: "A2",
+//         isFull: false,
+//     },
+//     {
+//         id: 3,
+//         name: "A3",
+//         isFull: true,
+//     },
+//     {
+//         id: 4,
+//         name: "A4",
+//         isFull: false,
+//     },
+//     {
+//         id: 5,
+//         name: "A5",
+//         isFull: true,
+//     },
+//     {
+//         id: 6,
+//         name: "A6",
+//         isFull: true,
+//     },
+//     {
+//         id: 7,
+//         name: "A7",
+//         isFull: false,
+//     }
+// ]
 
 const cx = classNames.bind(style)
 
@@ -57,6 +58,7 @@ const DashboardFeature = () => {
     const [totalAccount, setTotalAccount] = useState(0)
     const [showModal, setShowModal] = useState(false)
     const [topSelling, setTopSelling] = useState([])
+    const [listPosition, setListPosition] = useState([])
 
     const openModal = (selected) => {
         setShowModal(true)
@@ -67,7 +69,7 @@ const DashboardFeature = () => {
     }
 
     const renderIcon = (position) => {
-        if (position.isFull) {
+        if (position.status) {
             return <Button onClick={openModal} icon={<StopFilled style={{ color: 'red' }} />} />
         }
         return <Button icon={<PlusCircleFilled style={{ color: 'green' }} />} />
@@ -75,16 +77,11 @@ const DashboardFeature = () => {
 
     const fetchBranch = async () => {
         try {
-            const listActive = await branchApi.getPaging({
+            const list = await branchApi.getPaging({
                 pageIndex: 0,
                 pageSize: 100,
             });
-            const listInActive = await branchApi.getPaging({
-                pageIndex: 0,
-                pageSize: 100,
-                active: false,
-            });
-            setTotalBranch(listActive.total + listInActive.total)
+            setTotalBranch(list.total);
         } catch (error) {
             console.log(error);
         }
@@ -111,10 +108,20 @@ const DashboardFeature = () => {
         }
     }
 
+    const fetchPosition = async () => {
+        try {
+            const list = getUser()?.roleId == 1 ? await positionApi.getBranch(getUser()?.idBranch) : await positionApi.getWarehouse()
+            setListPosition(list)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         fetchBranch();
         fetchAccount();
         fetchTopSelling();
+        fetchPosition()
     }, [])
 
     return (

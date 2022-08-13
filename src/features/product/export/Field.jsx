@@ -9,7 +9,7 @@ export default function FieldExport({ listProduct, listBranch, name, remove, ...
         <Row gutter={16}>
             <Col span={6}>
                 <Form.Item
-                    name="productId"
+                    name={[name, 'productId']}
                     rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <Select placeholder='Select Product' size="large">
                         {
@@ -24,7 +24,7 @@ export default function FieldExport({ listProduct, listBranch, name, remove, ...
                 </Form.Item>
             </Col>
             <Col span={4}>
-                <Form.Item name="branchId" rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                <Form.Item name={[name, 'branchId']} rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <Select placeholder='Select Branch' size='large'>
                         {
                             listBranch.map(branch => (
@@ -37,17 +37,17 @@ export default function FieldExport({ listProduct, listBranch, name, remove, ...
                 </Form.Item>
             </Col>
             <Col span={4}>
-                <Form.Item name="sku" rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                <Form.Item name={[name, 'sku']} rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <Input size='large' placeholder='SKU' />
                 </Form.Item>
             </Col>
             <Col span={4}>
-                <Form.Item name="price" rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                    <InputCurrency size='large' placeholder='Price' style={{ width: '100%' }} />
+                <Form.Item name={[name, 'price']} rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                    <InputCurrency min={0} size='large' placeholder='Price' style={{ width: '100%' }} />
                 </Form.Item>
             </Col>
             <Col span={4}>
-                <Form.Item name="quantity" rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                <Form.Item name={[name, 'quantity']} rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <InputNumber placeholder='Quantity' size='large' min={1} style={{ width: '100%' }} />
                 </Form.Item>
             </Col>

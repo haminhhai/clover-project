@@ -10,6 +10,7 @@ import Export from "features/product/export";
 import Import from "features/product/import";
 import InventoryProduct from "features/product/inventory";
 import ProfileFeature from "features/profile";
+import ListAccount from "features/profile/list-account";
 import { PrivateLayout, PublicLayout } from "layout";
 import {
   BrowserRouter,
@@ -64,6 +65,10 @@ function App() {
 
         <Route path='/export' element={<PrivateLayout />}>
           <Route index element={<Export />} />
+        </Route>
+
+        <Route path='/manage-account' element={<PrivateLayout />}>
+          <Route index element={<ListAccount />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

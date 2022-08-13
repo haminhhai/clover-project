@@ -85,13 +85,13 @@ export default function ListAccount() {
                 }
 
                 await accountApi.editAccount(userInfo);
-                toast.success("Update account success");
+                toast.success("Success");
             }
             setVisibleEdit(false);
             fetchListAccount();
         } catch (error) {
             console.log("🚀 ~ error", error)
-            toast.error('Create account failed');
+            toast.error('Account existed');
         } finally {
             setLoading(false);
         }

@@ -1,5 +1,6 @@
 import { Col, DatePicker, Input, Row, Select, Space } from "antd";
 import { useState } from "react";
+import { disableFutureDate } from "utils/";
 
 const { Option } = Select;
 
@@ -11,7 +12,7 @@ export default function Filter() {
         <Row gutter={[16, 16]}>
             <Col span={24}>
                 <Space>
-                    <RangePicker />
+                    <RangePicker disabledDate={disableFutureDate} />
                 </Space>
             </Col>
             <Col span={24}>

@@ -36,9 +36,9 @@ const listPosition = [
         isFull: true,
     }
 ]
-export default function WareHouse({ selectedPosition, visible, onClose, selectPosistion }) {
+export default function WareHouse({ selectedPosition, listPosition, visible, onClose, selectPosistion }) {
     const renderIcon = (position) => {
-        if (position.isFull) {
+        if (position.status) {
             return <StopFilled />
         }
         return position.id === selectedPosition?.id ? <CheckCircleFilled /> : <PlusCircleFilled />
@@ -55,7 +55,7 @@ export default function WareHouse({ selectedPosition, visible, onClose, selectPo
                     <Col span={4} key={index} className={cx('wrapper')}>
                         <span className={cx('name')}>{item.name}</span>
                         <Button
-                            disabled={item.isFull}
+                            disabled={item.status}
                             type={selectedPosition?.id === item.id ? "primary" : ""}
                             icon={renderIcon(item)}
                             onClick={() => selectPosistion(item)} />

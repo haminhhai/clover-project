@@ -31,21 +31,15 @@ export default function BestSelling() {
 
     const fetchBranch = async () => {
         try {
-            const listActive = await branchApi.getPaging({
+            const list = await branchApi.getPaging({
                 pageIndex: 0,
                 pageSize: 100,
             });
-            const listInActive = await branchApi.getPaging({
-                pageIndex: 0,
-                pageSize: 100,
-                active: false,
-            });
-            setListBranch([...listActive.branches, ...listInActive.branches]);
+            setListBranch(list.branches);
         } catch (error) {
             console.log(error);
         }
     }
-
 
     useEffect(() => {
         fetchBestSelling();

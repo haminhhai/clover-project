@@ -26,20 +26,6 @@ export default function ProfileFeature() {
                     <TabPane
                         tab={
                             <span>
-                                <TeamOutlined />
-                                List Account
-                            </span>
-                        }
-                        key="2"
-                    >
-                        <ListAccount />
-                    </TabPane>
-                }
-                {
-                    getUser()?.roleId == 0 &&
-                    <TabPane
-                        tab={
-                            <span>
                                 <LockOutlined />
                                 Change Password
                             </span>

@@ -20,8 +20,9 @@ export function AccountDetail() {
     const [form] = Form.useForm()
     const contextValue = useContext(Context)
 
+    const [loading, setLoading] = useState(false)
     const [fileList, setFileList] = useState([]);
-    const [imageProfile, setImageProfile] = useState({})
+    const [imageProfile, setImageProfile] = useState('')
     const [isEdit, setIsEdit] = useState(false);
     const [userInfo, setUserInfo] = useState(null);
 
@@ -29,7 +30,12 @@ export function AccountDetail() {
 
     const toggleMode = () => {
         if (!isEdit) {
-            if (imageProfile.url) setFileList([imageProfile]);
+            if (imageProfile) setFileList([{
+                uid: '-1',
+                name: 'name',
+                status: 'done',
+                url: imageProfile
+            }]);
             else setFileList([])
             form.setFieldsValue({
                 email: getUser().email,
@@ -76,7 +82,7 @@ export function AccountDetail() {
     };
 
     const onRemove = (file) => {
-        console.log("🚀 ~ file", file)
+        setFileList([]);
     }
 
     const cancelSubmit = () => {
@@ -91,11 +97,12 @@ export function AccountDetail() {
         }
         let res;
         try {
+            setLoading(true)
             // check image exist
-            if (imageProfile.url) {
+            if (imageProfile) {
                 if (fileList.length === 0) {
                     userInfo.image = '';
-                    setImageProfile(null)
+                    setImageProfile("")
                 }
                 else {
                     if (!fileList[0].url) {
@@ -134,6 +141,8 @@ export function AccountDetail() {
             toast.success("Update account success");
         } catch (error) {
             toast.error(error.message);
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -221,7 +230,7 @@ export function AccountDetail() {
                                 <Input />
                             </Form.Item>
                             <Form.Item>
-                                <Button type="primary" htmlType="submit">
+                                <Button type="primary" htmlType="submit" loading={loading}>
                                     Save
                                 </Button>
                                 <Button danger className={cx('cancel-btn')} onClick={cancelSubmit}>

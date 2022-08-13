@@ -4,7 +4,7 @@ import style from "./index.module.scss"
 import { useEffect } from "react"
 import { useNavigate, useLocation } from "react-router"
 import { getUser } from "utils/"
-import { DashboardFilled, ExportOutlined, ImportOutlined, InboxOutlined, ShopFilled, ShoppingFilled } from "@ant-design/icons"
+import { DashboardFilled, ExportOutlined, ImportOutlined, InboxOutlined, ShopFilled, ShoppingFilled, TeamOutlined } from "@ant-design/icons"
 
 const cx = classNames.bind(style)
 const { Sider } = Layout
@@ -35,6 +35,9 @@ export default function Sidebar({ selectedTab, setSelectedTab }) {
                 break
             case path.includes('export'):
                 setSelectedTab(['export'])
+                break
+            case path.includes('account'):
+                setSelectedTab(['manage-account'])
                 break
             default:
                 setSelectedTab([])
@@ -89,6 +92,13 @@ export default function Sidebar({ selectedTab, setSelectedTab }) {
                             Export
                         </Menu.Item>
                     </>
+                }
+                {
+                    getUser()?.roleId !== 1 && (
+                        <Menu.Item key='manage-account' icon={<TeamOutlined style={{ fontSize: 20 }} />}>
+                            Manage Account
+                        </Menu.Item>
+                    )
                 }
             </Menu>
         </Sider>
