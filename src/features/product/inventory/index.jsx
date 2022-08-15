@@ -1,4 +1,4 @@
-import { EyeFilled, RestFilled, SearchOutlined } from "@ant-design/icons";
+import { EyeFilled, RestFilled, RotateRightOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Empty, Form, Input, InputNumber, Menu, Modal, Pagination, Row } from "antd";
 import branchApi from "api/branch";
 import categoryApi from "api/category";
@@ -32,10 +32,12 @@ export default function InventoryProduct() {
     const [selectedBranch, setSelectedBranch] = useState({});
     const [visibleDetail, setVisibleDetail] = useState(false);
     const [visibleHistory, setVisibleHistory] = useState(false);
+    const [visibleAdd, setVisibleAdd] = useState(false);
     const [visibleDelete, setVisibleDelete] = useState(false);
     const [listProduct, setListProduct] = useState([]);
     const [listBranch, setListBranch] = useState([]);
     const [listCategory, setListCategory] = useState([]);
+    const [listHistory, setListHistory] = useState([]);
 
     const openDetail = (product) => {
         setSelectedProduct(product);
@@ -46,6 +48,12 @@ export default function InventoryProduct() {
         setSelectedBranch(branch);
         setVisibleHistory(true);
     }
+
+    const openAdd = (product) => {
+        setSelectedProduct(product);
+        setVisibleAdd(true);
+    }
+
 
     const openDelete = (product) => {
         setSelectedProduct(product);
@@ -70,7 +78,8 @@ export default function InventoryProduct() {
             <EyeFilled key='1' onClick={() => openDetail(product)} />
         ]
         if (getUser()?.roleId === 1) {
-            actions.push(<RestFilled key='2' onClick={() => openDelete(product)} />)
+            actions.push(<RotateRightOutlined key='2' onClick={() => openAdd(product)} />)
+            actions.push(<RestFilled key='3' onClick={() => openDelete(product)} />)
         }
 
         return actions;
@@ -99,7 +108,7 @@ export default function InventoryProduct() {
 
     const fetchInventory = async () => {
         try {
-            const { products, total } = await productApi.getProductBranch({
+            const { products, total } = await productApi.getProductInventory({
                 ...filter,
                 branchId: selectedKeys[0],
             });
@@ -110,13 +119,39 @@ export default function InventoryProduct() {
         }
     }
 
+    const fetchHistoryDelete = async () => {
+        try {
+            const list = await branchApi.getDeleteHistory(selectedKeys[0]);
+            setListHistory(list);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const addToWarehouse = async (values) => {
         try {
-            console.log("🚀 ~ selectedProduct", selectedProduct)
             await productApi.addProductToWarehouse({
                 ...values,
                 productId: selectedProduct.id,
                 positionId: selectedProduct.position,
+            })
+            setVisibleAdd(false);
+            fetchInventory();
+            toast.success("Success")
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed')
+        }
+    }
+
+    const deleteInventory = async (values) => {
+        try {
+            await productApi.deleteInventory({
+                ...values,
+                id: selectedProduct.id,
+                branchId: getUser()?.idBranch,
+                accountId: getUser()?.id,
+                accountName: getUser()?.username,
             })
             setVisibleDelete(false);
             fetchInventory();
@@ -136,6 +171,10 @@ export default function InventoryProduct() {
     useEffect(() => {
         form.resetFields();
     }, [visibleDelete])
+
+    useEffect(() => {
+        visibleHistory && fetchHistoryDelete();
+    }, [visibleHistory])
 
     useEffect(() => {
         selectedKeys.length > 0 && fetchInventory();
@@ -203,11 +242,11 @@ export default function InventoryProduct() {
                 }
             </Row>
             <ProductDetail visible={visibleDetail} product={selectedProduct} onClose={() => setVisibleDetail(false)} />
-            <HistoryDelete visible={visibleHistory} inventory={selectedBranch} onClose={() => setVisibleHistory(false)} />
+            <HistoryDelete visible={visibleHistory} list={listHistory} onClose={() => setVisibleHistory(false)} />
             <Modal
                 title="Add Inventory Product To Warehouse"
-                visible={visibleDelete}
-                onCancel={() => setVisibleDelete(false)}
+                visible={visibleAdd}
+                onCancel={() => setVisibleAdd(false)}
                 footer=''
             >
                 <Form
@@ -224,7 +263,37 @@ export default function InventoryProduct() {
                     >
                         <InputNumber min={0} max={selectedProduct?.quantity} />
                     </Form.Item>
-                    <Form.Item name='reason' label='Reason' rules={[
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" style={{ marginRight: 8 }}>
+                            Submit
+                        </Button>
+                        <Button onClick={() => setVisibleAdd(false)}>
+                            Cancel
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
+            <Modal
+                title="Delete Inventory Product"
+                visible={visibleDelete}
+                onCancel={() => setVisibleDelete(false)}
+                footer=''
+            >
+                <Form
+                    form={form}
+                    onFinish={deleteInventory}
+                    layout='vertical'>
+                    <Form.Item
+                        label="Quantity"
+                        name='quantity'
+                        extra={`Has ${selectedProduct.quantity} left`}
+                        rules={[
+                            { required: true, message: FIELD_REQUIRED },
+                        ]}
+                    >
+                        <InputNumber min={0} max={selectedProduct?.quantity} />
+                    </Form.Item>
+                    <Form.Item name='reason' label="Reason" rules={[
                         { required: true, message: FIELD_REQUIRED },
                     ]}>
                         <Input />
@@ -239,7 +308,6 @@ export default function InventoryProduct() {
                     </Form.Item>
                 </Form>
             </Modal>
-
         </div>
     )
 }

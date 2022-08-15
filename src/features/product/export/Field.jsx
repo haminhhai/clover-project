@@ -23,7 +23,7 @@ export default function FieldExport({ listProduct, listBranch, name, remove, ...
                     </Select>
                 </Form.Item>
             </Col>
-            <Col span={4}>
+            <Col span={6}>
                 <Form.Item name={[name, 'branchId']} rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <Select placeholder='Select Branch' size='large'>
                         {
@@ -36,12 +36,7 @@ export default function FieldExport({ listProduct, listBranch, name, remove, ...
                     </Select>
                 </Form.Item>
             </Col>
-            <Col span={4}>
-                <Form.Item name={[name, 'sku']} rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                    <Input size='large' placeholder='SKU' />
-                </Form.Item>
-            </Col>
-            <Col span={4}>
+            <Col span={6}>
                 <Form.Item name={[name, 'price']} rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <InputCurrency min={0} size='large' placeholder='Price' style={{ width: '100%' }} />
                 </Form.Item>

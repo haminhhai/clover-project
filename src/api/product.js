@@ -14,6 +14,10 @@ const productApi = {
         return axiosService.get(url, { params });
     },
     getProductBranch(params) {
+        const url = '/branch/product';
+        return axiosService.get(url, { params });
+    },
+    getProductInventory(params) {
         const url = '/inventory';
         return axiosService.get(url, { params });
     },
@@ -28,6 +32,10 @@ const productApi = {
     addProductToWarehouse(body) {
         const url = '/warehouse';
         return axiosService.post(url, body);
+    },
+    deleteInventory(body) {
+        const url = '/inventory';
+        return axiosService.delete(url, { data: body });
     },
     exportProduct(body) {
         const url = '/product/export';

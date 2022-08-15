@@ -1,8 +1,8 @@
 export const columns = [
     {
-        title: 'Product Name',
-        dataIndex: 'name',
-        key: 'name',
+        title: 'ID',
+        dataIndex: 'id',
+        key: 'id',
     },
     {
         title: 'Quantity',
@@ -10,9 +10,9 @@ export const columns = [
         key: 'quantity',
     },
     {
-        title: 'Store keeper',
-        dataIndex: 'fullName',
-        key: 'fullName',
+        title: 'Account',
+        dataIndex: 'accountName',
+        key: 'accountName',
     },
     {
         title: 'Reason',
@@ -20,8 +20,8 @@ export const columns = [
         key: 'reason',
     },
     {
-        title: 'Time Delete',
-        dataIndex: 'timeDelete',
-        key: 'timeDelete',
+        title: 'Delete Date',
+        dataIndex: 'deleteDate',
+        key: 'deleteDate',
     },
 ]

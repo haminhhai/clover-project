@@ -1,5 +1,5 @@
 import { PlusCircleFilled, StopFilled } from '@ant-design/icons'
-import { Button, Card, Col, Row, Table, Tag } from 'antd'
+import { Button, Card, Col, Row, Table } from 'antd'
 import accountApi from 'api/account'
 import branchApi from 'api/branch'
 import positionApi from 'api/position'
@@ -8,52 +8,18 @@ import classNames from 'classnames/bind'
 import React, { useEffect, useState } from 'react'
 import { getUser } from 'utils/'
 import { formatVND } from 'utils/'
-import { columnsTopSelling, data } from './columns'
+import { columnsTopSelling } from './columns'
 
 import style from "./index.module.scss"
 import ModalProduct from './ModalProduct'
 
-// const listPosition = [
-//     {
-//         id: 1,
-//         name: "A1",
-//         isFull: false,
-//     },
-//     {
-//         id: 2,
-//         name: "A2",
-//         isFull: false,
-//     },
-//     {
-//         id: 3,
-//         name: "A3",
-//         isFull: true,
-//     },
-//     {
-//         id: 4,
-//         name: "A4",
-//         isFull: false,
-//     },
-//     {
-//         id: 5,
-//         name: "A5",
-//         isFull: true,
-//     },
-//     {
-//         id: 6,
-//         name: "A6",
-//         isFull: true,
-//     },
-//     {
-//         id: 7,
-//         name: "A7",
-//         isFull: false,
-//     }
-// ]
 
 const cx = classNames.bind(style)
 
 const DashboardFeature = () => {
+    const [loadingUser, setLoadingUser] = useState(true)
+    const [loadingBranch, setLoadingBranch] = useState(true)
+    const [loadingBestSelling, setLoadingBestSelling] = useState(true)
     const [totalBranch, setTotalBranch] = useState(0)
     const [totalAccount, setTotalAccount] = useState(0)
     const [showModal, setShowModal] = useState(false)
@@ -77,6 +43,7 @@ const DashboardFeature = () => {
 
     const fetchBranch = async () => {
         try {
+            setLoadingBranch(true)
             const list = await branchApi.getPaging({
                 pageIndex: 0,
                 pageSize: 100,
@@ -84,11 +51,14 @@ const DashboardFeature = () => {
             setTotalBranch(list.total);
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoadingBranch(false)
         }
     }
 
     const fetchAccount = async () => {
         try {
+            setLoadingUser(true)
             const { total } = await accountApi.getAll({
                 pageIndex: 0,
                 pageSize: 100,
@@ -96,15 +66,20 @@ const DashboardFeature = () => {
             setTotalAccount(total)
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoadingUser(false)
         }
     }
 
     const fetchTopSelling = async () => {
         try {
+            setLoadingBestSelling(true)
             const list = await productApi.getBestSelling({});
             setTopSelling(list)
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoadingBestSelling(false)
         }
     }
 
@@ -130,12 +105,12 @@ const DashboardFeature = () => {
                 getUser()?.roleId === 0 &&
                 <>
                     <Col span={8}>
-                        <Card hoverable title="User" >
+                        <Card hoverable title="User" loading={loadingUser}>
                             <h2>{totalAccount}</h2>
                         </Card>
                     </Col>
                     <Col span={8}>
-                        <Card hoverable title="Branch" >
+                        <Card hoverable title="Branch" loading={loadingBranch}>
                             <h2>{totalBranch}</h2>
                         </Card>
                     </Col>
@@ -149,7 +124,7 @@ const DashboardFeature = () => {
             {
                 getUser()?.roleId !== 2 &&
                 <Col span={getUser()?.roleId === 0 ? 24 : 12}>
-                    <Card hoverable title="Top 10 Best Selling" className={cx('scroll')}>
+                    <Card hoverable title="Top 10 Best Selling" className={cx('scroll')} loading={loadingBestSelling}>
                         <Table dataSource={topSelling} columns={columnsTopSelling} pagination={false} />
                     </Card>
                 </Col>

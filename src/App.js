@@ -11,6 +11,7 @@ import Import from "features/product/import";
 import InventoryProduct from "features/product/inventory";
 import ProfileFeature from "features/profile";
 import ListAccount from "features/profile/list-account";
+import MyStaff from "features/profile/my-staff";
 import { PrivateLayout, PublicLayout } from "layout";
 import {
   BrowserRouter,
@@ -69,6 +70,9 @@ function App() {
 
         <Route path='/manage-account' element={<PrivateLayout />}>
           <Route index element={<ListAccount />} />
+        </Route>
+        <Route path='/my-staff' element={<PrivateLayout />}>
+          <Route index element={<MyStaff />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

@@ -39,6 +39,9 @@ export default function Sidebar({ selectedTab, setSelectedTab }) {
             case path.includes('account'):
                 setSelectedTab(['manage-account'])
                 break
+            case path.includes('staff'):
+                setSelectedTab(['my-staff'])
+                break
             default:
                 setSelectedTab([])
         }
@@ -94,9 +97,16 @@ export default function Sidebar({ selectedTab, setSelectedTab }) {
                     </>
                 }
                 {
-                    getUser()?.roleId !== 1 && (
+                    getUser()?.roleId === 0 && (
                         <Menu.Item key='manage-account' icon={<TeamOutlined style={{ fontSize: 20 }} />}>
                             Manage Account
+                        </Menu.Item>
+                    )
+                }
+                {
+                    getUser()?.roleId === 1 && (
+                        <Menu.Item key='my-staff' icon={<TeamOutlined style={{ fontSize: 20 }} />}>
+                            My Staff
                         </Menu.Item>
                     )
                 }

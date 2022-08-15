@@ -28,6 +28,11 @@ export default function LoginPage() {
                 toast.error('Username or password is incorrect')
                 return;
             }
+
+            if (user.roleId === 3) {
+                toast.error('Access Denied')
+                return;
+            }
             const jwtToken = "token";
             setHeader('Authorization', `Bearer ${jwtToken}`);
             localStorage.setItem(CLOVER_TOKEN, jwtToken);

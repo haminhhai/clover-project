@@ -14,6 +14,7 @@ export default function BestSelling() {
     const [visibleDetail, setVisibleDetail] = useState(false);
     const [listProduct, setListProduct] = useState([]);
     const [listBranch, setListBranch] = useState([]);
+    const [selectedBranch, setSelectedBranch] = useState("");
 
     const openDetail = (product) => {
         setSelectedProduct(product);
@@ -29,6 +30,10 @@ export default function BestSelling() {
         }
     }
 
+    const onChangeBranch = (value) => {
+        setSelectedBranch(value);
+    }
+
     const fetchBranch = async () => {
         try {
             const list = await branchApi.getPaging({
@@ -42,22 +47,26 @@ export default function BestSelling() {
     }
 
     useEffect(() => {
-        fetchBestSelling();
-        fetchBranch();
+        fetchBranch()
     }, [])
+
+    useEffect(() => {
+        fetchBestSelling()
+    }, [selectedBranch])
 
     return (
         <Row gutter={16}>
-            <Col span={4}>
-                <Select placeholder="Select Branch" style={{ width: "100%" }}>
+            {/* <Col span={4}>
+                <Select placeholder="Select Branch" style={{ width: "100%" }} value={selectedBranch} onChange={onChangeBranch}>
+                    <Select.Option value="">All</Select.Option>
                     {
                         listBranch.map(branch => (
                             <Select.Option key={branch.id} value={branch.id}>{branch.name}</Select.Option>
                         ))
                     }
                 </Select>
-            </Col>
-            <Col span={18}>
+            </Col> */}
+            <Col span={24}>
                 <Row gutter={[16, 16]}>
 
                     {listProduct.map((product) => (

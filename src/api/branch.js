@@ -24,6 +24,10 @@ const branchApi = {
     getIncomeBranch(params) {
         const url = '/branch/income';
         return axiosService.get(url, { params });
+    },
+    getDeleteHistory(id) {
+        const url = `/inventory/${id}`;
+        return axiosService.get(url);
     }
 }
 

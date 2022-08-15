@@ -149,7 +149,7 @@ export default function Manually() {
                             <Input />
                         </Form.Item>
                     </Col>
-                    <Col span={6}>
+                    {/* <Col span={6}>
                         <Form.Item
                             label='Place'
                             name='idBranch'
@@ -164,7 +164,7 @@ export default function Manually() {
                                 }
                             </Select>
                         </Form.Item>
-                    </Col>
+                    </Col> */}
                     <Col span={6}>
                         <Form.Item label='Category' name='idCategory' rules={[{ required: true, message: FIELD_REQUIRED }]}>
                             <Select >
