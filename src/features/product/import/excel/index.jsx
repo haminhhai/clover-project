@@ -70,22 +70,22 @@ export default function ImportExcel() {
                 let error = false
                 data.forEach((item, idx) => {
                     if (idx) {
-                        const [name, code, image, price, quantity, position] = item
-                        if (!name || !code || !price || !quantity || !position) {
+                        const [productId, quantity, positionId] = item
+                        if (!productId || !positionId || !quantity) {
                             error = true
                             return
                         }
 
                         allPromise.push(
-                            productApi.addProduct({
-                                name, code, image, price, quantity, position
+                            productApi.addProductToWarehouse({
+                                productId, quantity, positionId
                             })
                         )
                     }
                 })
                 if (!error) {
                     Promise.all(allPromise).then(res => {
-                        toast.success(`Import success ${data.length - 1} product`)
+                        toast.success(`Import success ${data.length - 1} product(s)`)
                     }).catch(err => {
                         toast.error("Import error!")
                     })
@@ -137,7 +137,7 @@ export default function ImportExcel() {
                 <Row gutter={[16, 16]}>
                     {listPosition.map((item, index) => (
                         <Col span={4} key={index} className={cx('wrapper')}>
-                            <span>{item.name}</span>
+                            <span>{`ID: ${item.id}`}</span>
                             {renderIcon(item)}
                         </Col>
                     ))}
