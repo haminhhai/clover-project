@@ -122,25 +122,40 @@ const DashboardFeature = () => {
                 </>
             }
             {
-                getUser()?.roleId !== 2 &&
-                <Col span={getUser()?.roleId === 0 ? 24 : 12}>
-                    <Card hoverable title="Top 10 Best Selling" className={cx('scroll')} loading={loadingBestSelling}>
-                        <Table dataSource={topSelling} columns={columnsTopSelling} pagination={false} />
+                getUser()?.roleId !== 0 &&
+                <Col span={24}>
+                    <Card hoverable title={`${getUser()?.roleId === 1 ? 'Branch' : 'Warehouse'}'s status`} className={cx('scroll')}>
+                        <Row gutter={[16, 16]}>
+                            {listPosition.map((item, index) => {
+                                if (index !== 0 && index / 10 === 0) {
+                                    return (
+                                        <>
+                                            <Col span={2} key={index} className={cx('wrapper')}>
+                                                <span className={cx('name')}>{item.name}</span>
+                                                {renderIcon(item)}
+                                            </Col>
+                                            <Col span={4}>
+
+                                            </Col>
+                                        </>
+                                    )
+                                }
+                                return (
+                                    <Col span={2} key={index} className={cx('wrapper')}>
+                                        <span className={cx('name')}>{item.name}</span>
+                                        {renderIcon(item)}
+                                    </Col>
+                                )
+                            })}
+                        </Row>
                     </Card>
                 </Col>
             }
             {
-                getUser()?.roleId !== 0 &&
-                <Col span={getUser()?.roleId === 2 ? 24 : 12}>
-                    <Card hoverable title={`${getUser()?.roleId === 1 ? 'Branch' : 'Warehouse'}'s status`} className={cx('scroll')}>
-                        <Row gutter={[16, 16]}>
-                            {listPosition.map((item, index) => (
-                                <Col span={getUser()?.roleId === 2 ? 2 : 4} key={index} className={cx('wrapper')}>
-                                    <span className={cx('name')}>{item.name}</span>
-                                    {renderIcon(item)}
-                                </Col>
-                            ))}
-                        </Row>
+                getUser()?.roleId !== 2 &&
+                <Col span={24}>
+                    <Card hoverable title="Top 10 Best Selling" className={cx('scroll')} loading={loadingBestSelling}>
+                        <Table dataSource={topSelling} columns={columnsTopSelling} pagination={false} />
                     </Card>
                 </Col>
             }

@@ -138,7 +138,7 @@ export default function AddNew() {
                             </Upload>
                         </Form.Item>
                     </Col>
-                    <Col span={4}>
+                    <Col span={8}>
                         <Form.Item label='Name' name='name' rules={[{ required: true, message: FIELD_REQUIRED }]}>
                             <Input />
                         </Form.Item>
@@ -185,7 +185,7 @@ export default function AddNew() {
                             <InputNumber style={{ width: '100%' }} />
                         </Form.Item>
                     </Col>
-                    <Col span={4}>
+                    {/* <Col span={4}>
                         <Form.Item label='Position' name='position' rules={[{ required: true, message: FIELD_REQUIRED }]}>
                             {
                                 selectedPosition.name &&
@@ -197,20 +197,20 @@ export default function AddNew() {
                                 }
                             </Button>
                         </Form.Item>
-                    </Col>
+                    </Col> */}
 
                 </Row>
                 <Form.Item>
                     <Button type='primary' loading={loading} htmlType='submit'>Add</Button>
                 </Form.Item>
             </Form>
-
+            {/* 
             <WareHouse
                 selectedPosition={selectedPosition}
                 listPosition={listPosition}
                 visible={visibleWarehouse}
                 onClose={() => setVisibleWarehouse(false)}
-                selectPosistion={selectPosistion} />
+                selectPosistion={selectPosistion} /> */}
         </Card>
     )
 }

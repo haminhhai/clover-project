@@ -79,6 +79,9 @@ export default function InventoryProduct() {
         ]
         if (getUser()?.roleId === 1) {
             actions.push(<RotateRightOutlined key='2' onClick={() => openAdd(product)} />)
+        }
+
+        if (getUser().roleId === 2) {
             actions.push(<RestFilled key='3' onClick={() => openDelete(product)} />)
         }
 
@@ -108,12 +111,21 @@ export default function InventoryProduct() {
 
     const fetchInventory = async () => {
         try {
-            const { products, total } = await productApi.getProductInventory({
-                ...filter,
-                branchId: selectedKeys[0],
-            });
-            setListProduct(products);
-            setTotal(total);
+            if (selectedKeys[0] == '0') {
+                const { products, total } = await productApi.getProductWarehouse({
+                    ...filter,
+                    warehouseId: 1
+                });
+                setListProduct(products);
+                setTotal(total);
+            } else {
+                const { products, total } = await productApi.getProductInventory({
+                    ...filter,
+                    branchId: selectedKeys[0],
+                });
+                setListProduct(products);
+                setTotal(total);
+            }
         } catch (error) {
             console.log(error);
         }
@@ -191,15 +203,15 @@ export default function InventoryProduct() {
             <Row gutter={16}>
                 <Col span={4}>
                     <Menu mode="inline" selectedKeys={selectedKeys}>
+                        {
+                            getUser()?.roleId === 2 && (
+                                <Menu.Item key="0" onClick={() => setSelectedKeys(['0'])}>
+                                    <span>WareHouse</span>
+                                </Menu.Item>
+                            )
+                        }
                         {listBranch.length > 0 ? listBranch.map((item, idx) => {
-                            if (getUser()?.roleId === 1 && item.id == getUser()?.idBranch) {
-                                return (
-                                    <Menu.Item key={item.id} onClick={() => setSelectedKeys([`${item.id}`])}>
-                                        {item.name}
-                                    </Menu.Item>
-                                )
-                            }
-                            if (getUser()?.roleId === 0 || getUser()?.roleId === 2) {
+                            if ((getUser()?.roleId === 0 || getUser()?.roleId === 2) || (getUser()?.roleId === 1 && item.id == getUser()?.idBranch)) {
                                 return (
                                     <Menu.Item key={item.id} onClick={() => setSelectedKeys([`${item.id}`])}>
                                         {item.name}
@@ -214,9 +226,6 @@ export default function InventoryProduct() {
                         <Col span={20}>
                             <Card className={cx('filter')}>
                                 <Filter filter={filter} onChangeFilter={onChangeFilter} listCategory={listCategory} />
-                                {/* <div className={cx('btn')}>
-                                    <Button icon={<SearchOutlined />}>Search</Button>
-                                </div> */}
                             </Card>
 
                             <Row gutter={[16, 16]}>

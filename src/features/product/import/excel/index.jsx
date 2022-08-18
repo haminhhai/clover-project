@@ -70,15 +70,15 @@ export default function ImportExcel() {
                 let error = false
                 data.forEach((item, idx) => {
                     if (idx) {
-                        const [productId, quantity, positionId] = item
-                        if (!productId || !positionId || !quantity) {
+                        const [productId, quantity, size, positionId] = item
+                        if (!productId || !positionId || !size || !quantity) {
                             error = true
                             return
                         }
 
                         allPromise.push(
                             productApi.addProductToWarehouse({
-                                productId, quantity, positionId
+                                productId, quantity, size, positionId
                             })
                         )
                     }
@@ -123,7 +123,7 @@ export default function ImportExcel() {
             />
             <h3>Example format</h3>
             <Image style={{ marginBottom: 8 }} src={img} />
-            <Tag color='blue'>
+            {/* <Tag color='blue'>
                 Note: Position must be available in warehouse. You can click this button to see warehouse's status.
             </Tag>
             <Button onClick={() => setVisible(true)} style={{ marginTop: 8 }}>
@@ -142,7 +142,7 @@ export default function ImportExcel() {
                         </Col>
                     ))}
                 </Row>
-            </Modal>
+            </Modal> */}
         </Card>
     )
 }

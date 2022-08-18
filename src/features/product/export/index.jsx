@@ -39,6 +39,7 @@ export default function Export() {
                 employee: getUser().id,
                 exportDate: moment().format(DATE_FORMAT)
             });
+            toast.success("Success");
         } catch (error) {
             console.log(error);
             toast.error("Export Failed")

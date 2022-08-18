@@ -32,7 +32,7 @@ export default function ProductDetail({ visible, product, onClose }) {
             {
                 key: 'position',
                 label: 'Position',
-                value: product.position
+                value: product.positionName
             }
         ]);
     }, [visible, product]);

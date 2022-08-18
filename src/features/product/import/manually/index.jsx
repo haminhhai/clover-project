@@ -73,14 +73,17 @@ export default function Manually() {
 
     useEffect(() => {
         fetchListProduct();
-        fetchListPosition()
     }, [])
+
+    useEffect(() => {
+        visibleWarehouse && fetchListPosition()
+    }, [visibleWarehouse])
 
     return (
         <Card>
             <Form form={form} layout='vertical' onFinish={importProduct} onFinishFailed={onFinishFailed}>
                 <Row gutter={[16, 8]}>
-                    <Col span={8}>
+                    <Col span={6}>
                         <Form.Item
                             label='Product'
                             name='productId'
@@ -97,12 +100,17 @@ export default function Manually() {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={8}>
+                    <Col span={6}>
                         <Form.Item label='Quantity' name='quantity' rules={[{ required: true, message: FIELD_REQUIRED }]}>
                             <InputNumber style={{ width: '100%' }} />
                         </Form.Item>
                     </Col>
-                    <Col span={8}>
+                    <Col span={6}>
+                        <Form.Item label='Size' name='size' rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                            <InputNumber style={{ width: '100%' }} />
+                        </Form.Item>
+                    </Col>
+                    <Col span={6}>
                         <Form.Item label='Position' name='positionId' rules={[{ required: true, message: FIELD_REQUIRED }]}>
                             {
                                 selectedPosition.name &&

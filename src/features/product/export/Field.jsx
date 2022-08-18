@@ -3,15 +3,25 @@ import { Avatar, Button, Col, Form, Input, InputNumber, Row, Select } from "antd
 import { InputCurrency } from "components/";
 import { FIELD_REQUIRED } from "constants/message";
 import img from "assets/images/null-img.png"
+import { useState } from "react";
+import { formatVND } from "utils/";
 
 export default function FieldExport({ listProduct, listBranch, name, remove, ...restField }) {
+    const [initialPrice, setInitialPrice] = useState('');
+    const onChangeProduct = (value) => {
+        const product = listProduct.find(item => item.id === value);
+        if (product) {
+            setInitialPrice(formatVND(product.price));
+        }
+    }
+
     return (
         <Row gutter={16}>
             <Col span={6}>
                 <Form.Item
                     name={[name, 'productId']}
                     rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                    <Select placeholder='Select Product' size="large">
+                    <Select placeholder='Select Product' size="large" onChange={onChangeProduct}>
                         {
                             listProduct.map(product => (
                                 <Select.Option key={product.id} value={product.id}>
@@ -37,7 +47,7 @@ export default function FieldExport({ listProduct, listBranch, name, remove, ...
                 </Form.Item>
             </Col>
             <Col span={6}>
-                <Form.Item name={[name, 'price']} rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                <Form.Item name={[name, 'price']} rules={[{ required: true, message: FIELD_REQUIRED }]} extra={initialPrice && `Initial Price: ${initialPrice}`}>
                     <InputCurrency min={0} size='large' placeholder='Price' style={{ width: '100%' }} />
                 </Form.Item>
             </Col>

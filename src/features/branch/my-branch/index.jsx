@@ -34,8 +34,9 @@ export default function MyBranch() {
         })
     }
 
-    const fetchDetail = async () => {
+    const fetchDetail = async (total) => {
         try {
+            let totalIncome = total || 0
             const branch = await branchApi.getDetail(getUser().idBranch);
             setBranchDetail(branch);
             setDataTable([
@@ -62,7 +63,7 @@ export default function MyBranch() {
                 {
                     key: 'income',
                     label: 'Income',
-                    value: branch.income
+                    value: totalIncome
                 },
             ]);
         } catch (error) {
@@ -71,13 +72,19 @@ export default function MyBranch() {
     }
 
     const fetchIncome = async () => {
+        if (!filter.startDate || !filter.endDate) return;
         try {
             const income = await branchApi.getIncomeBranch({
-                branchId: id,
+                branchId: getUser().idBranch,
                 startDate: filter.startDate,
                 endDate: filter.endDate,
             });
             setDataIncome(income);
+            const tableData = dataTable
+            setDataTable(tableData)
+            fetchDetail(income.reduce((total, item) => {
+                return total + item.income
+            }, 0))
         } catch (error) {
             console.log(error);
         }

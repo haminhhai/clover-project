@@ -15,7 +15,6 @@ const cx = classNames.bind(style);
 export default function ManageBranch() {
     const navigate = useNavigate();
 
-    const [loading, setLoading] = useState(false);
     const [filter, setFilter] = useState({
         name: "",
         active: '',
@@ -40,6 +39,15 @@ export default function ManageBranch() {
     const closeAddEdit = () => {
         setSelected(null)
         setVisibleAddEdit(false);
+    }
+
+    const handlePageChange = async (page, pageSize) => {
+        const params = {
+            ...filter,
+            pageIndex: page - 1,
+            pageSize,
+        }
+        setFilter(params)
     }
 
     const submitAddEdit = async (values) => {
@@ -81,7 +89,7 @@ export default function ManageBranch() {
 
     useEffect(() => {
         fetchListBranch();
-    }, [])
+    }, [filter])
 
     return (
         <Card>
@@ -99,16 +107,18 @@ export default function ManageBranch() {
                 )
             }
             <Filter filter={filter} onChange={(value) => setFilter(value)} />
-            <Space className={cx('btn')}>
+            {/* <Space className={cx('btn')}>
                 <Button icon={<SearchOutlined />} onClick={fetchListBranch}>Search</Button>
-            </Space>
+            </Space> */}
 
             <Table dataSource={listBranch} columns={renderColumns(goDetail, openEdit)} pagination={false} />
             <Pagination
                 className={cx('pagination')}
                 total={total}
                 current={filter.pageIndex + 1}
-                pageSize={filter.pageSize} />
+                pageSize={filter.pageSize}
+                onChange={handlePageChange}
+            />
             <BranchAddEdit
                 selected={selected}
                 visible={visbleAddEdit}

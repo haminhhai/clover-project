@@ -35,9 +35,20 @@ export default function BranchDetail() {
         })
     }
 
-    const fetchDetail = async () => {
+    const fetchDetail = async (total = 0) => {
         try {
+            let totalIncome = total || 0
             const branch = await branchApi.getDetail(id);
+            if (getUser().roleId == '2') {
+                const income = await branchApi.getIncomeBranch({
+                    branchId: id,
+                    startDate: '2022-07-01',
+                    endDate: moment().format(DATE_FORMAT)
+                });
+                totalIncome = income.reduce((total, item) => {
+                    return total + item.income
+                }, 0)
+            }
             setBranchDetail(branch);
             setDataTable([
                 {
@@ -63,7 +74,7 @@ export default function BranchDetail() {
                 {
                     key: 'income',
                     label: 'Income',
-                    value: branch.income
+                    value: totalIncome
                 },
             ]);
         } catch (error) {
@@ -72,6 +83,7 @@ export default function BranchDetail() {
     }
 
     const fetchIncome = async () => {
+        if (!filter.startDate || !filter.endDate) return;
         try {
             const income = await branchApi.getIncomeBranch({
                 branchId: id,
@@ -79,6 +91,7 @@ export default function BranchDetail() {
                 endDate: filter.endDate,
             });
             setDataIncome(income);
+            fetchDetail(income.reduce((total, item) => total + item.income, 0));
         } catch (error) {
             console.log(error);
         }

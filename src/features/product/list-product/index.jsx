@@ -20,7 +20,7 @@ export default function ListProduct() {
 
     const [filter, setFilter] = useState({
         pageIndex: 0,
-        pageSize: 9,
+        pageSize: 8,
         name: "",
         size: "",
         category: "",
@@ -109,6 +109,7 @@ export default function ListProduct() {
             const list = await branchApi.getPaging({
                 pageIndex: 0,
                 pageSize: 100,
+                active: true
             });
             setListBranch(list.branches);
         } catch (error) {
@@ -187,12 +188,12 @@ export default function ListProduct() {
         <Row gutter={16}>
             <Col span={4}>
                 <Menu mode="inline" selectedKeys={selectedKeys}>
-                    {
-                        (getUser()?.roleId === 0 || getUser()?.roleId === 2) &&
-                        <Menu.Item key={'0'} onClick={() => onChangeBranch('0')}>
-                            Warehouse
-                        </Menu.Item>
-                    }
+                    <Menu.Item key="All" onClick={() => onChangeBranch('All')}>
+                        All
+                    </Menu.Item>
+                    <Menu.Item key={'0'} onClick={() => onChangeBranch('0')}>
+                        Warehouse
+                    </Menu.Item>
                     {
                         (getUser()?.roleId !== 0 || getUser()?.roleId !== 4) &&
                             listBranch.length > 0 ? listBranch.map((item, idx) => {
