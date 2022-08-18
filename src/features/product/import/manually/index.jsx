@@ -23,7 +23,14 @@ export default function Manually() {
 
     const importProduct = async (values) => {
         try {
-            await productApi.addProductToWarehouse(values);
+            const resp = await productApi.addProductToWarehouse(values);
+            if (resp.positionId) {
+                const position = listPosition.find(item => item.id === resp.positionId);
+                if (position?.id) {
+                    toast.success(`Product was been placed in ${position.name}`);
+                }
+
+            }
             toast.success("Import product success");
             form.resetFields();
             setSelectedPosition({});

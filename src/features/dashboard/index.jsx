@@ -127,7 +127,7 @@ const DashboardFeature = () => {
                     <Card hoverable title={`${getUser()?.roleId === 1 ? 'Branch' : 'Warehouse'}'s status`} className={cx('scroll')}>
                         <Row gutter={[16, 16]}>
                             {listPosition.map((item, index) => {
-                                if (index !== 0 && index / 10 === 0) {
+                                if (index !== 0 && (index + 1) % 10 === 0) {
                                     return (
                                         <>
                                             <Col span={2} key={index} className={cx('wrapper')}>
@@ -135,11 +135,12 @@ const DashboardFeature = () => {
                                                 {renderIcon(item)}
                                             </Col>
                                             <Col span={4}>
-
+                                                { }
                                             </Col>
                                         </>
                                     )
                                 }
+
                                 return (
                                     <Col span={2} key={index} className={cx('wrapper')}>
                                         <span className={cx('name')}>{item.name}</span>

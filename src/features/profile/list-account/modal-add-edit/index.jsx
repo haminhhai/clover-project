@@ -73,12 +73,15 @@ export default function ModalAddEdit({ listRole, loading, visible, onCancel, onS
                 ]}>
                     <Input />
                 </Form.Item>
-                <Form.Item label="Email" name="email" rules={[
-                    { required: true, message: FIELD_REQUIRED },
-                    { type: "email", message: FIELD_EMAIL_INVALID }
-                ]}>
-                    <Input />
-                </Form.Item>
+                {
+                    !isEdit &&
+                    <Form.Item label="Email" name="email" rules={[
+                        { required: true, message: FIELD_REQUIRED },
+                        { type: "email", message: FIELD_EMAIL_INVALID }
+                    ]}>
+                        <Input />
+                    </Form.Item>
+                }
                 <Form.Item name="role" label="Role" rules={[
                     { required: true, message: FIELD_REQUIRED }
                 ]}>

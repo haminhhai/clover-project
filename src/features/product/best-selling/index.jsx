@@ -1,5 +1,4 @@
 import { Col, Pagination, Row, Select } from "antd";
-import branchApi from "api/branch";
 import productApi from "api/product";
 import classNames from "classnames/bind";
 import CardProduct from "components/card-product";
@@ -13,8 +12,6 @@ export default function BestSelling() {
     const [selectedProduct, setSelectedProduct] = useState("");
     const [visibleDetail, setVisibleDetail] = useState(false);
     const [listProduct, setListProduct] = useState([]);
-    const [listBranch, setListBranch] = useState([]);
-    const [selectedBranch, setSelectedBranch] = useState("");
 
     const openDetail = (product) => {
         setSelectedProduct(product);
@@ -30,54 +27,50 @@ export default function BestSelling() {
         }
     }
 
-    const onChangeBranch = (value) => {
-        setSelectedBranch(value);
-    }
-
-    const fetchBranch = async () => {
-        try {
-            const list = await branchApi.getPaging({
-                pageIndex: 0,
-                pageSize: 100,
-            });
-            setListBranch(list.branches);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        fetchBranch()
-    }, [])
-
     useEffect(() => {
         fetchBestSelling()
-    }, [selectedBranch])
+    }, [])
 
     return (
-        <Row gutter={16}>
-            {/* <Col span={4}>
-                <Select placeholder="Select Branch" style={{ width: "100%" }} value={selectedBranch} onChange={onChangeBranch}>
-                    <Select.Option value="">All</Select.Option>
-                    {
-                        listBranch.map(branch => (
-                            <Select.Option key={branch.id} value={branch.id}>{branch.name}</Select.Option>
-                        ))
-                    }
-                </Select>
-            </Col> */}
-            <Col span={24}>
-                <Row gutter={[16, 16]}>
+        <>
+            <Row gutter={[16, 16]}>
+                <Col span={8}>
+                    {listProduct.map((product, index) => {
+                        if (index < 3) {
 
-                    {listProduct.map((product) => (
-                        <Col key={product.id} span={8}>
-                            <CardProduct product={product} onClick={() => openDetail(product)} />
-                        </Col>
-                    ))}
-                </Row>
-                <Pagination className={cx('pagination')} pageSize={12} defaultCurrent={1} total={10} />
-            </Col>
+                            return (
+                                <Col key={product.id} span={24} style={{ marginTop: index === 0 ? 160 : 16 }}>
+                                    <CardProduct product={product} onClick={() => openDetail(product)} />
+                                </Col>
+                            )
+                        }
+                    })}
+                </Col>
+                <Col span={8}>
+                    {listProduct.map((product, index) => {
+                        if (index >= 3 && index <= 6) {
+                            return (
+                                <Col key={product.id} span={24} style={{ marginTop: index === 3 ? 0 : 16 }}>
+                                    <CardProduct product={product} onClick={() => openDetail(product)} />
+                                </Col>
+                            )
+                        }
+                    })}
+                </Col>
+                <Col span={8}>
+                    {listProduct.map((product, index) => {
+                        if (index > 6) {
+                            return (
+                                <Col key={product.id} span={24} style={{ marginTop: index === 7 ? 160 : 16 }}>
+                                    <CardProduct product={product} onClick={() => openDetail(product)} />
+                                </Col>
+                            )
+                        }
+                    })}
+                </Col>
+            </Row>
             <ProductDetail visible={visibleDetail} product={selectedProduct} onClose={() => setVisibleDetail(false)} />
-        </Row>
+        </>
+
     )
 }

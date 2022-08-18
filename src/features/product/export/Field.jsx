@@ -8,10 +8,13 @@ import { formatVND } from "utils/";
 
 export default function FieldExport({ listProduct, listBranch, name, remove, ...restField }) {
     const [initialPrice, setInitialPrice] = useState('');
+    const [maxQuantity, setMaxQuantity] = useState(null);
+
     const onChangeProduct = (value) => {
         const product = listProduct.find(item => item.id === value);
         if (product) {
             setInitialPrice(formatVND(product.price));
+            setMaxQuantity(product.quantity);
         }
     }
 
@@ -52,8 +55,8 @@ export default function FieldExport({ listProduct, listBranch, name, remove, ...
                 </Form.Item>
             </Col>
             <Col span={4}>
-                <Form.Item name={[name, 'quantity']} rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                    <InputNumber placeholder='Quantity' size='large' min={1} style={{ width: '100%' }} />
+                <Form.Item name={[name, 'quantity']} rules={[{ required: true, message: FIELD_REQUIRED }]} extra={maxQuantity && `Max quantity: ${maxQuantity}`}>
+                    <InputNumber max={maxQuantity} placeholder='Quantity' size='large' min={1} style={{ width: '100%' }} />
                 </Form.Item>
             </Col>
             <Col>

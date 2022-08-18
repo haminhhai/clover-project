@@ -1,5 +1,5 @@
 import { EyeFilled, RestFilled, RotateRightOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Empty, Form, Input, InputNumber, Menu, Modal, Pagination, Row } from "antd";
+import { Avatar, Button, Card, Col, Empty, Form, Input, InputNumber, Menu, Modal, Pagination, Row, Select } from "antd";
 import branchApi from "api/branch";
 import categoryApi from "api/category";
 import productApi from "api/product";
@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 import { getUser } from "utils/";
 import ProductDetail from "../detail";
 import { Filter, HistoryDelete } from "./components";
+import img from "assets/images/null-img.png"
+
 import style from "./index.module.scss";
 
 const cx = classNames.bind(style);
@@ -33,11 +35,13 @@ export default function InventoryProduct() {
     const [visibleDetail, setVisibleDetail] = useState(false);
     const [visibleHistory, setVisibleHistory] = useState(false);
     const [visibleAdd, setVisibleAdd] = useState(false);
+    const [visibleAddNew, setVisibleAddNew] = useState(false);
     const [visibleDelete, setVisibleDelete] = useState(false);
     const [listProduct, setListProduct] = useState([]);
     const [listBranch, setListBranch] = useState([]);
     const [listCategory, setListCategory] = useState([]);
     const [listHistory, setListHistory] = useState([]);
+    const [listProductWarehouse, setListProductWarehouse] = useState([]);
 
     const openDetail = (product) => {
         setSelectedProduct(product);
@@ -111,21 +115,12 @@ export default function InventoryProduct() {
 
     const fetchInventory = async () => {
         try {
-            if (selectedKeys[0] == '0') {
-                const { products, total } = await productApi.getProductWarehouse({
-                    ...filter,
-                    warehouseId: 1
-                });
-                setListProduct(products);
-                setTotal(total);
-            } else {
-                const { products, total } = await productApi.getProductInventory({
-                    ...filter,
-                    branchId: selectedKeys[0],
-                });
-                setListProduct(products);
-                setTotal(total);
-            }
+            const { products, total } = await productApi.getProductInventory({
+                ...filter,
+                branchId: selectedKeys[0] == '0' ? undefined : selectedKeys[0],
+            });
+            setListProduct(products);
+            setTotal(total);
         } catch (error) {
             console.log(error);
         }
@@ -137,6 +132,34 @@ export default function InventoryProduct() {
             setListHistory(list);
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    const fetchProductWarehouse = async () => {
+        try {
+            const { products } = await productApi.getProductWarehouse({
+                pageIndex: 0,
+                pageSize: 100,
+                warehouseId: 1
+            });
+            setListProductWarehouse(products);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const addNewInventory = async (values) => {
+        try {
+            await productApi.addProductToInventory({
+                ...values,
+                isWarehouse: true,
+            })
+            setVisibleAddNew(false);
+            fetchInventory();
+            toast.success("Success")
+        } catch (error) {
+            console.log(error);
+            toast.error('Failed')
         }
     }
 
@@ -161,7 +184,7 @@ export default function InventoryProduct() {
             await productApi.deleteInventory({
                 ...values,
                 id: selectedProduct.id,
-                branchId: getUser()?.idBranch,
+                branchId: selectedProduct.branchId,
                 accountId: getUser()?.id,
                 accountName: getUser()?.username,
             })
@@ -189,6 +212,10 @@ export default function InventoryProduct() {
     }, [visibleHistory])
 
     useEffect(() => {
+        visibleAddNew && fetchProductWarehouse();
+    }, [visibleAddNew])
+
+    useEffect(() => {
         selectedKeys.length > 0 && fetchInventory();
     }, [filter, selectedKeys]);
 
@@ -204,7 +231,7 @@ export default function InventoryProduct() {
                 <Col span={4}>
                     <Menu mode="inline" selectedKeys={selectedKeys}>
                         {
-                            getUser()?.roleId === 2 && (
+                            getUser()?.roleId !== 0 && (
                                 <Menu.Item key="0" onClick={() => setSelectedKeys(['0'])}>
                                     <span>WareHouse</span>
                                 </Menu.Item>
@@ -224,6 +251,13 @@ export default function InventoryProduct() {
                 {
                     selectedKeys.length > 0 && (
                         <Col span={20}>
+                            {
+                                selectedKeys[0] == '0' && (
+                                    <Button style={{ marginBottom: 16 }} onClick={() => setVisibleAddNew(true)}>
+                                        Add New Inventory
+                                    </Button>
+                                )
+                            }
                             <Card className={cx('filter')}>
                                 <Filter filter={filter} onChangeFilter={onChangeFilter} listCategory={listCategory} />
                             </Card>
@@ -253,7 +287,7 @@ export default function InventoryProduct() {
             <ProductDetail visible={visibleDetail} product={selectedProduct} onClose={() => setVisibleDetail(false)} />
             <HistoryDelete visible={visibleHistory} list={listHistory} onClose={() => setVisibleHistory(false)} />
             <Modal
-                title="Add Inventory Product To Warehouse"
+                title="Add Inventory"
                 visible={visibleAdd}
                 onCancel={() => setVisibleAdd(false)}
                 footer=''
@@ -312,6 +346,50 @@ export default function InventoryProduct() {
                             Submit
                         </Button>
                         <Button onClick={() => setVisibleDelete(false)}>
+                            Cancel
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
+            <Modal
+                title="Add New Inventory"
+                visible={visibleAddNew}
+                onCancel={() => setVisibleAddNew(false)}
+                footer=''
+            >
+                <Form
+                    form={form}
+                    onFinish={addNewInventory}
+                    layout='vertical'>
+                    <Form.Item
+                        label="Product"
+                        name='productId'
+                        rules={[{ required: true, message: FIELD_REQUIRED }]}>
+                        <Select placeholder='Select Product' size="large">
+                            {
+                                listProductWarehouse.map(product => (
+                                    <Select.Option key={product.id} value={product.id}>
+                                        <Avatar src={product?.image || img} style={{ marginRight: '1em' }} />
+                                        {product.name}
+                                    </Select.Option>
+                                ))
+                            }
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        label="Quantity"
+                        name='quantity'
+                        rules={[
+                            { required: true, message: FIELD_REQUIRED },
+                        ]}
+                    >
+                        <InputNumber min={0} max={selectedProduct?.quantity} />
+                    </Form.Item>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" style={{ marginRight: 8 }}>
+                            Submit
+                        </Button>
+                        <Button onClick={() => setVisibleAddNew(false)}>
                             Cancel
                         </Button>
                     </Form.Item>

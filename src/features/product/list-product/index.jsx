@@ -136,7 +136,13 @@ export default function ListProduct() {
                 });
                 setListProduct(products);
                 setTotal(total);
-            } else {
+
+            } else if (selectedKeys[0] === 'All') {
+                const { products, total } = await productApi.getAll(filter);
+                setListProduct(products);
+                setTotal(total);
+            }
+            else {
                 const { products, total } = await productApi.getProductBranch({
                     ...filter,
                     branchId: selectedKeys[0]
@@ -188,12 +194,20 @@ export default function ListProduct() {
         <Row gutter={16}>
             <Col span={4}>
                 <Menu mode="inline" selectedKeys={selectedKeys}>
-                    <Menu.Item key="All" onClick={() => onChangeBranch('All')}>
-                        All
-                    </Menu.Item>
-                    <Menu.Item key={'0'} onClick={() => onChangeBranch('0')}>
-                        Warehouse
-                    </Menu.Item>
+                    {
+                        getUser().roleId !== 1 &&
+                        <Menu.Item key="All" onClick={() => onChangeBranch('All')}>
+                            All
+                        </Menu.Item>
+                    }
+                    {
+                        getUser()?.roleId !== 0 && (
+                            <Menu.Item key={'0'} onClick={() => onChangeBranch('0')}>
+                                Warehouse
+                            </Menu.Item>
+
+                        )
+                    }
                     {
                         (getUser()?.roleId !== 0 || getUser()?.roleId !== 4) &&
                             listBranch.length > 0 ? listBranch.map((item, idx) => {

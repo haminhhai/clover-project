@@ -25,6 +25,7 @@ export default function Export() {
             const list = await branchApi.getPaging({
                 pageIndex: 0,
                 pageSize: 100,
+                active: true
             });
             setListBranch(list.branches);
         } catch (error) {
