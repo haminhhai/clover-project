@@ -119,7 +119,10 @@ export default function ListAccount() {
 
     const fetchListAccount = async () => {
         try {
-            const { total, accounts } = await accountApi.getAll(filter);
+            const { total, accounts } = await accountApi.getAll({
+                ...filter,
+                pageIndex: 0,
+            });
             setListAccount(accounts);
             setTotal(total);
         } catch (error) {
@@ -129,7 +132,6 @@ export default function ListAccount() {
 
     useEffect(() => {
         fetchListAccount()
-
     }, [filter])
 
     useEffect(() => {

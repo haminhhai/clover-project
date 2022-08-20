@@ -117,6 +117,7 @@ export default function InventoryProduct() {
         try {
             const { products, total } = await productApi.getProductInventory({
                 ...filter,
+                pageIndex: 0,
                 branchId: selectedKeys[0] == '0' ? undefined : selectedKeys[0],
             });
             setListProduct(products);

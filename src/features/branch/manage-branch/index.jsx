@@ -78,6 +78,7 @@ export default function ManageBranch() {
         try {
             const { branches, total } = await branchApi.getPaging({
                 ...filter,
+                pageIndex: 0,
                 active: filter.active.length < 1 ? undefined : (filter.active == '0' ? true : false),
             })
             setListBranch(branches)

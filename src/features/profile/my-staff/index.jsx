@@ -26,8 +26,9 @@ export default function MyStaff() {
 
     const fetchListAccount = async () => {
         try {
-            const { branches, warehouses } = await accountApi.getAllBranchWarehouse(getUser().id);
-            setListAccount(branches);
+            const list = await accountApi.getAllStaff(getUser().idBranch);
+            const filter = list.filter(x => x.role !== 1);
+            setListAccount(filter);
         } catch (error) {
             console.log("🚀 ~ error", error)
         }

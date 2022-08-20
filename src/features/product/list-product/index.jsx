@@ -132,19 +132,24 @@ export default function ListProduct() {
             if (selectedKeys[0] == '0') {
                 const { products, total } = await productApi.getProductWarehouse({
                     ...filter,
+                    pageIndex: 0,
                     warehouseId: 1
                 });
                 setListProduct(products);
                 setTotal(total);
 
             } else if (selectedKeys[0] === 'All') {
-                const { products, total } = await productApi.getAll(filter);
+                const { products, total } = await productApi.getAll({
+                    ...filter,
+                    pageIndex: 0,
+                });
                 setListProduct(products);
                 setTotal(total);
             }
             else {
                 const { products, total } = await productApi.getProductBranch({
                     ...filter,
+                    pageIndex: 0,
                     branchId: selectedKeys[0]
                 });
                 setListProduct(products);

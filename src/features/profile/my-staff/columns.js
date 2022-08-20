@@ -46,8 +46,8 @@ export const renderColumns = ({ listRole }) => [
     },
     {
         title: 'Role',
-        dataIndex: 'roleId',
-        key: 'roleId',
+        dataIndex: 'role',
+        key: 'role',
         render: (roleId, record) => (
             <span>
                 {renderRoles?.[roleId]?.icon}

@@ -9,8 +9,8 @@ const accountApi = {
         const url = `/account/id${id}`;
         return axiosService.get(url);
     },
-    getAllBranchWarehouse(id) {
-        const url = `/account/branch_warehouse/${id}`;
+    getAllStaff(id) {
+        const url = `/account/staff/${id}`;
         return axiosService.get(url);
     },
     changePassword(body) {
