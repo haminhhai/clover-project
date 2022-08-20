@@ -20,7 +20,7 @@ export default function FieldExport({ listProduct, listBranch, name, remove, ...
 
     return (
         <Row gutter={16}>
-            <Col span={6}>
+            <Col span={8}>
                 <Form.Item
                     name={[name, 'productId']}
                     rules={[{ required: true, message: FIELD_REQUIRED }]}>
@@ -36,7 +36,7 @@ export default function FieldExport({ listProduct, listBranch, name, remove, ...
                     </Select>
                 </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col span={8}>
                 <Form.Item name={[name, 'branchId']} rules={[{ required: true, message: FIELD_REQUIRED }]}>
                     <Select placeholder='Select Branch' size='large'>
                         {
@@ -49,12 +49,12 @@ export default function FieldExport({ listProduct, listBranch, name, remove, ...
                     </Select>
                 </Form.Item>
             </Col>
-            <Col span={6}>
+            {/* <Col span={6}>
                 <Form.Item name={[name, 'price']} rules={[{ required: true, message: FIELD_REQUIRED }]} extra={initialPrice && `Initial Price: ${initialPrice}`}>
                     <InputCurrency min={0} size='large' placeholder='Price' style={{ width: '100%' }} />
                 </Form.Item>
-            </Col>
-            <Col span={4}>
+            </Col> */}
+            <Col span={6}>
                 <Form.Item name={[name, 'quantity']} rules={[{ required: true, message: FIELD_REQUIRED }]} extra={maxQuantity && `Max quantity: ${maxQuantity}`}>
                     <InputNumber max={maxQuantity} placeholder='Quantity' size='large' min={1} style={{ width: '100%' }} />
                 </Form.Item>
