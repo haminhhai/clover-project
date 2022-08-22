@@ -1,4 +1,4 @@
-import { EyeFilled, RestFilled, RotateRightOutlined, SearchOutlined } from "@ant-design/icons";
+import { EyeFilled, MinusCircleOutlined, RestFilled, RotateRightOutlined, SearchOutlined } from "@ant-design/icons";
 import { Avatar, Button, Card, Col, Empty, Form, Input, InputNumber, Menu, Modal, Pagination, Row, Select } from "antd";
 import branchApi from "api/branch";
 import categoryApi from "api/category";
@@ -35,6 +35,7 @@ export default function InventoryProduct() {
     const [visibleDetail, setVisibleDetail] = useState(false);
     const [visibleHistory, setVisibleHistory] = useState(false);
     const [visibleAdd, setVisibleAdd] = useState(false);
+    const [visibleAddTo, setVisibleAddTo] = useState(false);
     const [visibleAddNew, setVisibleAddNew] = useState(false);
     const [visibleDelete, setVisibleDelete] = useState(false);
     const [listProduct, setListProduct] = useState([]);
@@ -42,6 +43,7 @@ export default function InventoryProduct() {
     const [listCategory, setListCategory] = useState([]);
     const [listHistory, setListHistory] = useState([]);
     const [listProductWarehouse, setListProductWarehouse] = useState([]);
+    const [listProductBranch, setListProductBranch] = useState([]);
 
     const openDetail = (product) => {
         setSelectedProduct(product);
@@ -56,6 +58,11 @@ export default function InventoryProduct() {
     const openAdd = (product) => {
         setSelectedProduct(product);
         setVisibleAdd(true);
+    }
+
+    const openAddTo = (product) => {
+        setSelectedProduct(product);
+        setVisibleAddTo(true);
     }
 
 
@@ -85,6 +92,9 @@ export default function InventoryProduct() {
             actions.push(<RotateRightOutlined key='2' onClick={() => openAdd(product)} />)
         }
 
+        if (getUser()?.roleId === 2 && selectedKeys[0] == '0') {
+            actions.push(<MinusCircleOutlined key='4' onClick={() => openAddTo(product)} />)
+        }
         if (getUser().roleId === 2) {
             actions.push(<RestFilled key='3' onClick={() => openDelete(product)} />)
         }
@@ -117,7 +127,6 @@ export default function InventoryProduct() {
         try {
             const { products, total } = await productApi.getProductInventory({
                 ...filter,
-                pageIndex: 0,
                 branchId: selectedKeys[0] == '0' ? undefined : selectedKeys[0],
             });
             setListProduct(products);
@@ -144,6 +153,38 @@ export default function InventoryProduct() {
                 warehouseId: 1
             });
             setListProductWarehouse(products);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const fetchProductBranch = async () => {
+        try {
+            const { products } = await productApi.getProductBranch({
+                pageIndex: 0,
+                pageSize: 100,
+                branchId: selectedKeys[0]
+            });
+            setListProductBranch(products);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const submitAddInventory = async (values) => {
+        try {
+            await productApi.addProductToInventory({
+                ...values,
+                idCategory: selectedProduct.idCategory,
+                name: selectedProduct.name,
+                image: selectedProduct.image,
+                price: selectedProduct.price,
+                size: selectedProduct.size,
+                position: selectedProduct.position,
+            });
+            setVisibleAdd(false);
+            fetchInventory();
+            toast.success("Success")
         } catch (error) {
             console.log(error);
         }
@@ -213,7 +254,10 @@ export default function InventoryProduct() {
     }, [visibleHistory])
 
     useEffect(() => {
-        visibleAddNew && fetchProductWarehouse();
+        if (visibleAddNew) {
+            fetchProductWarehouse();
+            fetchProductBranch()
+        }
     }, [visibleAddNew])
 
     useEffect(() => {
@@ -253,7 +297,14 @@ export default function InventoryProduct() {
                     selectedKeys.length > 0 && (
                         <Col span={20}>
                             {
-                                selectedKeys[0] == '0' && (
+                                selectedKeys[0] == '0' && getUser().roleId == '2' && (
+                                    <Button style={{ marginBottom: 16 }} onClick={() => setVisibleAddNew(true)}>
+                                        Add New Inventory
+                                    </Button>
+                                )
+                            }
+                            {
+                                selectedKeys[0] == getUser().idBranch && getUser().roleId == '1' && (
                                     <Button style={{ marginBottom: 16 }} onClick={() => setVisibleAddNew(true)}>
                                         Add New Inventory
                                     </Button>
@@ -368,7 +419,12 @@ export default function InventoryProduct() {
                         rules={[{ required: true, message: FIELD_REQUIRED }]}>
                         <Select placeholder='Select Product' size="large">
                             {
-                                listProductWarehouse.map(product => (
+                                getUser().roleId == '2' ? listProductWarehouse.map(product => (
+                                    <Select.Option key={product.id} value={product.id}>
+                                        <Avatar src={product?.image || img} style={{ marginRight: '1em' }} />
+                                        {product.name}
+                                    </Select.Option>
+                                )) : listProductBranch.map(product => (
                                     <Select.Option key={product.id} value={product.id}>
                                         <Avatar src={product?.image || img} style={{ marginRight: '1em' }} />
                                         {product.name}
@@ -391,6 +447,59 @@ export default function InventoryProduct() {
                             Submit
                         </Button>
                         <Button onClick={() => setVisibleAddNew(false)}>
+                            Cancel
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
+            <Modal
+                title="Add To Inventory"
+                visible={visibleAdd}
+                onCancel={() => setVisibleAddTo(false)}
+                footer=''
+            >
+                <Form
+                    form={form}
+                    onFinish={submitAddInventory}
+                    layout='vertical'>
+                    <Form.Item
+                        label="Quantity"
+                        name='quantity'
+                        extra={`Has ${selectedProduct.quantity} left`}
+                        rules={[
+                            { required: true, message: FIELD_REQUIRED },
+                            ({ }) => ({
+                                validator(_, value) {
+                                    if (value <= selectedProduct?.quantity) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(new Error(`Quantity must be less than ${selectedProduct?.quantity}`));
+                                },
+                            }),
+                        ]}
+                    >
+                        <InputNumber min={0} max={selectedProduct?.quantity} />
+                    </Form.Item>
+                    <Form.Item
+                        label="Branch"
+                        name='branchId'
+                        rules={[
+                            { required: true, message: FIELD_REQUIRED },
+                        ]}
+                    >
+                        <Select>
+                            {
+                                listBranch.map((item) => (
+                                    <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
+                                ))
+                            }
+                        </Select>
+                    </Form.Item>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" style={{ marginRight: 8 }}>
+                            Submit
+                        </Button>
+                        <Button onClick={() => setVisibleAddTo(false)}>
                             Cancel
                         </Button>
                     </Form.Item>

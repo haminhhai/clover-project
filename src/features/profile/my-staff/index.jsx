@@ -10,8 +10,6 @@ import { getUser } from "utils/";
 const cx = classNames.bind(style);
 
 export default function MyStaff() {
-
-    const [loading, setLoading] = useState(false);
     const [listAccount, setListAccount] = useState([]);
     const [listRole, setListRole] = useState([]);
 

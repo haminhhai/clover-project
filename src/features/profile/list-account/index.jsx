@@ -121,7 +121,6 @@ export default function ListAccount() {
         try {
             const { total, accounts } = await accountApi.getAll({
                 ...filter,
-                pageIndex: 0,
             });
             setListAccount(accounts);
             setTotal(total);

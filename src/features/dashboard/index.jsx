@@ -22,6 +22,7 @@ const DashboardFeature = () => {
     const [loadingBestSelling, setLoadingBestSelling] = useState(true)
     const [totalBranch, setTotalBranch] = useState(0)
     const [totalAccount, setTotalAccount] = useState(0)
+    const [totalOrder, setTotalOrder] = useState(0)
     const [showModal, setShowModal] = useState(false)
     const [topSelling, setTopSelling] = useState([])
     const [listPosition, setListPosition] = useState([])
@@ -83,6 +84,15 @@ const DashboardFeature = () => {
         }
     }
 
+    const fetchOrder = async () => {
+        try {
+            const total = await productApi.getOrder()
+            setTotalOrder(total)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const fetchPosition = async () => {
         try {
             const list = getUser()?.roleId == 1 ? await positionApi.getBranch(getUser()?.idBranch) : await positionApi.getWarehouse()
@@ -97,6 +107,7 @@ const DashboardFeature = () => {
         fetchAccount();
         fetchTopSelling();
         fetchPosition()
+        fetchOrder()
     }, [])
 
     return (
@@ -116,7 +127,7 @@ const DashboardFeature = () => {
                     </Col>
                     <Col span={8}>
                         <Card hoverable title="Order" >
-                            <h2>{formatVND(200000)}</h2>
+                            <h2>{formatVND(parseInt(totalOrder))}</h2>
                         </Card>
                     </Col>
                 </>

@@ -44,6 +44,10 @@ const productApi = {
     exportProduct(body) {
         const url = '/product/export';
         return axiosService.post(url, body);
+    },
+    getOrder() {
+        const url = '/product/total'
+        return axiosService.get(url);
     }
 
 }

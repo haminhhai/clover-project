@@ -7,11 +7,9 @@ import style from "./index.module.scss";
 import { useEffect, useState } from "react";
 import ProductDetail from "../detail";
 import { getUser } from "utils/";
-import { FIELD_REQUIRED } from "constants/message";
 import branchApi from "api/branch";
 import categoryApi from "api/category";
 import productApi from "api/product";
-import { toast } from "react-toastify";
 
 const cx = classNames.bind(style);
 
@@ -132,7 +130,6 @@ export default function ListProduct() {
             if (selectedKeys[0] == '0') {
                 const { products, total } = await productApi.getProductWarehouse({
                     ...filter,
-                    pageIndex: 0,
                     warehouseId: 1
                 });
                 setListProduct(products);
@@ -141,7 +138,6 @@ export default function ListProduct() {
             } else if (selectedKeys[0] === 'All') {
                 const { products, total } = await productApi.getAll({
                     ...filter,
-                    pageIndex: 0,
                 });
                 setListProduct(products);
                 setTotal(total);
@@ -149,7 +145,6 @@ export default function ListProduct() {
             else {
                 const { products, total } = await productApi.getProductBranch({
                     ...filter,
-                    pageIndex: 0,
                     branchId: selectedKeys[0]
                 });
                 setListProduct(products);
@@ -163,24 +158,7 @@ export default function ListProduct() {
         }
     }
 
-    const submitAddInventory = async (values) => {
-        try {
-            await productApi.addProductToInventory({
-                ...values,
-                idCategory: selectedProduct.idCategory,
-                name: selectedProduct.name,
-                image: selectedProduct.image,
-                price: selectedProduct.price,
-                size: selectedProduct.size,
-                position: selectedProduct.position,
-            });
-            setVisibleAdd(false);
-            fecthListProduct();
-            toast.success("Success")
-        } catch (error) {
-            console.log(error);
-        }
-    }
+
 
     useEffect(() => {
         fetchBranch();
@@ -259,59 +237,7 @@ export default function ListProduct() {
                 </Col>
             }
             <ProductDetail visible={visibleDetail} product={selectedProduct} onClose={() => setVisibleDetail(false)} />
-            <Modal
-                title="Add To Inventory"
-                visible={visibleAdd}
-                onCancel={() => setVisibleAdd(false)}
-                footer=''
-            >
-                <Form
-                    form={form}
-                    onFinish={submitAddInventory}
-                    layout='vertical'>
-                    <Form.Item
-                        label="Quantity"
-                        name='quantity'
-                        extra={`Has ${selectedProduct.quantity} left`}
-                        rules={[
-                            { required: true, message: FIELD_REQUIRED },
-                            ({ }) => ({
-                                validator(_, value) {
-                                    if (value <= selectedProduct?.quantity) {
-                                        return Promise.resolve();
-                                    }
-                                    return Promise.reject(new Error(`Quantity must be less than ${selectedProduct?.quantity}`));
-                                },
-                            }),
-                        ]}
-                    >
-                        <InputNumber min={0} max={selectedProduct?.quantity} />
-                    </Form.Item>
-                    <Form.Item
-                        label="Branch"
-                        name='branchId'
-                        rules={[
-                            { required: true, message: FIELD_REQUIRED },
-                        ]}
-                    >
-                        <Select>
-                            {
-                                listBranch.map((item) => (
-                                    <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
-                                ))
-                            }
-                        </Select>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" style={{ marginRight: 8 }}>
-                            Submit
-                        </Button>
-                        <Button onClick={() => setVisibleAdd(false)}>
-                            Cancel
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+
         </Row>
     )
 }
