@@ -58,7 +58,7 @@ export default function Manually() {
     }
     const fetchListProduct = async () => {
         try {
-            const { products } = await productApi.getProductWarehouse({
+            const { products } = await productApi.getAll({
                 pageIndex: 0,
                 pageSize: 100,
                 warehouseId: 1

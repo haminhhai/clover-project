@@ -181,7 +181,7 @@ export default function ListProduct() {
                         </Menu.Item>
                     }
                     {
-                        getUser()?.roleId !== 0 && (
+                        getUser()?.roleId != 1 && (
                             <Menu.Item key={'0'} onClick={() => onChangeBranch('0')}>
                                 Warehouse
                             </Menu.Item>

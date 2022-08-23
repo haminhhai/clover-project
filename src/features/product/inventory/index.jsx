@@ -1,4 +1,4 @@
-import { EyeFilled, MinusCircleOutlined, RestFilled, RotateRightOutlined, SearchOutlined } from "@ant-design/icons";
+import { EyeFilled, MinusCircleOutlined, PlusCircleOutlined, RestFilled, RotateRightOutlined, SearchOutlined } from "@ant-design/icons";
 import { Avatar, Button, Card, Col, Empty, Form, Input, InputNumber, Menu, Modal, Pagination, Row, Select } from "antd";
 import branchApi from "api/branch";
 import categoryApi from "api/category";
@@ -90,7 +90,7 @@ export default function InventoryProduct() {
         ]
 
         if (getUser()?.roleId == 1 && selectedKeys[0] == getUser().idBranch) {
-            actions.push(<MinusCircleOutlined key='5' onClick={() => openAddTo(product)} />)
+            actions.push(<PlusCircleOutlined key='5' onClick={() => openAddTo(product)} />)
         }
 
         if (getUser()?.roleId === 1) {
@@ -98,10 +98,8 @@ export default function InventoryProduct() {
         }
 
         if (getUser()?.roleId === 2 && selectedKeys[0] == '0') {
-            actions.push(<MinusCircleOutlined key='4' onClick={() => openAddTo(product)} />)
+            actions.push(<PlusCircleOutlined key='4' onClick={() => openAddTo(product)} />)
         }
-
-
 
         if (getUser().roleId === 2) {
             actions.push(<RestFilled key='3' onClick={() => openDelete(product)} />)
@@ -189,7 +187,8 @@ export default function InventoryProduct() {
                 price: selectedProduct.price,
                 size: selectedProduct.size,
                 position: selectedProduct.position,
-                branchId: getUser().roleId == '1' ? selectedKeys[0] : undefined
+                branchId: getUser().roleId == '1' ? selectedKeys[0] : undefined,
+                isWarehouse: getUser().roleId == '2'
             });
             setVisibleAddTo(false);
             fetchInventory();
@@ -292,7 +291,7 @@ export default function InventoryProduct() {
                 <Col span={4}>
                     <Menu mode="inline" selectedKeys={selectedKeys}>
                         {
-                            getUser()?.roleId !== 0 && (
+                            getUser()?.roleId !== 1 && (
                                 <Menu.Item key="0" onClick={() => setSelectedKeys(['0'])}>
                                     <span>WareHouse</span>
                                 </Menu.Item>
@@ -452,8 +451,25 @@ export default function InventoryProduct() {
                     <Form.Item
                         label="Quantity"
                         name='quantity'
+                        extra={`Has ${selectedProduct.quantity} left`}
                         rules={[
                             { required: true, message: FIELD_REQUIRED },
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    if (!value && !getFieldValue('productId')) return;
+                                    let product;
+
+                                    if (getUser().roleId == 1) {
+                                        product = listProductWarehouse.find(item => item.id === getFieldValue('productId'))
+                                    } else {
+                                        product = listProductBranch.find(item => item.id === getFieldValue('productId'))
+                                    }
+                                    if (value <= product?.quantity) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(new Error(`Quantity must be less than ${selectedProduct?.quantity}`));
+                                },
+                            }),
                         ]}
                     >
                         <InputNumber min={0} max={selectedProduct?.quantity} />
