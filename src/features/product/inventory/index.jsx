@@ -45,6 +45,18 @@ export default function InventoryProduct() {
     const [listProductWarehouse, setListProductWarehouse] = useState([]);
     const [listProductBranch, setListProductBranch] = useState([]);
     const [quantityValidate, setQuantityValidate] = useState('')
+    const [selectedProductAddNew, setSelectedProductAddNew] = useState('')
+
+    const onChangeProductAddNew = (product) =>  {
+        let res 
+        if (getUser().roleId === 2) {
+            res = listProductWarehouse.find(item => item.id === product)
+        } else {
+            res = listProductBranch.find(item => item.id === product)
+        }
+        setSelectedProductAddNew(res)
+
+    }
 
     const openDetail = (product) => {
         setSelectedProduct(product);
@@ -178,6 +190,7 @@ export default function InventoryProduct() {
         try {
             await productApi.addProductToInventory({
                 ...values,
+                productId: selectedProduct.productId,
                 idCategory: selectedProduct.idCategory,
                 name: selectedProduct.name,
                 image: selectedProduct.image,
@@ -259,7 +272,7 @@ export default function InventoryProduct() {
                     pageSize: 100,
                     warehouseId: 1
                 });
-                let product = products.find(item => item.id === selectedProduct.id)
+                let product = products.find(item => item.id === selectedProduct.productId)
                 setQuantityValidate(product?.quantity || '')
             } else {
                 const { products } = await productApi.getProductBranch({
@@ -267,7 +280,7 @@ export default function InventoryProduct() {
                     pageSize: 100,
                     branchId: selectedKeys[0]
                 })
-                let product = products.find(item => item.id === selectedProduct.id)
+                let product = products.find(item => item.id === selectedProduct.productId)
                 setQuantityValidate(product?.quantity || '')
             }
         } catch (error) {
@@ -302,7 +315,7 @@ export default function InventoryProduct() {
 
     useEffect(() => {
         visibleAddTo && fetchListForAddTo()
-        !visibleAddTo && setQuantityValidate('')
+        if (!visibleAddTo) setQuantityValidate('')
     }, [visibleAddTo])
 
     return (
@@ -377,7 +390,7 @@ export default function InventoryProduct() {
                     )
                 }
             </Row>
-            <ProductDetail visible={visibleDetail} product={selectedProduct} onClose={() => setVisibleDetail(false)} />
+            <ProductDetail isInventory visible={visibleDetail} product={selectedProduct} onClose={() => setVisibleDetail(false)} />
             <HistoryDelete visible={visibleHistory} list={listHistory} onClose={() => setVisibleHistory(false)} />
             <Modal
                 title="Add Inventory"
@@ -458,10 +471,10 @@ export default function InventoryProduct() {
                         label="Product"
                         name='productId'
                         rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                        <Select placeholder='Select Product' size="large">
+                        <Select placeholder='Select Product' size="large" onChange={onChangeProductAddNew}>
                             {
                                 getUser().roleId == '2' ? listProductWarehouse.map(product => (
-                                    <Select.Option key={product.id} value={product.id}>
+                                    <Select.Option key={product.id} value={product.id} >
                                         <Avatar src={product?.image || img} style={{ marginRight: '1em' }} />
                                         {product.name}
                                     </Select.Option>
@@ -477,7 +490,7 @@ export default function InventoryProduct() {
                     <Form.Item
                         label="Quantity"
                         name='quantity'
-                        extra={selectedProduct?.quantity ? `Has ${selectedProduct.quantity} left` : ''}
+                        extra={selectedProductAddNew?.quantity ? `Has ${selectedProductAddNew.quantity} left` : ''}
                         rules={[
                             { required: true, message: FIELD_REQUIRED },
                             ({ getFieldValue }) => ({
@@ -493,12 +506,12 @@ export default function InventoryProduct() {
                                     if (!product?.quantity || value <= product?.quantity) {
                                         return Promise.resolve();
                                     }
-                                    return Promise.reject(new Error(`Quantity must be less than ${selectedProduct?.quantity}`));
+                                    return Promise.reject(new Error(`Quantity must be less than ${selectedProductAddNew?.quantity}`));
                                 },
                             }),
                         ]}
                     >
-                        <InputNumber min={0} max={selectedProduct?.quantity} />
+                        <InputNumber min={0} max={selectedProductAddNew?.quantity} />
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit" style={{ marginRight: 8 }}>
@@ -523,7 +536,7 @@ export default function InventoryProduct() {
                     <Form.Item
                         label="Quantity"
                         name='quantity'
-                        extra={quantityValidate ? `Has ${selectedProduct.quantity} left` : ''}
+                        extra={quantityValidate ? `Has ${quantityValidate} left` : ''}
                         rules={[
                             { required: true, message: FIELD_REQUIRED },
                             ({ }) => ({

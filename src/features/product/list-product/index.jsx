@@ -88,8 +88,13 @@ export default function ListProduct() {
     }
 
     const getProductById = async (product) => {
+        if (selectedKeys[0] !== 'All' && selectedKeys[0] !== '0') {
+            setSelectedProduct(product)
+            return;
+        }
         try {
             const resp = await productApi.getById(product.id);
+            // const resp = await productApi.getProductBranchById(product.id)
             setSelectedProduct({
                 ...resp,
                 quantity: product.quantity
@@ -233,7 +238,7 @@ export default function ListProduct() {
                         total={total} />
                 </Col>
             }
-            <ProductDetail visible={visibleDetail} product={selectedProduct} onClose={() => setVisibleDetail(false)} />
+            <ProductDetail isProductAll={selectedKeys[0] === 'All'} visible={visibleDetail} product={selectedProduct} onClose={() => setVisibleDetail(false)} />
 
         </Row>
     )

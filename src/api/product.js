@@ -17,6 +17,10 @@ const productApi = {
         const url = '/warehouse';
         return axiosService.get(url, { params });
     },
+    getProductBranchById(id) {
+        const url = `/product/branch/${id}`;
+        return axiosService.get(url);
+    },
     getProductBranch(params) {
         const url = '/branch/product';
         return axiosService.get(url, { params });

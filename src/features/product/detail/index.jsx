@@ -9,11 +9,11 @@ import { formatVND } from "utils/";
 
 const cx = classNames.bind(style);
 
-export default function ProductDetail({ visible, product, onClose }) {
+export default function ProductDetail({ visible, isInventory, isProductAll, product, onClose }) {
     const [dataTable, setDataTable] = useState([]);
 
     useEffect(() => {
-        setDataTable([
+        let columns = [
             {
                 key: 'price',
                 label: 'Price',
@@ -34,7 +34,14 @@ export default function ProductDetail({ visible, product, onClose }) {
                 label: 'Position',
                 value: product.positionName
             }
-        ]);
+        ]
+        if (isInventory) {
+            columns = columns.filter(item => item.key !== 'position')
+        }
+        if (isProductAll) {
+            columns = columns.filter(item => item.key !== 'quantity' && item.key !== 'position')
+        }
+        setDataTable(columns);
     }, [visible, product]);
 
     return (
