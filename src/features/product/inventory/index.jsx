@@ -182,7 +182,7 @@ export default function InventoryProduct() {
                 size: selectedProduct.size,
                 position: selectedProduct.position,
             });
-            setVisibleAdd(false);
+            setVisibleAddTo(false);
             fetchInventory();
             toast.success("Success")
         } catch (error) {
@@ -454,7 +454,7 @@ export default function InventoryProduct() {
             </Modal>
             <Modal
                 title="Add To Inventory"
-                visible={visibleAdd}
+                visible={visibleAddTo}
                 onCancel={() => setVisibleAddTo(false)}
                 footer=''
             >
