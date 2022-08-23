@@ -42,7 +42,7 @@ export default function BranchDetail() {
             if (getUser().roleId == '2') {
                 const income = await branchApi.getIncomeBranch({
                     branchId: id,
-                    startDate: '2022-07-01',
+                    startDate: '2019-07-01',
                     endDate: moment().format(DATE_FORMAT)
                 });
                 totalIncome = income.reduce((total, item) => {

@@ -44,6 +44,7 @@ export default function InventoryProduct() {
     const [listHistory, setListHistory] = useState([]);
     const [listProductWarehouse, setListProductWarehouse] = useState([]);
     const [listProductBranch, setListProductBranch] = useState([]);
+    const [quantityValidate, setQuantityValidate] = useState('')
 
     const openDetail = (product) => {
         setSelectedProduct(product);
@@ -91,10 +92,6 @@ export default function InventoryProduct() {
 
         if (getUser()?.roleId == 1 && selectedKeys[0] == getUser().idBranch) {
             actions.push(<PlusCircleOutlined key='5' onClick={() => openAddTo(product)} />)
-        }
-
-        if (getUser()?.roleId === 1) {
-            actions.push(<RotateRightOutlined key='2' onClick={() => openAdd(product)} />)
         }
 
         if (getUser()?.roleId === 2 && selectedKeys[0] == '0') {
@@ -254,6 +251,30 @@ export default function InventoryProduct() {
         }
     }
 
+    const fetchListForAddTo = async () => {
+        try {
+            if (selectedKeys[0] === '0') {
+                const { products } = await productApi.getProductWarehouse({
+                    pageIndex: 0,
+                    pageSize: 100,
+                    warehouseId: 1
+                });
+                let product = products.find(item => item.id === selectedProduct.id)
+                setQuantityValidate(product?.quantity || '')
+            } else {
+                const { products } = await productApi.getProductBranch({
+                    pageIndex: 0,
+                    pageSize: 100,
+                    branchId: selectedKeys[0]
+                })
+                let product = products.find(item => item.id === selectedProduct.id)
+                setQuantityValidate(product?.quantity || '')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     useEffect(() => {
         fetchBranch();
@@ -278,6 +299,11 @@ export default function InventoryProduct() {
     useEffect(() => {
         selectedKeys.length > 0 && fetchInventory();
     }, [filter, selectedKeys]);
+
+    useEffect(() => {
+        visibleAddTo && fetchListForAddTo()
+        !visibleAddTo && setQuantityValidate('')
+    }, [visibleAddTo])
 
     return (
         <div>
@@ -451,7 +477,7 @@ export default function InventoryProduct() {
                     <Form.Item
                         label="Quantity"
                         name='quantity'
-                        extra={`Has ${selectedProduct.quantity} left`}
+                        extra={selectedProduct?.quantity ? `Has ${selectedProduct.quantity} left` : ''}
                         rules={[
                             { required: true, message: FIELD_REQUIRED },
                             ({ getFieldValue }) => ({
@@ -464,7 +490,7 @@ export default function InventoryProduct() {
                                     } else {
                                         product = listProductBranch.find(item => item.id === getFieldValue('productId'))
                                     }
-                                    if (value <= product?.quantity) {
+                                    if (!product?.quantity || value <= product?.quantity) {
                                         return Promise.resolve();
                                     }
                                     return Promise.reject(new Error(`Quantity must be less than ${selectedProduct?.quantity}`));
@@ -497,20 +523,20 @@ export default function InventoryProduct() {
                     <Form.Item
                         label="Quantity"
                         name='quantity'
-                        extra={`Has ${selectedProduct.quantity} left`}
+                        extra={quantityValidate ? `Has ${selectedProduct.quantity} left` : ''}
                         rules={[
                             { required: true, message: FIELD_REQUIRED },
                             ({ }) => ({
                                 validator(_, value) {
-                                    if (value <= selectedProduct?.quantity) {
+                                    if (value <= quantityValidate) {
                                         return Promise.resolve();
                                     }
-                                    return Promise.reject(new Error(`Quantity must be less than ${selectedProduct?.quantity}`));
+                                    return Promise.reject(new Error(`Quantity must be less than ${quantityValidate}`));
                                 },
                             }),
                         ]}
                     >
-                        <InputNumber min={0} max={selectedProduct?.quantity} />
+                        <InputNumber min={0} max={quantityValidate ? quantityValidate : undefined} />
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit" style={{ marginRight: 8 }}>

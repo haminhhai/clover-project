@@ -37,7 +37,7 @@ const DashboardFeature = () => {
 
     const renderIcon = (position) => {
         if (position.status) {
-            return <Button onClick={openModal} icon={<StopFilled style={{ color: 'red' }} />} />
+            return <Button icon={<StopFilled style={{ color: 'red' }} />} />
         }
         return <Button icon={<PlusCircleFilled style={{ color: 'green' }} />} />
     }
