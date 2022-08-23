@@ -88,6 +88,11 @@ export default function InventoryProduct() {
         let actions = [
             <EyeFilled key='1' onClick={() => openDetail(product)} />
         ]
+
+        if (getUser()?.roleId == 1 && selectedKeys[0] == getUser().idBranch) {
+            actions.push(<MinusCircleOutlined key='5' onClick={() => openAddTo(product)} />)
+        }
+
         if (getUser()?.roleId === 1) {
             actions.push(<RotateRightOutlined key='2' onClick={() => openAdd(product)} />)
         }
@@ -95,6 +100,9 @@ export default function InventoryProduct() {
         if (getUser()?.roleId === 2 && selectedKeys[0] == '0') {
             actions.push(<MinusCircleOutlined key='4' onClick={() => openAddTo(product)} />)
         }
+
+
+
         if (getUser().roleId === 2) {
             actions.push(<RestFilled key='3' onClick={() => openDelete(product)} />)
         }
@@ -181,6 +189,7 @@ export default function InventoryProduct() {
                 price: selectedProduct.price,
                 size: selectedProduct.size,
                 position: selectedProduct.position,
+                branchId: getUser().roleId == '1' ? selectedKeys[0] : undefined
             });
             setVisibleAddTo(false);
             fetchInventory();
@@ -192,7 +201,14 @@ export default function InventoryProduct() {
 
     const addNewInventory = async (values) => {
         try {
+            let selectedProduct;
+            if (getUser().roleId == '2') {
+                selectedProduct = listProductWarehouse.find(item => (item.id === values.productId))
+            } else {
+                selectedProduct = listProductBranch.find(item => (item.id === values.productId))
+            }
             await productApi.addProductToInventory({
+                ...selectedProduct,
                 ...values,
                 isWarehouse: true,
             })
@@ -479,21 +495,6 @@ export default function InventoryProduct() {
                         ]}
                     >
                         <InputNumber min={0} max={selectedProduct?.quantity} />
-                    </Form.Item>
-                    <Form.Item
-                        label="Branch"
-                        name='branchId'
-                        rules={[
-                            { required: true, message: FIELD_REQUIRED },
-                        ]}
-                    >
-                        <Select>
-                            {
-                                listBranch.map((item) => (
-                                    <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
-                                ))
-                            }
-                        </Select>
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit" style={{ marginRight: 8 }}>

@@ -29,7 +29,7 @@ export default function AddNew() {
         let productInfo = values
         // if (productInfo.idBranch == 0) {
         productInfo.idBranch = null;
-        productInfo.warehouseId = 1
+        productInfo.warehouseId = null
         // } else {
         //     productInfo.warehouseId = null
         // }

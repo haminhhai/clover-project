@@ -35,12 +35,12 @@ export default function Export() {
 
     const onFinish = async (values) => {
         try {
-            const newValues = values.map(item => ({
+            const newValues = values.products.map(item => ({
                 ...item,
                 price: 0,
             }))
             await productApi.exportProduct({
-                ...newValues,
+                products: newValues,
                 employee: getUser().id,
                 exportDate: moment().format(DATE_FORMAT)
             });
