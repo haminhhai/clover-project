@@ -34,6 +34,10 @@ export default function Export() {
     }
 
     const onFinish = async (values) => {
+        if (!values.products || values.products?.length === 0) {
+            toast.error('Please add fields to export')
+            return;
+        }
         try {
             const newValues = values.products.map(item => ({
                 ...item,
@@ -45,6 +49,8 @@ export default function Export() {
                 exportDate: moment().format(DATE_FORMAT)
             });
             toast.success("Success");
+            fetchListProduct()
+            form.resetFields();
         } catch (error) {
             console.log(error);
             toast.error("Export Failed")
