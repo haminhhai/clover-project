@@ -34,6 +34,7 @@ export default function Manually() {
             toast.success("Import product success");
             form.resetFields();
             setSelectedPosition({});
+            fetchListProduct();
         } catch (error) {
             console.log("🚀 ~ error", error)
             toast.error('Import product failed');
@@ -47,10 +48,15 @@ export default function Manually() {
         console.log("🚀 ~ errorFields", errorFields)
     }
 
+    const changeProduct = (value) => {
+        const product = listProduct.find(item => item.id === value)
+        form.setFieldsValue({
+            size: product.size
+        })
+    }
 
     const selectPosistion = pos => {
         setSelectedPosition(pos);
-        console.log("🚀 ~ pos", pos)
         setVisibleWarehouse(false);
         form.setFieldsValue({
             positionId: pos.id,
@@ -95,10 +101,10 @@ export default function Manually() {
                             label='Product'
                             name='productId'
                             rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                            <Select placeholder='Select Product' size="large">
+                            <Select placeholder='Select Product' size="large" onChange={changeProduct}>
                                 {
                                     listProduct.map(product => (
-                                        <Select.Option key={product.id} value={product.id}>
+                                        <Select.Option key={product.id} value={product.id} >
                                             <Avatar src={product?.image || img} style={{ marginRight: '1em' }} />
                                             {product.name}
                                         </Select.Option>
@@ -114,7 +120,7 @@ export default function Manually() {
                     </Col>
                     <Col span={6}>
                         <Form.Item label='Size' name='size' rules={[{ required: true, message: FIELD_REQUIRED }]}>
-                            <InputNumber style={{ width: '100%' }} />
+                            <Input disabled style={{ width: '100%' }} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>

@@ -175,6 +175,16 @@ export default function ListProduct() {
         selectedKeys.length > 0 && fecthListProduct();
     }, [filter, selectedKeys])
 
+    useEffect(() => {
+        setFilter({
+            pageIndex: 0,
+            pageSize: 8,
+            name: "",
+            size: "",
+            category: "",
+        })
+    }, [selectedKeys])
+
     return (
         <Row gutter={16}>
             <Col span={4}>

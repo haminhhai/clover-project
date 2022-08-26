@@ -47,8 +47,8 @@ export default function InventoryProduct() {
     const [quantityValidate, setQuantityValidate] = useState('')
     const [selectedProductAddNew, setSelectedProductAddNew] = useState('')
 
-    const onChangeProductAddNew = (product) =>  {
-        let res 
+    const onChangeProductAddNew = (product) => {
+        let res
         if (getUser().roleId === 2) {
             res = listProductWarehouse.find(item => item.id === product)
         } else {
@@ -317,6 +317,16 @@ export default function InventoryProduct() {
         visibleAddTo && fetchListForAddTo()
         if (!visibleAddTo) setQuantityValidate('')
     }, [visibleAddTo])
+
+    useEffect(() => {
+        setFilter({
+            pageIndex: 0,
+            pageSize: 8,
+            name: "",
+            size: "",
+            category: "",
+        })
+    }, [selectedKeys])
 
     return (
         <div>

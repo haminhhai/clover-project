@@ -1,6 +1,7 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Form, InputNumber, Row, Select, Space } from "antd";
 import branchApi from "api/branch";
+import positionApi from "api/position";
 import productApi from "api/product";
 import classNames from "classnames/bind";
 import { InputCurrency } from "components/";
@@ -18,6 +19,8 @@ const cx = classNames.bind(style)
 export default function Export() {
     const [form] = Form.useForm();
     const [listProduct, setListProduct] = useState([]);
+    const [listPosition, setListPosition] = useState([]);
+    const [selectedPosition, setSelectedPosition] = useState({});
     const [listBranch, setListBranch] = useState([]);
 
     const fetchBranch = async () => {
@@ -54,6 +57,15 @@ export default function Export() {
         } catch (error) {
             console.log(error);
             toast.error("Export Failed")
+        }
+    }
+
+    const fetchListPosition = async () => {
+        try {
+            const list = await positionApi.getWarehouse();
+            setListPosition(list);
+        } catch (error) {
+            console.log("🚀 ~ error", error)
         }
     }
 
