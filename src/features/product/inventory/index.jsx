@@ -22,7 +22,7 @@ export default function InventoryProduct() {
 
     const [filter, setFilter] = useState({
         pageIndex: 0,
-        pageSize: 9,
+        pageSize: 8,
         name: "",
         size: "",
         category: "",
@@ -223,6 +223,8 @@ export default function InventoryProduct() {
             })
             setVisibleAddNew(false);
             fetchInventory();
+            fetchProductBranch();
+            fetchProductWarehouse()
             toast.success("Success")
         } catch (error) {
             console.log(error);
@@ -381,7 +383,7 @@ export default function InventoryProduct() {
                             <Row gutter={[16, 16]}>
                                 {
                                     listProduct.map((product) => (
-                                        <Col key={product.id} span={8}>
+                                        <Col key={product.id} span={6}>
                                             <CardProduct
                                                 product={product}
                                                 actions={renderAction(product)}
