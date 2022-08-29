@@ -309,6 +309,7 @@ export default function InventoryProduct() {
             fetchProductWarehouse();
             fetchProductBranch()
         }
+        setSelectedProductAddNew()
     }, [visibleAddNew])
 
     useEffect(() => {
