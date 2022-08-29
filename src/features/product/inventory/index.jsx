@@ -219,7 +219,7 @@ export default function InventoryProduct() {
             await productApi.addProductToInventory({
                 ...selectedProduct,
                 ...values,
-                isWarehouse: true,
+                isWarehouse: getUser().roleId == '2',
             })
             setVisibleAddNew(false);
             fetchInventory();
